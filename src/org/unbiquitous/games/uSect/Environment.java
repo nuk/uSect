@@ -41,33 +41,24 @@ public class Environment extends GameObject {
 		background = new Rectangle(center, Color.WHITE, screen.getWidth(), screen.getHeight());
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private Map<Sect, Set<Nutrient>> notificationTable = new HashMap();
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private Map<Nutrient, Map<Sect, Integer>> nutrientAbsortionTable = new HashMap();
-	
 	public void update() {
 		if(random.v() >= chancesOfNutrients()){
 			addNutrient();
 		}
 		for(Sect s : sects){
+			
 			Set<Nutrient> forRemoval = new HashSet<Nutrient>();
 			for(Nutrient n : nutrients){
-				if(! notificationTable.get(s).contains(n)){
-					s.onNutrientInSight(n); 
-					notificationTable.get(s).add(n);
-				};
+				n.insightOf(s);
 				if(n.center.equals(s.center)){
-					Map<Sect, Integer> sectMap = nutrientAbsortionTable.get(n);
-					sectMap.put(s, 1+sectMap.getOrDefault(s, 0));
-					if(sectMap.get(s) >= 5){
-						forRemoval.add(n);
-						nutrientAbsortionTable.remove(n);
-						s.onNutrientAbsorved(n);
-					}
+					n.inContactWith(s);
+				}
+				if(n.hasBeenConsumed){
+					forRemoval.add(n);
 				}
 			}
 			nutrients.removeAll(forRemoval);
+			
 			s.update();
 		}
 	}
@@ -83,13 +74,11 @@ public class Environment extends GameObject {
 	protected Nutrient addNutrient(Point center) {
 		Nutrient n = new Nutrient(center);
 		nutrients.add(n);
-		nutrientAbsortionTable.put(n, new HashMap<Sect, Integer>());
 		return n;
 	}
 	
 	protected Sect addSect(Sect s) {
 		sects.add(s);
-		notificationTable.put(s, new HashSet<Nutrient>());
 		return s;
 	}
 
@@ -147,9 +136,31 @@ class RandomGenerator{
 
 class Nutrient extends GameObject{
 	Point center;
+	Set<Sect> targetOf;
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	Map<Sect, Integer> absortionTable = new HashMap();
+	
+	boolean hasBeenConsumed = false;
 	
 	public Nutrient(Point center) {
 		this.center = center;
+		targetOf = new HashSet<Sect>();
+	}
+
+	public void inContactWith(Sect s) {
+		absortionTable.put(s, 1+absortionTable.get(s));
+		if(absortionTable.get(s) >= 5){
+			s.onNutrientAbsorved(this);
+			hasBeenConsumed = true;
+		}
+	}
+
+	public void insightOf(Sect s) {
+		if(! targetOf.contains(s)){
+			s.onNutrientInSight(this); 
+			targetOf.add(s);
+			absortionTable.put(s, 0);
+		};
 	}
 
 	protected void render(GameRenderers renderers) {
