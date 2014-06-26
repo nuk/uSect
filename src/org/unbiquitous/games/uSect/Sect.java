@@ -2,19 +2,14 @@ package org.unbiquitous.games.uSect;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.TreeSet;
 
-import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.jse.util.shapes.SimetricShape;
 
-public class Sect extends GameObject {
+public class Sect extends EnvironmentObject {
 	protected Point center;
 	protected RandomGenerator random =  new RandomGenerator();
 	private Behaviour behaviour;
@@ -24,8 +19,8 @@ public class Sect extends GameObject {
 	public interface Behaviour {
 		public void init(Sect s, RandomGenerator random);
 		public void update();
-		public void enteredViewRange(EnvironmentObject o);
-		public void leftViewRange(EnvironmentObject o);
+		public void enteredViewRange(Something o);
+		public void leftViewRange(Something o);
 	}
 	
 	public Sect() {
@@ -46,11 +41,11 @@ public class Sect extends GameObject {
 		behaviour.update();
 	}
 	
-	protected void enteredSight(EnvironmentObject o){
+	protected void enteredSight(Something o){
 		behaviour.enteredViewRange(o);
 	}
 	
-	protected void leftSight(EnvironmentObject o) {
+	protected void leftSight(Something o) {
 		behaviour.leftViewRange(o);
 	}
 
@@ -95,17 +90,15 @@ public class Sect extends GameObject {
 		return 0;
 	}
 
-	protected void wakeup(Object... args) {}
-	protected void destroy() {}
 }
 
 class Herbivore implements Sect.Behaviour{
-	protected LinkedList<EnvironmentObject> nutrientsInSight;
+	protected LinkedList<Something> nutrientsInSight;
 	private Sect sect;
 	
 	public void init(Sect sect, RandomGenerator random) {
 		this.sect = sect;
-		nutrientsInSight = new LinkedList<EnvironmentObject>();
+		nutrientsInSight = new LinkedList<Something>();
 	}
 
 	public void update() {
@@ -130,27 +123,27 @@ class Herbivore implements Sect.Behaviour{
 		return oringin == destination ? 0 : direction;
 	}
 	
-	public void enteredViewRange(EnvironmentObject n){
+	public void enteredViewRange(Something n){
 		nutrientsInSight.add(n);
-		Collections.sort(nutrientsInSight, new Comparator<EnvironmentObject>() {
-			public int compare(EnvironmentObject o1, EnvironmentObject o2) {
+		Collections.sort(nutrientsInSight, new Comparator<Something>() {
+			public int compare(Something o1, Something o2) {
 				return distanceTo(o1) - distanceTo(o2);
 			}
 		});
 	}
 
-	private EnvironmentObject target(){
+	private Something target(){
 		if(nutrientsInSight.isEmpty()){
 			return null;
 		}
 		return nutrientsInSight.getFirst();
 	}
 	
-	private int distanceTo(EnvironmentObject n) {
+	private int distanceTo(Something n) {
 		return Math.abs(n.center().x-sect.center.x) + Math.abs(n.center().y-sect.center.y);
 	}
 
-	public void leftViewRange(EnvironmentObject n) {
+	public void leftViewRange(Something n) {
 		nutrientsInSight.remove(n);
 	}
 

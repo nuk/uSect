@@ -35,7 +35,7 @@ public class Environment_NotifiesSectsAboutEvents {
 		e.addNutrient();
 		final int[] count = new int[]{0};
 		Sect s = new Sect(){
-			protected void enteredSight(EnvironmentObject n) {
+			protected void enteredSight(Something n) {
 				count[0]++;
 			}
 		};
@@ -53,7 +53,7 @@ public class Environment_NotifiesSectsAboutEvents {
 		Nutrient n = e.addNutrient(new Point(10,10));
 		final int[] count = new int[]{0};
 		Sect s = new Sect(){
-			protected void leftSight(EnvironmentObject n) {
+			protected void leftSight(Something n) {
 				count[0]++;
 			}
 		};
@@ -78,12 +78,12 @@ public class Environment_NotifiesSectsAboutEvents {
 		Nutrient n = e.addNutrient(new Point(10,10));
 		final int[] count = new int[]{0,0};
 		e.addSect(new Sect(new Point(9,10)){
-			protected void leftSight(EnvironmentObject n) {
+			protected void leftSight(Something n) {
 				count[0]++;
 			}
 		});
 		e.addSect(new Sect(new Point(20,20)){
-			protected void leftSight(EnvironmentObject n) {
+			protected void leftSight(Something n) {
 				count[1]++;
 			}
 		});

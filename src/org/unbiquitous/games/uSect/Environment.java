@@ -135,40 +135,26 @@ class RandomGenerator{
 	}
 }
 
-class EnvironmentObject {
-	enum Type {NUTRIENT,SECT}
+abstract class EnvironmentObject extends GameObject {
+	protected UUID id = UUID.randomUUID();
+	protected void update() {}
+	protected void wakeup(Object... args) {}
+	protected void destroy() {}
 	
-	private UUID id; 
-	private Point center;
-	private Type type;
-	
-	public EnvironmentObject(UUID id, Point center, Type type) {
-		super();
-		this.id = id;
-		this.center = center;
-		this.type = type;
-	}
-
-	public UUID id() {		return id;}
-	public Point center() {	return center;}
-	public Type type() {	return type;}
-
-	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof EnvironmentObject){
-			return ((EnvironmentObject)obj).id.equals(this.id) ;
+		if(obj instanceof Nutrient){
+			return ((Nutrient)obj).id.equals(this.id) ;
 		}
 		return false;
 	}
 	
-	@Override
 	public int hashCode() {
 		return id.hashCode();
 	}
+	
 }
 
-
-class Nutrient extends GameObject{
+class Nutrient extends EnvironmentObject{
 	Point center;
 	Set<Sect> targetOf;
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -192,13 +178,13 @@ class Nutrient extends GameObject{
 
 	private void notifyAbsortionToAll() {
 		for(Sect s1: targetOf){
-			s1.leftSight(new EnvironmentObject(id, center, EnvironmentObject.Type.NUTRIENT));
+			s1.leftSight(new Something(id, center, Something.Type.NUTRIENT));
 		}
 	}
 
 	public void insightOf(Sect s) {
 		if(! targetOf.contains(s)){
-			s.enteredSight(new EnvironmentObject(id, center, EnvironmentObject.Type.NUTRIENT)); 
+			s.enteredSight(new Something(id, center, Something.Type.NUTRIENT)); 
 			targetOf.add(s);
 			absortionTable.put(s, 0);
 		};
@@ -206,24 +192,5 @@ class Nutrient extends GameObject{
 
 	protected void render(GameRenderers renderers) {
 		new Circle(center, Color.GREEN.darker(), radius).render();
-	}
-
-	protected void update() {}
-	protected void wakeup(Object... args) {}
-	protected void destroy() {}
-	
-	UUID id = UUID.randomUUID();
-	
-	@Override
-	public boolean equals(Object obj) {
-		if(obj instanceof Nutrient){
-			return ((Nutrient)obj).id.equals(this.id) ;
-		}
-		return false;
-	}
-	
-	@Override
-	public int hashCode() {
-		return id.hashCode();
 	}
 }
