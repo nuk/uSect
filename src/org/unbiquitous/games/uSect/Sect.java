@@ -9,8 +9,15 @@ import org.unbiquitous.uImpala.jse.util.shapes.SimetricShape;
 
 public class Sect extends GameObject {
 	protected Point center;
-	protected Nutrient nutrient;
 	protected RandomGenerator random =  new RandomGenerator();
+	private Behaviour behaviour;
+	
+	public interface Behaviour {
+		public void init(Sect s, RandomGenerator random);
+		public void update();
+		public void onNutrientInSight(Nutrient n);
+		public void onNutrientAbsorved(Nutrient n);
+	}
 	
 	public Sect() {
 		this(new Point());
@@ -18,6 +25,8 @@ public class Sect extends GameObject {
 	
 	public Sect(Point center) {
 		center(center);
+		behaviour = new Herbivore();
+		behaviour.init(this, random);
 	}
 	
 	
@@ -26,39 +35,18 @@ public class Sect extends GameObject {
 	}
 
 	protected void update() {
-		if (seesNutrient()){
-			moveTo(nutrientDirection());
-		}
-	}
-
-	private boolean seesNutrient() {
-		return nutrient != null;
-	}
-
-	private Point nutrientDirection() {
-		Point dir = new Point();
-		dir.x = dimensionDirection(center.x,nutrient.center.x);
-		dir.y = dimensionDirection(center.y,nutrient.center.y);
-		return dir;
-	}
-
-	private int dimensionDirection(int oringin, int destination) {
-		int direction = oringin > destination  ? -1 : +1;
-		return oringin == destination ? 0 : direction;
+		behaviour.update();
 	}
 	
-	protected void onNutrientOnSight(Nutrient n){
-		if(nutrient == null || distanceTo(n) < distanceTo(nutrient)){
-			this.nutrient = n;
-		}
-	}
-
-	private int distanceTo(Nutrient n) {
-		return Math.abs(n.center.x-center.x) + Math.abs(n.center.y-center.y);
+	protected void onNutrientInSight(Nutrient n){
+		behaviour.onNutrientInSight(n);
 	}
 	
-	//TODO: Move to environemt, he's the one who decides this, he's also the one who decides about the Sects Stats
-	private void moveTo(Point dir) {
+	protected void onNutrientAbsorved(Nutrient n) {
+		behaviour.onNutrientAbsorved(n);
+	}
+
+	protected void moveTo(Point dir) {
 		adjustDirection(dir);
 		center.x += dir.x;
 		center.y += dir.y;
@@ -71,8 +59,6 @@ public class Sect extends GameObject {
 			dir.x = 0;
 		}
 	}
-
-
 	
 	protected void render(GameRenderers renderers) {
 		new SimetricShape(center, Color.RED, 10,3).render();
@@ -80,4 +66,51 @@ public class Sect extends GameObject {
 
 	protected void wakeup(Object... args) {}
 	protected void destroy() {}
+}
+
+class Herbivore implements Sect.Behaviour{
+	protected Nutrient nutrient;
+	private Sect sect;
+	
+	public void init(Sect sect, RandomGenerator random) {
+		this.sect = sect;
+	}
+
+	public void update() {
+		if (seesNutrient()){
+			sect.moveTo(nutrientDirection());
+		}
+	}
+
+	private boolean seesNutrient() {
+		return nutrient != null;
+	}
+
+	private Point nutrientDirection() {
+		Point dir = new Point();
+		dir.x = dimensionDirection(sect.center.x,nutrient.center.x);
+		dir.y = dimensionDirection(sect.center.y,nutrient.center.y);
+		return dir;
+	}
+
+	private int dimensionDirection(int oringin, int destination) {
+		int direction = oringin > destination  ? -1 : +1;
+		return oringin == destination ? 0 : direction;
+	}
+	
+	public void onNutrientInSight(Nutrient n){
+		if(nutrient == null || distanceTo(n) < distanceTo(nutrient)){
+			this.nutrient = n;
+		}
+	}
+
+	private int distanceTo(Nutrient n) {
+		return Math.abs(n.center.x-sect.center.x) + Math.abs(n.center.y-sect.center.y);
+	}
+
+	public void onNutrientAbsorved(Nutrient n) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

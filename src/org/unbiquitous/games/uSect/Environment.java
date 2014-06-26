@@ -43,18 +43,31 @@ public class Environment extends GameObject {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Map<Sect, Set<Nutrient>> notificationTable = new HashMap();
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private Map<Nutrient, Map<Sect, Integer>> nutrientAbsortionTable = new HashMap();
 	
 	public void update() {
 		if(random.v() >= chancesOfNutrients()){
 			addNutrient();
 		}
 		for(Sect s : sects){
+			Set<Nutrient> forRemoval = new HashSet<Nutrient>();
 			for(Nutrient n : nutrients){
 				if(! notificationTable.get(s).contains(n)){
-					s.onNutrientOnSight(n); 
+					s.onNutrientInSight(n); 
 					notificationTable.get(s).add(n);
 				};
+				if(n.center.equals(s.center)){
+					Map<Sect, Integer> sectMap = nutrientAbsortionTable.get(n);
+					sectMap.put(s, 1+sectMap.getOrDefault(s, 0));
+					if(sectMap.get(s) >= 5){
+						forRemoval.add(n);
+						nutrientAbsortionTable.remove(n);
+						s.onNutrientAbsorved(n);
+					}
+				}
 			}
+			nutrients.removeAll(forRemoval);
 			s.update();
 		}
 	}
@@ -70,6 +83,7 @@ public class Environment extends GameObject {
 	protected Nutrient addNutrient(Point center) {
 		Nutrient n = new Nutrient(center);
 		nutrients.add(n);
+		nutrientAbsortionTable.put(n, new HashMap<Sect, Integer>());
 		return n;
 	}
 	

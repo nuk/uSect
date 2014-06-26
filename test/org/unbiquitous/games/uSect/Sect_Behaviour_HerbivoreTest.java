@@ -5,7 +5,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import java.awt.Point;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.jse.impl.io.Screen;
@@ -84,5 +83,5 @@ public class Sect_Behaviour_HerbivoreTest {
 		
 		assertThat(s.center).isEqualTo(n1.center);
 	}
-
+	
 }
