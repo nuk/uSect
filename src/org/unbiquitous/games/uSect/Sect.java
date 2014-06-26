@@ -2,8 +2,13 @@ package org.unbiquitous.games.uSect;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.TreeSet;
 
 import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
@@ -14,12 +19,13 @@ public class Sect extends GameObject {
 	protected RandomGenerator random =  new RandomGenerator();
 	private Behaviour behaviour;
 	private Point currentDir;
+	private int radius = 30;
 	
 	public interface Behaviour {
 		public void init(Sect s, RandomGenerator random);
 		public void update();
-		public void onNutrientInSight(Nutrient n);
-		public void onNutrientAbsorved(Nutrient n);
+		public void enteredViewRange(EnvironmentObject o);
+		public void leftViewRange(EnvironmentObject o);
 	}
 	
 	public Sect() {
@@ -32,7 +38,6 @@ public class Sect extends GameObject {
 		behaviour.init(this, random);
 	}
 	
-	
 	public void center(Point center) {
 		this.center = (Point) center.clone();
 	}
@@ -41,12 +46,12 @@ public class Sect extends GameObject {
 		behaviour.update();
 	}
 	
-	protected void onNutrientInSight(Nutrient n){
-		behaviour.onNutrientInSight(n);
+	protected void enteredSight(EnvironmentObject o){
+		behaviour.enteredViewRange(o);
 	}
 	
-	protected void onNutrientAbsorved(Nutrient n) {
-		behaviour.onNutrientAbsorved(n);
+	protected void leftSight(EnvironmentObject o) {
+		behaviour.leftViewRange(o);
 	}
 
 	protected void moveTo(Point dir) {
@@ -66,7 +71,7 @@ public class Sect extends GameObject {
 	}
 	
 	protected void render(GameRenderers renderers) {
-		SimetricShape triangle = new SimetricShape(center, Color.RED, 30,3);
+		SimetricShape triangle = new SimetricShape(center, Color.RED, radius,3);
 		triangle.rotate(rotationAngle());
 		triangle.render();
 	}
@@ -95,29 +100,28 @@ public class Sect extends GameObject {
 }
 
 class Herbivore implements Sect.Behaviour{
-	protected Nutrient targetedNutrient;
-	protected Set<Nutrient> nutrientsInSight;
+	protected LinkedList<EnvironmentObject> nutrientsInSight;
 	private Sect sect;
 	
 	public void init(Sect sect, RandomGenerator random) {
 		this.sect = sect;
-		nutrientsInSight = new HashSet<Nutrient>();
+		nutrientsInSight = new LinkedList<EnvironmentObject>();
 	}
 
 	public void update() {
-		if (seesNutrient()){
+		if (hasATarget()){
 			sect.moveTo(nutrientDirection());
 		}
 	}
 
-	private boolean seesNutrient() {
-		return targetedNutrient != null;
+	private boolean hasATarget() {
+		return target() != null;
 	}
 
 	private Point nutrientDirection() {
 		Point dir = new Point();
-		dir.x = dimensionDirection(sect.center.x,targetedNutrient.center.x);
-		dir.y = dimensionDirection(sect.center.y,targetedNutrient.center.y);
+		dir.x = dimensionDirection(sect.center.x,target().center().x);
+		dir.y = dimensionDirection(sect.center.y,target().center().y);
 		return dir;
 	}
 
@@ -126,38 +130,28 @@ class Herbivore implements Sect.Behaviour{
 		return oringin == destination ? 0 : direction;
 	}
 	
-	public void onNutrientInSight(Nutrient n){
-		if(targetedNutrient == null){
-			targetedNutrient = n;
-		}else if(distanceTo(n) < distanceTo(targetedNutrient)){
-			nutrientsInSight.add(targetedNutrient);
-			targetedNutrient = n;
-		}else{
-			nutrientsInSight.add(n);
-		}
-	}
-
-	private int distanceTo(Nutrient n) {
-		return Math.abs(n.center.x-sect.center.x) + Math.abs(n.center.y-sect.center.y);
-	}
-
-	public void onNutrientAbsorved(Nutrient n) {
-		if(n.equals(targetedNutrient)){
-			targetedNutrient = null;
-		}
-		nutrientsInSight.remove(n);
-		if(!nutrientsInSight.isEmpty()){
-			updateToNearestNutrient();
-		}
-	}
-
-	private void updateToNearestNutrient() {
-		targetedNutrient = nutrientsInSight.iterator().next();
-		for(Nutrient n1: nutrientsInSight){
-			if(distanceTo(n1) < distanceTo(targetedNutrient)){
-				targetedNutrient = n1;
+	public void enteredViewRange(EnvironmentObject n){
+		nutrientsInSight.add(n);
+		Collections.sort(nutrientsInSight, new Comparator<EnvironmentObject>() {
+			public int compare(EnvironmentObject o1, EnvironmentObject o2) {
+				return distanceTo(o1) - distanceTo(o2);
 			}
+		});
+	}
+
+	private EnvironmentObject target(){
+		if(nutrientsInSight.isEmpty()){
+			return null;
 		}
+		return nutrientsInSight.getFirst();
 	}
 	
+	private int distanceTo(EnvironmentObject n) {
+		return Math.abs(n.center().x-sect.center.x) + Math.abs(n.center().y-sect.center.y);
+	}
+
+	public void leftViewRange(EnvironmentObject n) {
+		nutrientsInSight.remove(n);
+	}
+
 }

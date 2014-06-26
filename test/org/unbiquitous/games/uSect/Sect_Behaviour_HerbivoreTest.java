@@ -93,6 +93,7 @@ public class Sect_Behaviour_HerbivoreTest {
 	}
 	
 	@Test public void afterAnutrientIsGoneMustChaseTheClosesInSight(){
+		e.addNutrient(new Point(100,100));
 		e.addNutrient(new Point(20,20));
 		Nutrient n1 = e.addNutrient(new Point(40,40));
 		e.addNutrient(new Point(5,5));
@@ -120,5 +121,6 @@ public class Sect_Behaviour_HerbivoreTest {
 			e.update();
 		}
 	}
-	
+
+	//TODO: check energy status and feeding process
 }

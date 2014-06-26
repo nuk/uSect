@@ -135,11 +135,45 @@ class RandomGenerator{
 	}
 }
 
+class EnvironmentObject {
+	enum Type {NUTRIENT,SECT}
+	
+	private UUID id; 
+	private Point center;
+	private Type type;
+	
+	public EnvironmentObject(UUID id, Point center, Type type) {
+		super();
+		this.id = id;
+		this.center = center;
+		this.type = type;
+	}
+
+	public UUID id() {		return id;}
+	public Point center() {	return center;}
+	public Type type() {	return type;}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof EnvironmentObject){
+			return ((EnvironmentObject)obj).id.equals(this.id) ;
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return id.hashCode();
+	}
+}
+
+
 class Nutrient extends GameObject{
 	Point center;
 	Set<Sect> targetOf;
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	Map<Sect, Integer> absortionTable = new HashMap();
+	private int radius = 10;
 	
 	boolean hasBeenConsumed = false;
 	
@@ -158,27 +192,27 @@ class Nutrient extends GameObject{
 
 	private void notifyAbsortionToAll() {
 		for(Sect s1: targetOf){
-			s1.onNutrientAbsorved(this);
+			s1.leftSight(new EnvironmentObject(id, center, EnvironmentObject.Type.NUTRIENT));
 		}
 	}
 
 	public void insightOf(Sect s) {
 		if(! targetOf.contains(s)){
-			s.onNutrientInSight(this); 
+			s.enteredSight(new EnvironmentObject(id, center, EnvironmentObject.Type.NUTRIENT)); 
 			targetOf.add(s);
 			absortionTable.put(s, 0);
 		};
 	}
 
 	protected void render(GameRenderers renderers) {
-		new Circle(center, Color.GREEN, 10).render();
+		new Circle(center, Color.GREEN.darker(), radius).render();
 	}
 
 	protected void update() {}
 	protected void wakeup(Object... args) {}
 	protected void destroy() {}
 	
-	private UUID id = UUID.randomUUID();
+	UUID id = UUID.randomUUID();
 	
 	@Override
 	public boolean equals(Object obj) {

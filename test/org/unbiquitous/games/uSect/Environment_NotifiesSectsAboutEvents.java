@@ -35,7 +35,7 @@ public class Environment_NotifiesSectsAboutEvents {
 		e.addNutrient();
 		final int[] count = new int[]{0};
 		Sect s = new Sect(){
-			protected void onNutrientInSight(Nutrient n) {
+			protected void enteredSight(EnvironmentObject n) {
 				count[0]++;
 			}
 		};
@@ -53,7 +53,7 @@ public class Environment_NotifiesSectsAboutEvents {
 		Nutrient n = e.addNutrient(new Point(10,10));
 		final int[] count = new int[]{0};
 		Sect s = new Sect(){
-			protected void onNutrientAbsorved(Nutrient n) {
+			protected void leftSight(EnvironmentObject n) {
 				count[0]++;
 			}
 		};
@@ -78,12 +78,12 @@ public class Environment_NotifiesSectsAboutEvents {
 		Nutrient n = e.addNutrient(new Point(10,10));
 		final int[] count = new int[]{0,0};
 		e.addSect(new Sect(new Point(9,10)){
-			protected void onNutrientAbsorved(Nutrient n) {
+			protected void leftSight(EnvironmentObject n) {
 				count[0]++;
 			}
 		});
 		e.addSect(new Sect(new Point(20,20)){
-			protected void onNutrientAbsorved(Nutrient n) {
+			protected void leftSight(EnvironmentObject n) {
 				count[1]++;
 			}
 		});
@@ -97,4 +97,8 @@ public class Environment_NotifiesSectsAboutEvents {
 		assertThat(e.nutrients).doesNotContain(n);
 	}
 	
+	
+	//TODO: check line of sight
+	//TODO: check collision (movement must not allow collisions between sects)
+	//TODO: notifications must be on every change (like, a sect on sight moved away)
 }

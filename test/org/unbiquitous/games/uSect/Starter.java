@@ -1,5 +1,7 @@
 package org.unbiquitous.games.uSect;
 
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.util.Arrays;
 
@@ -21,7 +23,10 @@ public class Starter extends GameObjectTreeScene {
 		deltaTime.setUPS(30);
 		
 		screen = GameComponents.get(ScreenManager.class).create();
-		screen.open("uSect", 800, 600, false, null);
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		int width = gd.getDisplayMode().getWidth();
+		int height = gd.getDisplayMode().getHeight();
+		screen.open("uSect", width, height, false, null);
 
 		GameComponents.put(Screen.class, screen);
 		
