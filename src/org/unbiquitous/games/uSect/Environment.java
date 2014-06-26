@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObject;
@@ -170,4 +171,19 @@ class Nutrient extends GameObject{
 	protected void update() {}
 	protected void wakeup(Object... args) {}
 	protected void destroy() {}
+	
+	private UUID id = UUID.randomUUID();
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Nutrient){
+			return ((Nutrient)obj).id.equals(this.id) ;
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return id.hashCode();
+	}
 }

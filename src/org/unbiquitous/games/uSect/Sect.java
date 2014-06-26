@@ -2,8 +2,8 @@ package org.unbiquitous.games.uSect;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.util.Comparator;
-import java.util.TreeSet;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
@@ -64,7 +64,7 @@ public class Sect extends GameObject {
 	}
 	
 	protected void render(GameRenderers renderers) {
-		new SimetricShape(center, Color.RED, 10,3).render();
+		new SimetricShape(center, Color.RED, 30,3).render();
 	}
 
 	protected void wakeup(Object... args) {}
@@ -72,17 +72,13 @@ public class Sect extends GameObject {
 }
 
 class Herbivore implements Sect.Behaviour{
-	protected Nutrient nutrient;
-	protected TreeSet<Nutrient> nutrientsInSight;
+	protected Nutrient targetedNutrient;
+	protected Set<Nutrient> nutrientsInSight;
 	private Sect sect;
 	
 	public void init(Sect sect, RandomGenerator random) {
 		this.sect = sect;
-		nutrientsInSight = new TreeSet<Nutrient>(new Comparator<Nutrient>() {
-			public int compare(Nutrient o1, Nutrient o2) {
-				return distanceTo(o1) - distanceTo(o2);
-			}
-		});
+		nutrientsInSight = new HashSet<Nutrient>();
 	}
 
 	public void update() {
@@ -92,13 +88,13 @@ class Herbivore implements Sect.Behaviour{
 	}
 
 	private boolean seesNutrient() {
-		return nutrient != null;
+		return targetedNutrient != null;
 	}
 
 	private Point nutrientDirection() {
 		Point dir = new Point();
-		dir.x = dimensionDirection(sect.center.x,nutrient.center.x);
-		dir.y = dimensionDirection(sect.center.y,nutrient.center.y);
+		dir.x = dimensionDirection(sect.center.x,targetedNutrient.center.x);
+		dir.y = dimensionDirection(sect.center.y,targetedNutrient.center.y);
 		return dir;
 	}
 
@@ -108,11 +104,11 @@ class Herbivore implements Sect.Behaviour{
 	}
 	
 	public void onNutrientInSight(Nutrient n){
-		if(nutrient == null){
-			nutrient = n;
-		}else if(distanceTo(n) < distanceTo(nutrient)){
-			nutrientsInSight.add(nutrient);
-			nutrient = n;
+		if(targetedNutrient == null){
+			targetedNutrient = n;
+		}else if(distanceTo(n) < distanceTo(targetedNutrient)){
+			nutrientsInSight.add(targetedNutrient);
+			targetedNutrient = n;
 		}else{
 			nutrientsInSight.add(n);
 		}
@@ -123,8 +119,19 @@ class Herbivore implements Sect.Behaviour{
 	}
 
 	public void onNutrientAbsorved(Nutrient n) {
+		targetedNutrient = null;
+		nutrientsInSight.remove(n);
 		if(!nutrientsInSight.isEmpty()){
-			nutrient = nutrientsInSight.pollFirst();
+			updateToNearestNutrient();
+		}
+	}
+
+	private void updateToNearestNutrient() {
+		targetedNutrient = nutrientsInSight.iterator().next();
+		for(Nutrient n1: nutrientsInSight){
+			if(distanceTo(n1) < distanceTo(targetedNutrient)){
+				targetedNutrient = n1;
+			}
 		}
 	}
 	
