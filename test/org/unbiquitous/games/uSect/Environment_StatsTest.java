@@ -48,10 +48,10 @@ public class Environment_StatsTest {
 		double value = 1-chances;
 		e.random.setvalue(value-0.0001);
 		e.update();
-		assertThat(e.nutrients()).isEmpty();;
+		assertThat(e.nutrients).isEmpty();;
 		e.random.setvalue(value);
 		e.update();
-		assertThat(e.nutrients()).hasSize(1);
+		assertThat(e.nutrients).hasSize(1);
 	}
 	
 	private DeviceStats createStastWithMemory(final int memoryInMB) {

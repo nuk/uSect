@@ -15,9 +15,11 @@ import org.unbiquitous.uImpala.jse.util.shapes.Rectangle;
 public class Environment extends GameObject {
 
 	private DeviceStats deviceStats;
+	private Screen screen;
 	protected RandomGenerator random =  new RandomGenerator();
 	Rectangle background;
-	List<Nutrient> nurtients = new ArrayList<Nutrient>();
+	List<Nutrient> nutrients = new ArrayList<Nutrient>();
+	List<Sect> sects = new ArrayList<Sect>();
 
 	public Environment(DeviceStats deviceStats) {
 		this.deviceStats = deviceStats;
@@ -25,15 +27,28 @@ public class Environment extends GameObject {
 	}
 
 	private void createBackground() {
-		Screen screen = GameComponents.get(Screen.class);
+		screen = GameComponents.get(Screen.class);
 		Point center = new Point(screen.getWidth()/2, screen.getHeight()/2);
 		background = new Rectangle(center, Color.WHITE, screen.getWidth(), screen.getHeight());
 	}
 
 	public void update() {
 		if(random.v() >= chancesOfNutrients()){
-			nutrients().add(new Nutrient());
+			addNutrient();
 		}
+		for(Sect s : sects){
+			s.update();
+		}
+	}
+
+	protected void addNutrient() {
+		int x = (int) (Math.random()*screen.getWidth());
+		int y = (int) (Math.random()*screen.getHeight());
+		nutrients.add(new Nutrient(new Point(x, y)));
+	}
+	
+	protected void addSect(Sect s) {
+		sects.add(s);
 	}
 
 	private double chancesOfNutrients() {
@@ -48,15 +63,14 @@ public class Environment extends GameObject {
 		return 0.99;
 	}
 
-	public List<Nutrient> nutrients() {
-		return nurtients;
-	}
-
 	@Override
 	protected void render(GameRenderers renderers) {
 		background.render();
-		for(Nutrient n : nutrients()){
+		for(Nutrient n : nutrients){
 			n.render(null);
+		}
+		for(Sect s : sects){
+			s.render(null);
 		}
 	}
 
@@ -90,36 +104,17 @@ class RandomGenerator{
 }
 
 class Nutrient extends GameObject{
-
 	Point center;
 	
-	public Nutrient() {
-		int x = (int) (Math.random()*400);
-		int y = (int) (Math.random()*400);
-		center = new Point(x, y);
-	}
-	
-	@Override
-	protected void update() {
-		// TODO Auto-generated method stub
-		
+	public Nutrient(Point center) {
+		this.center = center;
 	}
 
-	@Override
 	protected void render(GameRenderers renderers) {
-		new Circle(center, Color.GREEN, 20).render();;
+		new Circle(center, Color.GREEN, 10).render();
 	}
 
-	@Override
-	protected void wakeup(Object... args) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void destroy() {
-		// TODO Auto-generated method stub
-		
-	}
-	
+	protected void update() {}
+	protected void wakeup(Object... args) {}
+	protected void destroy() {}
 }
