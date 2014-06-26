@@ -74,6 +74,27 @@ public class Environment_NotifiesSectsAboutEvents {
 		assertThat(count[0]).isEqualTo(1);
 	}
 	
-	//TODO: notify every Sect in sight of nutrient absortion 
-
+	@Test public void notifiesAllSectsInSightAboutTheNutrientThatHasBeenEaten(){
+		Nutrient n = e.addNutrient(new Point(10,10));
+		final int[] count = new int[]{0,0};
+		e.addSect(new Sect(new Point(9,10)){
+			protected void onNutrientAbsorved(Nutrient n) {
+				count[0]++;
+			}
+		});
+		e.addSect(new Sect(new Point(20,20)){
+			protected void onNutrientAbsorved(Nutrient n) {
+				count[1]++;
+			}
+		});
+		
+		
+		for(int i = 0; i <= 5; i++){
+			e.update();
+		}
+		assertThat(count[0]).isEqualTo(1);
+		assertThat(count[1]).isEqualTo(1);
+		assertThat(e.nutrients).doesNotContain(n);
+	}
+	
 }

@@ -64,9 +64,7 @@ public class Sect_Behaviour_HerbivoreTest {
 		Nutrient nutrient = e.addNutrient(new Point(20,20));
 		
 		Sect s = e.addSect(new Sect(new Point(30,15)));
-		for (int i = 0; i < 30; i++){
-			e.update();
-		}
+		executeThisManyTurns(30);
 		
 		assertThat(s.center.x).isEqualTo(nutrient.center.x);
 		assertThat(s.center.y).isEqualTo(nutrient.center.y);
@@ -78,9 +76,7 @@ public class Sect_Behaviour_HerbivoreTest {
 		Nutrient n1 = e.addNutrient(new Point(5,5));
 		Sect s =  e.addSect(new Sect(new Point(10,10)));
 		
-		for (int i = 0; i < 10; i++){
-			e.update();
-		}
+		executeThisManyTurns(10);
 		
 		assertThat(s.center).isEqualTo(n1.center);
 	}
@@ -88,16 +84,10 @@ public class Sect_Behaviour_HerbivoreTest {
 	@Test public void dontChaseDeadNutrients(){
 		e.addNutrient(new Point(5,5));
 		Sect s =  e.addSect(new Sect(new Point(10,10)));
-		
-		for (int i = 0; i < 14; i++){
-			e.update();
-		}
-		
+		executeThisManyTurns(14);
 		Nutrient n2 = e.addNutrient(new Point(20,20));
 		
-		for (int i = 0; i < 30; i++){
-			e.update();
-		}
+		executeThisManyTurns(30);
 		
 		assertThat(s.center).isEqualTo(n2.center);
 	}
@@ -108,11 +98,27 @@ public class Sect_Behaviour_HerbivoreTest {
 		e.addNutrient(new Point(5,5));
 		Sect s =  e.addSect(new Sect(new Point(10,10)));
 		
-		for (int i = 0; i < 10+4+30+4+40; i++){
-			e.update();
-		}
+		executeThisManyTurns(10+4+30+4+40);
 		
 		assertThat(s.center).isEqualTo(n1.center);
+	}
+	
+	@Test public void doesNotBotherByNutrientsEatenThatAreNotTheTarget(){
+		Nutrient n1 = e.addNutrient(new Point(40,40));
+		e.addNutrient(new Point(5,5));
+		Sect s1 =  e.addSect(new Sect(new Point(10,10)));
+		Sect s2 =  e.addSect(new Sect(new Point(50,50)));
+		
+		executeThisManyTurns(100);
+		
+		assertThat(s1.center).isNotEqualTo(n1.center);
+		assertThat(s2.center).isEqualTo(n1.center);
+	}
+
+	private void executeThisManyTurns(int numberOfTurns) {
+		for (int i = 0; i < numberOfTurns; i++){
+			e.update();
+		}
 	}
 	
 }

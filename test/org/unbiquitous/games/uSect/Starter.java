@@ -14,21 +14,31 @@ import org.unbiquitous.uImpala.jse.impl.core.Game;
 
 public class Starter extends GameObjectTreeScene {
 
+	private Screen screen;
+
 	public Starter() {
 		DeltaTime deltaTime = GameComponents.get(DeltaTime.class);
 		deltaTime.setUPS(30);
 		
-		
-		Screen screen = GameComponents.get(ScreenManager.class).create();
+		screen = GameComponents.get(ScreenManager.class).create();
 		screen.open("uSect", 800, 600, false, null);
 
 		GameComponents.put(Screen.class, screen);
 		
 		Environment e = new Environment(new DeviceStats());
-		Sect s = new Sect();
-		s.center(new Point());
-		e.addSect(s);
+		e.addSect(new Sect(new Point()));
+		e.addSect(new Sect(new Point(screen.getWidth(),0)));
+		e.addSect(new Sect(new Point(0,screen.getHeight())));
+		e.addSect(new Sect(new Point(screen.getWidth(),screen.getHeight())));
 		add(e);
+	}
+	
+	@Override
+	public void update() {
+		super.update();
+		if (screen.isCloseRequested()) {
+			GameComponents.get(org.unbiquitous.uImpala.engine.core.Game.class).quit();
+		}
 	}
 	
 	@SuppressWarnings({ "unchecked", "serial" })

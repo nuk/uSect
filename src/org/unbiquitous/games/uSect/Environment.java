@@ -151,8 +151,14 @@ class Nutrient extends GameObject{
 	public void inContactWith(Sect s) {
 		absortionTable.put(s, 1+absortionTable.get(s));
 		if(absortionTable.get(s) >= 5){
-			s.onNutrientAbsorved(this);
+			notifyAbsortionToAll();
 			hasBeenConsumed = true;
+		}
+	}
+
+	private void notifyAbsortionToAll() {
+		for(Sect s1: targetOf){
+			s1.onNutrientAbsorved(this);
 		}
 	}
 

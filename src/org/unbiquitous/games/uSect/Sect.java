@@ -119,7 +119,9 @@ class Herbivore implements Sect.Behaviour{
 	}
 
 	public void onNutrientAbsorved(Nutrient n) {
-		targetedNutrient = null;
+		if(n.equals(targetedNutrient)){
+			targetedNutrient = null;
+		}
 		nutrientsInSight.remove(n);
 		if(!nutrientsInSight.isEmpty()){
 			updateToNearestNutrient();
