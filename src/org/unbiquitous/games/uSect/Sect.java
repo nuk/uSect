@@ -47,6 +47,17 @@ public class Sect extends GameObject {
 		return oringin == destination ? 0 : direction;
 	}
 	
+	protected void onNutrientOnSight(Nutrient n){
+		if(nutrient == null || distanceTo(n) < distanceTo(nutrient)){
+			this.nutrient = n;
+		}
+	}
+
+	private int distanceTo(Nutrient n) {
+		return Math.abs(n.center.x-center.x) + Math.abs(n.center.y-center.y);
+	}
+	
+	//TODO: Move to environemt, he's the one who decides this, he's also the one who decides about the Sects Stats
 	private void moveTo(Point dir) {
 		adjustDirection(dir);
 		center.x += dir.x;
@@ -62,9 +73,6 @@ public class Sect extends GameObject {
 	}
 
 
-	protected void onNutrientOnSight(Nutrient n){
-		this.nutrient = n;
-	}
 	
 	protected void render(GameRenderers renderers) {
 		new SimetricShape(center, Color.RED, 10,3).render();

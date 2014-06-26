@@ -73,10 +73,9 @@ public class Sect_Behaviour_HerbivoreTest {
 		assertThat(s.center.y).isEqualTo(nutrient.center.y);
 	}
 	
-	@Ignore
 	@Test public void goesAfterTheNearestNutrient(){
-		Nutrient n1 = e.addNutrient(new Point(5,5));
 		e.addNutrient(new Point(20,20));
+		Nutrient n1 = e.addNutrient(new Point(5,5));
 		Sect s =  e.addSect(new Sect(new Point(10,10)));
 		
 		for (int i = 0; i < 10; i++){
