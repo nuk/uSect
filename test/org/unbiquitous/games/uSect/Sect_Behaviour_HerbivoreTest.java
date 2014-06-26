@@ -1,63 +1,89 @@
 package org.unbiquitous.games.uSect;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.awt.Point;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.jse.impl.io.Screen;
 
 public class Sect_Behaviour_HerbivoreTest {
 
+	private Environment e;
+
 	@Before public void setUp(){
 		GameComponents.put(org.unbiquitous.uImpala.engine.io.Screen.class, new Screen());
+		e = new Environment();
+		e.random.setvalue(0);
 	}
 	
 	@Test public void goesAfterANutrientAfterEachStep(){
-		Environment e = new Environment(new DeviceStats());
-		Nutrient nutrient = createNutrient(e);
+		Nutrient nutrient = e.addNutrient(new Point(20,20));
 		
-		Sect s = addSectAt(e, nutrient, new Point(-10,+5));
+		Sect s = e.addSect(new Sect(new Point(21,21)));
+		e.update();
 		e.update(); 
 		
-		assertThat(s.center.x).isEqualTo(nutrient.center.x-9);
-		assertThat(s.center.y).isEqualTo(nutrient.center.y+4);
+		assertThat(s.center.x).isEqualTo(nutrient.center.x);
+		assertThat(s.center.y).isEqualTo(nutrient.center.y);
+	}
+	
+	@Test public void goesMovementIsAlwaysOnePixelAtAtimeRandomly(){
+		e.addNutrient(new Point(20,20));
+		
+		Sect s = e.addSect(new Sect(new Point(10, 10)));
+		
+		s.random.setvalue(0.51);
+		e.update(); 
+		
+		assertThat(s.center).isEqualTo(new Point(11,10));
+
+		s.random.setvalue(0.49);
+		e.update(); 
+		
+		assertThat(s.center).isEqualTo(new Point(11,11));
+	}
+	
+	@Test public void ifTheresOnlyOneDirectionGoesThatWay(){
+		e.addNutrient(new Point(20,20));
+		
+		Sect s1 = e.addSect(new Sect(new Point(20, 10)));
+		s1.random.setvalue(0.51);
+		e.update(); 
+		assertThat(s1.center).isEqualTo(new Point(20,11));
+
+		Sect s2 = e.addSect(new Sect(new Point(10, 20)));
+		s2.random.setvalue(0.49);
+		e.update(); 
+		assertThat(s2.center).isEqualTo(new Point(11,20));
 	}
 	
 	@Test public void stopsWalkingAfterEatingNutrient(){
-		Environment e = new Environment(new DeviceStats());
-		Nutrient nutrient = createNutrient(e);
+		Nutrient nutrient = e.addNutrient(new Point(20,20));
 		
-		Sect s = addSectAt(e, nutrient, new Point(+10,-5));
-		for (int i = 0; i < 15; i++){
+		Sect s = e.addSect(new Sect(new Point(30,15)));
+		for (int i = 0; i < 30; i++){
 			e.update();
 		}
 		
 		assertThat(s.center.x).isEqualTo(nutrient.center.x);
 		assertThat(s.center.y).isEqualTo(nutrient.center.y);
 	}
-
-	private Sect addSectAt(Environment e, Nutrient nutrient, Point shift) {
-		Sect s = new Sect();
-		
-		Point pos = (Point)nutrient.center.clone();
-		pos.x += shift.x;
-		pos.y += shift.y;
-		s.center(pos);
-		s.onNutrientOnSight(nutrient);
-		
-		e.addSect(s);
-		return s;
-	}
-
-	private Nutrient createNutrient(Environment e) {
-		e.random.setvalue(1);
-		e.update();
-		e.random.setvalue(0);
-		Nutrient nutrient = e.nutrients.get(0);
-		return nutrient;
-	}
 	
+	@Ignore
+	@Test public void goesAfterTheNearestNutrient(){
+		Nutrient n1 = e.addNutrient(new Point(5,5));
+		e.addNutrient(new Point(20,20));
+		Sect s =  e.addSect(new Sect(new Point(10,10)));
+		
+		for (int i = 0; i < 10; i++){
+			e.update();
+		}
+		
+		assertThat(s.center).isEqualTo(n1.center);
+	}
+
 }

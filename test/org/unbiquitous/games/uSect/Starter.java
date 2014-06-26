@@ -1,5 +1,6 @@
 package org.unbiquitous.games.uSect;
 
+import java.awt.Point;
 import java.util.Arrays;
 
 import org.unbiquitous.uImpala.engine.core.GameComponents;
@@ -23,7 +24,11 @@ public class Starter extends GameObjectTreeScene {
 
 		GameComponents.put(Screen.class, screen);
 		
-		add(new Environment(new DeviceStats()));
+		Environment e = new Environment(new DeviceStats());
+		Sect s = new Sect();
+		s.center(new Point());
+		e.addSect(s);
+		add(e);
 	}
 	
 	@SuppressWarnings({ "unchecked", "serial" })

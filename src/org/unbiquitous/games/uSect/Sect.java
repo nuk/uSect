@@ -10,6 +10,16 @@ import org.unbiquitous.uImpala.jse.util.shapes.SimetricShape;
 public class Sect extends GameObject {
 	protected Point center;
 	protected Nutrient nutrient;
+	protected RandomGenerator random =  new RandomGenerator();
+	
+	public Sect() {
+		this(new Point());
+	}
+	
+	public Sect(Point center) {
+		center(center);
+	}
+	
 	
 	public void center(Point center) {
 		this.center = (Point) center.clone();
@@ -38,8 +48,17 @@ public class Sect extends GameObject {
 	}
 	
 	private void moveTo(Point dir) {
+		adjustDirection(dir);
 		center.x += dir.x;
 		center.y += dir.y;
+	}
+
+	private void adjustDirection(Point dir) {
+		if(random.v() > 0.5 && dir.x != 0){
+			dir.y = 0;
+		}else if (random.v() <= 0.5 && dir.y != 0){
+			dir.x = 0;
+		}
 	}
 
 

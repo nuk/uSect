@@ -3,7 +3,11 @@ package org.unbiquitous.games.uSect;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObject;
@@ -21,6 +25,11 @@ public class Environment extends GameObject {
 	List<Nutrient> nutrients = new ArrayList<Nutrient>();
 	List<Sect> sects = new ArrayList<Sect>();
 
+	public Environment() {
+		this(new DeviceStats());
+	}
+	
+	
 	public Environment(DeviceStats deviceStats) {
 		this.deviceStats = deviceStats;
 		createBackground();
@@ -32,23 +41,42 @@ public class Environment extends GameObject {
 		background = new Rectangle(center, Color.WHITE, screen.getWidth(), screen.getHeight());
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private Map<Sect, Set<Nutrient>> notificationTable = new HashMap();
+	
 	public void update() {
 		if(random.v() >= chancesOfNutrients()){
 			addNutrient();
 		}
 		for(Sect s : sects){
+			for(Nutrient n : nutrients){
+				if(! notificationTable.get(s).contains(n)){
+					s.onNutrientOnSight(n); 
+					notificationTable.get(s).add(n);
+				};
+			}
 			s.update();
 		}
 	}
 
-	protected void addNutrient() {
+	protected Nutrient addNutrient() {
 		int x = (int) (Math.random()*screen.getWidth());
 		int y = (int) (Math.random()*screen.getHeight());
-		nutrients.add(new Nutrient(new Point(x, y)));
+		Point center = new Point(x, y);
+		return addNutrient(center);
+	}
+
+
+	protected Nutrient addNutrient(Point center) {
+		Nutrient n = new Nutrient(center);
+		nutrients.add(n);
+		return n;
 	}
 	
-	protected void addSect(Sect s) {
+	protected Sect addSect(Sect s) {
 		sects.add(s);
+		notificationTable.put(s, new HashSet<Nutrient>());
+		return s;
 	}
 
 	private double chancesOfNutrients() {
