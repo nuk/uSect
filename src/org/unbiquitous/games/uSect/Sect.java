@@ -2,6 +2,8 @@ package org.unbiquitous.games.uSect;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.Comparator;
+import java.util.TreeSet;
 
 import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
@@ -53,9 +55,10 @@ public class Sect extends GameObject {
 	}
 
 	private void adjustDirection(Point dir) {
-		if(random.v() > 0.5 && dir.x != 0){
+		double lottery = random.v();
+		if(lottery > 0.5 && dir.x != 0){
 			dir.y = 0;
-		}else if (random.v() <= 0.5 && dir.y != 0){
+		}else if (lottery <= 0.5 && dir.y != 0){
 			dir.x = 0;
 		}
 	}
@@ -70,10 +73,16 @@ public class Sect extends GameObject {
 
 class Herbivore implements Sect.Behaviour{
 	protected Nutrient nutrient;
+	protected TreeSet<Nutrient> nutrientsInSight;
 	private Sect sect;
 	
 	public void init(Sect sect, RandomGenerator random) {
 		this.sect = sect;
+		nutrientsInSight = new TreeSet<Nutrient>(new Comparator<Nutrient>() {
+			public int compare(Nutrient o1, Nutrient o2) {
+				return distanceTo(o1) - distanceTo(o2);
+			}
+		});
 	}
 
 	public void update() {
@@ -99,8 +108,13 @@ class Herbivore implements Sect.Behaviour{
 	}
 	
 	public void onNutrientInSight(Nutrient n){
-		if(nutrient == null || distanceTo(n) < distanceTo(nutrient)){
-			this.nutrient = n;
+		if(nutrient == null){
+			nutrient = n;
+		}else if(distanceTo(n) < distanceTo(nutrient)){
+			nutrientsInSight.add(nutrient);
+			nutrient = n;
+		}else{
+			nutrientsInSight.add(n);
 		}
 	}
 
@@ -109,8 +123,9 @@ class Herbivore implements Sect.Behaviour{
 	}
 
 	public void onNutrientAbsorved(Nutrient n) {
-		// TODO Auto-generated method stub
-		
+		if(!nutrientsInSight.isEmpty()){
+			nutrient = nutrientsInSight.pollFirst();
+		}
 	}
 	
 }

@@ -57,10 +57,10 @@ public class Environment_NotifiesSectsAboutEvents {
 				count[0]++;
 			}
 		};
-		s.center(new Point(10,10));
+		s.center(new Point(9,10));
 		e.addSect(s);
 		
-		for(int i = 0; i < 4; i++){
+		for(int i = 0; i < 5; i++){
 			e.update();
 		}
 		assertThat(count[0]).isEqualTo(0);
@@ -73,5 +73,7 @@ public class Environment_NotifiesSectsAboutEvents {
 		e.update();
 		assertThat(count[0]).isEqualTo(1);
 	}
+	
+	//TODO: notify every Sect in sight of nutrient absortion 
 
 }

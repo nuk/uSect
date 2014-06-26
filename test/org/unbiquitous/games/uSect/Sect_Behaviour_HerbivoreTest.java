@@ -74,10 +74,24 @@ public class Sect_Behaviour_HerbivoreTest {
 	
 	@Test public void goesAfterTheNearestNutrient(){
 		e.addNutrient(new Point(20,20));
+		e.addNutrient(new Point(40,40));
 		Nutrient n1 = e.addNutrient(new Point(5,5));
 		Sect s =  e.addSect(new Sect(new Point(10,10)));
 		
 		for (int i = 0; i < 10; i++){
+			e.update();
+		}
+		
+		assertThat(s.center).isEqualTo(n1.center);
+	}
+	
+	@Test public void afterAnutrientIsGoneMustChaseTheClosesInSight(){
+		Nutrient n1 = e.addNutrient(new Point(20,20));
+		e.addNutrient(new Point(40,40));
+		e.addNutrient(new Point(5,5));
+		Sect s =  e.addSect(new Sect(new Point(10,10)));
+		
+		for (int i = 0; i < 10+4+30; i++){
 			e.update();
 		}
 		
