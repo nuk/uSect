@@ -15,8 +15,7 @@ public class DeviceStats {
 			cpuInfo = s.getCpuInfoList()[0];
 			runtime = Runtime.getRuntime();
 		} catch (SigarException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 	

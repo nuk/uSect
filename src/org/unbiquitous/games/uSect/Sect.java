@@ -13,6 +13,7 @@ public class Sect extends GameObject {
 	protected Point center;
 	protected RandomGenerator random =  new RandomGenerator();
 	private Behaviour behaviour;
+	private Point currentDir;
 	
 	public interface Behaviour {
 		public void init(Sect s, RandomGenerator random);
@@ -49,6 +50,7 @@ public class Sect extends GameObject {
 	}
 
 	protected void moveTo(Point dir) {
+		currentDir = dir;
 		adjustDirection(dir);
 		center.x += dir.x;
 		center.y += dir.y;
@@ -64,7 +66,28 @@ public class Sect extends GameObject {
 	}
 	
 	protected void render(GameRenderers renderers) {
-		new SimetricShape(center, Color.RED, 30,3).render();
+		SimetricShape triangle = new SimetricShape(center, Color.RED, 30,3);
+		triangle.rotate(rotationAngle());
+		triangle.render();
+	}
+
+	private float rotationAngle() {
+		if(      new Point(+1, 0).equals(currentDir)){
+			return -45;
+		}else if(new Point(+1,-1).equals(currentDir)){
+			return -90;
+		}else if(new Point( 0,-1).equals(currentDir)){
+			return -135;
+		}else if(new Point(-1,-1).equals(currentDir)){
+			return -180;
+		}else if(new Point(-1, 0).equals(currentDir)){
+			return +135;
+		}else if(new Point(-1,+1).equals(currentDir)){
+			return +90;
+		}else if(new Point( 0,+1).equals(currentDir)){
+			return +45;
+		}
+		return 0;
 	}
 
 	protected void wakeup(Object... args) {}

@@ -44,7 +44,7 @@ public class Starter extends GameObjectTreeScene {
 	@SuppressWarnings({ "unchecked", "serial" })
 	public static void main(String[] args) {
 		Game.run(new GameSettings() {
-			{ // TODO: Game Settings could have helper methods
+			{ 
 				put("first_scene", Starter.class);
 				put("input_managers", Arrays.asList(MouseManager.class));
 				put("output_managers", Arrays.asList(ScreenManager.class));
