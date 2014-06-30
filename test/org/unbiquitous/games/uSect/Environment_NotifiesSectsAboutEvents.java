@@ -1,6 +1,6 @@
 package org.unbiquitous.games.uSect;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.awt.Point;
 
@@ -21,9 +21,7 @@ public class Environment_NotifiesSectsAboutEvents {
 	
 	@Test public void notifiesSectOfNutrientPresence(){
 		e.addNutrient();
-		Sect s = new Sect();
-		s.center(new Point(10,10));
-		e.addSect(s);
+		Sect s = e.addSect(new Sect(),new Point(10,10));
 		
 		e.update();
 		
@@ -33,13 +31,11 @@ public class Environment_NotifiesSectsAboutEvents {
 	@Test public void notifiesSectOfNutrientPresenceOnlyOnce(){
 		e.addNutrient();
 		final int[] count = new int[]{0};
-		Sect s = new Sect(){
+		e.addSect(new Sect(){
 			protected void enteredSight(Something n) {
 				count[0]++;
 			}
-		};
-		s.center(new Point(10,10));
-		e.addSect(s);
+		},new Point(10,10));
 		
 		for(int i = 0; i < 10; i++){
 			e.update();
@@ -51,13 +47,11 @@ public class Environment_NotifiesSectsAboutEvents {
 	@Test public void ifASectStaysMoreThan5turnsOnTopOfANutrientItEatsIt(){
 		Nutrient n = e.addNutrient(new Point(10,10));
 		final int[] count = new int[]{0};
-		Sect s = new Sect(){
+		e.addSect(new Sect(){
 			protected void leftSight(Something n) {
 				count[0]++;
 			}
-		};
-		s.center(new Point(9,10));
-		e.addSect(s);
+		},new Point(9,10));
 		
 		for(int i = 0; i < 5; i++){
 			e.update();
@@ -76,21 +70,21 @@ public class Environment_NotifiesSectsAboutEvents {
 	@Test public void notifiesAllSectsInSightAboutTheNutrientThatHasBeenEaten(){
 		Nutrient n = e.addNutrient(new Point(10,10));
 		final int[] count = new int[]{0,0,0};
-		e.addSect(new Sect(new Point(9,10), new Herbivore()){
+		e.addSect(new Sect(new Herbivore()){
 			protected void leftSight(Something n) {
 				count[0]++;
 			}
-		});
-		e.addSect(new Sect(new Point(40,40), new Herbivore()){
+		},new Point(9,10));
+		e.addSect(new Sect(new Herbivore()){
 			protected void leftSight(Something n) {
 				count[1]++;
 			}
-		});
-		e.addSect(new Sect(new Point(100,100), new Herbivore()){
+		},new Point(40,40));
+		e.addSect(new Sect(new Herbivore()){
 			protected void leftSight(Something n) {
 				count[2]++;
 			}
-		});
+		},new Point(100,100));
 		
 		
 		for(int i = 0; i <= 5; i++){
@@ -104,21 +98,17 @@ public class Environment_NotifiesSectsAboutEvents {
 	
 	@Test public void whenTheresAsectNotifiesOthers(){
 		final int[] count = new int[]{0,0};
-		Sect s1 = new Sect(){
+		e.addSect(new Sect(){
 			protected void enteredSight(Something n) {
 				count[0]++;
 			}
-		};
-		s1.center(new Point(9,10));
-		Sect s2 = new Sect(){
+		},new Point(9,10));
+		e.addSect(new Sect(){
 			protected void enteredSight(Something n) {
 				count[1]++;
 			}
-		};
-		s2.center(new Point(90,100));
-		e.addSect(s1);
-		e.addSect(s2);
-		e.addSect(new Sect(new Point(0,0), new Herbivore()));
+		},new Point(90,100));
+		e.addSect(new Sect(),new Point(0,0));
 		
 		e.update();
 		assertThat(count[0]).isEqualTo(2);
@@ -132,8 +122,8 @@ public class Environment_NotifiesSectsAboutEvents {
 	@Test public void whenTwoSectsHasHalfChanceOfNotMoving(){
 		e.addNutrient(new Point(10,10));
 		e.random.setvalue(0.49);
-		Sect s1 = e.addSect(new Sect(new Point(10,10), new Herbivore()));
-		Sect s2 = e.addSect(new Sect(new Point(10+(s1.radius()),10), new Herbivore()));
+		Sect s1 = e.addSect(new Sect(),new Point(10,10));
+		Sect s2 = e.addSect(new Sect(),new Point(10+(s1.radius()),10));
 		
 		e.update();
 		
@@ -143,8 +133,8 @@ public class Environment_NotifiesSectsAboutEvents {
 	@Test public void whenTwoSectsHasHalfChanceOfBackingOf(){
 		e.addNutrient(new Point(10,10));
 		e.random.setvalue(0.51);
-		Sect s1 = e.addSect(new Sect(new Point(10,10), new Herbivore()));
-		Sect s2 = e.addSect(new Sect(new Point(10+(s1.radius()),10), new Herbivore()));
+		Sect s1 = e.addSect(new Sect(),new Point(10,10));
+		Sect s2 = e.addSect(new Sect(),new Point(10+(s1.radius()),10));
 		
 		e.update();
 		

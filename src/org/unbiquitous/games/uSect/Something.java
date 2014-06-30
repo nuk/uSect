@@ -7,18 +7,18 @@ class Something {
 	enum Type {NUTRIENT,SECT}
 	
 	private UUID id; 
-	private Point center;
 	private Type type;
+	private Environment env;
 	
-	public Something(UUID id, Point center, Type type) {
+	public Something(UUID id, Environment env, Type type) {
 		super();
 		this.id = id;
-		this.center = center;
+		this.env = env;
 		this.type = type;
 	}
 
 	public UUID id() {		return id;}
-	public Point center() {	return center;}
+	public Point center() {	return env.position(id);}
 	public Type type() {	return type;}
 
 	@Override

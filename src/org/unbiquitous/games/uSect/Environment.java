@@ -3,9 +3,12 @@ package org.unbiquitous.games.uSect;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObject;
@@ -19,14 +22,15 @@ public class Environment extends GameObject {
 	private Screen screen;
 	protected RandomGenerator random =  new RandomGenerator();
 	Rectangle background;
+	
 	List<Nutrient> nutrients = new ArrayList<Nutrient>();
 	List<Sect> sects = new ArrayList<Sect>();
 	List<Sect> newSects = new ArrayList<Sect>();
+	Map<UUID,Point> positionMap = new HashMap<UUID,Point>();
 
 	public Environment() {
 		this(new DeviceStats());
 	}
-	
 	
 	public Environment(DeviceStats deviceStats) {
 		this.deviceStats = deviceStats;
@@ -62,7 +66,7 @@ public class Environment extends GameObject {
 	}
 
 	private void checkEating(Sect s, Nutrient n) {
-		if(n.center.equals(s.center())){
+		if(n.center().equals(s.center())){
 			n.inContactWith(s);
 		}
 	}
@@ -76,7 +80,7 @@ public class Environment extends GameObject {
 	private void checkForNewSects(Sect s) {
 		for(Sect s2 : newSects){
 			if(!s.equals(s2)){
-				s.enteredSight(new Something(s2.id, s2.center(), Something.Type.SECT));
+				s.enteredSight(new Something(s2.id, this, Something.Type.SECT));
 			}
 		}
 	}
@@ -89,14 +93,25 @@ public class Environment extends GameObject {
 	}
 
 
-	protected Nutrient addNutrient(Point center) {
-		Nutrient n = new Nutrient(center);
+	protected Nutrient addNutrient(Point position) {
+		Nutrient n = new Nutrient();
+		n.setEnv(this);
 		nutrients.add(n);
+		positionMap.put(n.id, position);
 		return n;
 	}
 	
-	protected Sect addSect(Sect s) {
+	public Point position(UUID objectId){
+		if(!positionMap.containsKey(objectId)){
+			return null;
+		}
+		return (Point) positionMap.get(objectId).clone();
+	}
+	
+	protected Sect addSect(Sect s, Point position) {
 		s.setEnv(this);
+//		s.center(position);
+		positionMap.put(s.id, position);
 		sects.add(s);
 		newSects.add(s);
 		return s;
@@ -130,7 +145,7 @@ public class Environment extends GameObject {
 
 	public void moveTo(Sect sect, Point dir) {
 		adjustDirection(dir);
-		sect.center( determineFinalPosition(sect, dir));
+		positionMap.put(sect.id, determineFinalPosition(sect, dir));
 	}
 
 	private void adjustDirection(Point dir) {

@@ -31,12 +31,17 @@ public class Starter extends GameObjectTreeScene {
 		GameComponents.put(Screen.class, screen);
 		
 		Environment e = new Environment(new DeviceStats());
-		e.addSect(new Sect(new Point(), new Herbivore()));
-		e.addSect(new Sect(new Point(screen.getWidth(),0), new Herbivore()));
-		e.addSect(new Sect(new Point(0,screen.getHeight()), new Herbivore()));
-		e.addSect(new Sect(new Point(screen.getWidth(),screen.getHeight()), new Herbivore()));
+		e.addSect(new Sect(new Herbivore()),new Point());
+		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth(),0));
+		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth()/2,0));
+		e.addSect(new Sect(new Herbivore()),new Point(0,screen.getHeight()));
+		e.addSect(new Sect(new Herbivore()),new Point(0,screen.getHeight()/2));
+		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth(),screen.getHeight()));
+		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth()/2,screen.getHeight()));
+		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth(),screen.getHeight()/2));
 		
-		e.addSect(new Sect(new Point(screen.getWidth()/2,screen.getHeight()/2), new Carnivore()));
+		e.addSect(new Sect(new Carnivore()),new Point(screen.getWidth()/4,screen.getHeight()/4));
+		e.addSect(new Sect(new Carnivore()),new Point(3*screen.getWidth()/4,3*screen.getHeight()/4));
 		
 		add(e);
 	}

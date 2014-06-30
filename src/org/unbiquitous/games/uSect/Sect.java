@@ -11,7 +11,6 @@ import org.unbiquitous.uImpala.jse.util.shapes.SimetricShape;
 
 public class Sect extends EnvironmentObject {
 	private Behaviour behaviour;
-	private Point center;
 	private Point currentDir;
 	private Environment env;
 	
@@ -26,31 +25,21 @@ public class Sect extends EnvironmentObject {
 	}
 	
 	public Sect() {
-		this(new Point(), new Herbivore());
+		this(new Herbivore());
 	}
 	
-	public Sect(Point center, Behaviour behaviour) {
-		center(center);
+	public Sect(Behaviour behaviour) {
 		if(behaviour instanceof Carnivore){
-			shape = new SimetricShape(center, new Color(211, 84, 0,200), radius,5);
+			shape = new SimetricShape(new Point(), new Color(211, 84, 0,200), radius,5);
 		}else{
-			shape = new SimetricShape(center, new Color(41, 128, 185,200), radius,7);
+			shape = new SimetricShape(new Point(), new Color(41, 128, 185,200), radius,7);
 		}
 		this.behaviour = behaviour;
 		behaviour.init(this);
 	}
 	
-	public void center(Point center) {
-		if(this.center == null){
-			this.center = (Point) center.clone();
-		}else{
-			this.center.x = center.x;
-			this.center.y = center.y;
-		}
-	}
-	
 	public Point center() {
-		return this.center;
+		return env.position(id);
 	}
 
 	public void setEnv(Environment env) {
@@ -79,7 +68,7 @@ public class Sect extends EnvironmentObject {
 	}
 
 	protected void render(GameRenderers renderers) {
-		shape.center(center);
+		shape.center(center());
 		shape.rotate(rotationAngle());
 		shape.render();
 	}
@@ -183,5 +172,4 @@ class Carnivore extends TargetFocused{
 	public void update() {
 		super.update();
 	}
-	
 }

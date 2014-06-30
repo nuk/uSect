@@ -11,19 +11,27 @@ import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.jse.util.shapes.Circle;
 
 class Nutrient extends EnvironmentObject{
-	Point center;
-	Set<Sect> targetOf;
+	private Set<Sect> targetOf;
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	Map<Sect, Integer> absortionTable = new HashMap();
+	private Map<Sect, Integer> absortionTable = new HashMap();
+	
 	private int radius = 10;
+	private Environment env;
 	
 	boolean hasBeenConsumed = false;
-	
-	public Nutrient(Point center) {
-		this.center = center;
+
+	public Nutrient() {
 		targetOf = new HashSet<Sect>();
 	}
 
+	public void setEnv(Environment env) {
+		this.env = env;
+	}
+	
+	public Point center() {
+		return env.position(id);
+	}
+	
 	public void inContactWith(Sect s) {
 		absortionTable.put(s, 1+absortionTable.get(s));
 		if(absortionTable.get(s) >= 5){
@@ -34,19 +42,19 @@ class Nutrient extends EnvironmentObject{
 
 	private void notifyAbsortionToAll() {
 		for(Sect s1: targetOf){
-			s1.leftSight(new Something(id, center, Something.Type.NUTRIENT));
+			s1.leftSight(new Something(id, env, Something.Type.NUTRIENT));
 		}
 	}
 
 	public void insightOf(Sect s) {
 		if(! targetOf.contains(s)){
-			s.enteredSight(new Something(id, center, Something.Type.NUTRIENT)); 
+			s.enteredSight(new Something(id, env, Something.Type.NUTRIENT)); 
 			targetOf.add(s);
 			absortionTable.put(s, 0);
 		};
 	}
 
 	protected void render(GameRenderers renderers) {
-		new Circle(center, Color.GREEN.darker(), radius).render();
+		new Circle(center(), Color.GREEN.darker(), radius).render();
 	}
 }
