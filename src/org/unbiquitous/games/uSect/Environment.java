@@ -44,26 +44,40 @@ public class Environment extends GameObject {
 			addNutrient();
 		}
 		for(Sect s : sects){
-			Set<Nutrient> forRemoval = new HashSet<Nutrient>();
-			for(Nutrient n : nutrients){
-				n.insightOf(s);
-				if(n.center.equals(s.center)){
-					n.inContactWith(s);
-				}
-				if(n.hasBeenConsumed){
-					forRemoval.add(n);
-				}
-			}
-			nutrients.removeAll(forRemoval); // FIXME: what about other Sects?
-			
-			for(Sect s2 : newSects){
-				if(!s.equals(s2)){
-					s.enteredSight(new Something(s2.id, s2.center, Something.Type.SECT));
-				}
-			}
-			newSects.clear(); // FIXME: what about other Sects?
-			
+			checkNutrients(s);
+			checkForNewSects(s);
 			s.update();
+		}
+		newSects.clear(); 
+	}
+
+	private void checkNutrients(Sect s) {
+		Set<Nutrient> forRemoval = new HashSet<Nutrient>();
+		for(Nutrient n : nutrients){
+			n.insightOf(s);
+			checkEating(s, n);
+			checkConsumtion(forRemoval, n);
+		}
+		nutrients.removeAll(forRemoval);
+	}
+
+	private void checkEating(Sect s, Nutrient n) {
+		if(n.center.equals(s.center)){
+			n.inContactWith(s);
+		}
+	}
+
+	private void checkConsumtion(Set<Nutrient> forRemoval, Nutrient n) {
+		if(n.hasBeenConsumed){
+			forRemoval.add(n);
+		}
+	}
+
+	private void checkForNewSects(Sect s) {
+		for(Sect s2 : newSects){
+			if(!s.equals(s2)){
+				s.enteredSight(new Something(s2.id, s2.center, Something.Type.SECT));
+			}
 		}
 	}
 
