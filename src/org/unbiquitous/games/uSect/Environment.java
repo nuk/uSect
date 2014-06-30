@@ -45,15 +45,27 @@ public class Environment extends GameObject {
 	}
 
 	public void update() {
+		updateNutrients();
+		updateSects();
+		newSects.clear(); 
+	}
+
+	private void updateNutrients() {
 		if(random.v() >= chancesOfNutrients()){
 			addNutrient();
 		}
+	}
+
+	private void updateSects() {
 		for(Sect s : sects){
-			checkNutrients(s);
-			checkForNewSects(s);
-			s.update();
+			updateSect(s);
 		}
-		newSects.clear(); 
+	}
+
+	private void updateSect(Sect s) {
+		checkNutrients(s);
+		checkForNewSects(s);
+		s.update();
 	}
 
 	private void checkNutrients(Sect s) {
