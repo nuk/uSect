@@ -26,8 +26,8 @@ public class Sect_Behaviour_HerbivoreTest {
 		e.update();
 		e.update(); 
 		
-		assertThat(s.center.x).isEqualTo(nutrient.center.x);
-		assertThat(s.center.y).isEqualTo(nutrient.center.y);
+		assertThat(s.center().x).isEqualTo(nutrient.center.x);
+		assertThat(s.center().y).isEqualTo(nutrient.center.y);
 	}
 	
 	@Test public void goesMovementIsAlwaysOnePixelAtAtimeRandomly(){
@@ -38,12 +38,12 @@ public class Sect_Behaviour_HerbivoreTest {
 		e.random.setvalue(0.51);
 		e.update(); 
 		
-		assertThat(s.center).isEqualTo(new Point(11,10));
+		assertThat(s.center()).isEqualTo(new Point(11,10));
 
 		e.random.setvalue(0.49);
 		e.update(); 
 		
-		assertThat(s.center).isEqualTo(new Point(11,11));
+		assertThat(s.center()).isEqualTo(new Point(11,11));
 	}
 	
 	@Test public void ifTheresOnlyOneDirectionGoesThatWay(){
@@ -52,12 +52,12 @@ public class Sect_Behaviour_HerbivoreTest {
 		Sect s1 = e.addSect(new Sect(new Point(40, 10), new Herbivore()));
 		e.random.setvalue(0.51);
 		e.update(); 
-		assertThat(s1.center).isEqualTo(new Point(40,11));
+		assertThat(s1.center()).isEqualTo(new Point(40,11));
 
 		Sect s2 = e.addSect(new Sect(new Point(10, 40), new Herbivore()));
 		e.random.setvalue(0.49);
 		e.update(); 
-		assertThat(s2.center).isEqualTo(new Point(11,40));
+		assertThat(s2.center()).isEqualTo(new Point(11,40));
 	}
 	
 	@Test public void stopsWalkingAfterEatingNutrient(){
@@ -66,8 +66,8 @@ public class Sect_Behaviour_HerbivoreTest {
 		Sect s = e.addSect(new Sect(new Point(30,15), new Herbivore()));
 		executeThisManyTurns(30);
 		
-		assertThat(s.center.x).isEqualTo(nutrient.center.x);
-		assertThat(s.center.y).isEqualTo(nutrient.center.y);
+		assertThat(s.center().x).isEqualTo(nutrient.center.x);
+		assertThat(s.center().y).isEqualTo(nutrient.center.y);
 	}
 	
 	@Test public void goesAfterTheNearestNutrient(){
@@ -78,7 +78,7 @@ public class Sect_Behaviour_HerbivoreTest {
 		
 		executeThisManyTurns(10);
 		
-		assertThat(s.center).isEqualTo(n1.center);
+		assertThat(s.center()).isEqualTo(n1.center);
 	}
 
 	@Test public void dontChaseDeadNutrients(){
@@ -89,7 +89,7 @@ public class Sect_Behaviour_HerbivoreTest {
 		
 		executeThisManyTurns(30);
 		
-		assertThat(s.center).isEqualTo(n2.center);
+		assertThat(s.center()).isEqualTo(n2.center);
 	}
 	
 	@Test public void afterAnutrientIsGoneMustChaseTheClosesInSight(){
@@ -101,7 +101,7 @@ public class Sect_Behaviour_HerbivoreTest {
 		
 		executeThisManyTurns(10+4+30+4+40);
 		
-		assertThat(s.center).isEqualTo(n1.center);
+		assertThat(s.center()).isEqualTo(n1.center);
 	}
 	
 	@Test public void doesNotBotherByNutrientsEatenThatAreNotTheTarget(){
@@ -112,8 +112,8 @@ public class Sect_Behaviour_HerbivoreTest {
 		
 		executeThisManyTurns(100);
 		
-		assertThat(s1.center).isNotEqualTo(n1.center);
-		assertThat(s2.center).isEqualTo(n1.center);
+		assertThat(s1.center()).isNotEqualTo(n1.center);
+		assertThat(s2.center()).isEqualTo(n1.center);
 	}
 
 	private void executeThisManyTurns(int numberOfTurns) {

@@ -11,7 +11,7 @@ import org.unbiquitous.uImpala.jse.util.shapes.SimetricShape;
 
 public class Sect extends EnvironmentObject {
 	private Behaviour behaviour;
-	protected Point center;
+	private Point center;
 	private Point currentDir;
 	private Environment env;
 	
@@ -29,15 +29,28 @@ public class Sect extends EnvironmentObject {
 		this(new Point(), new Herbivore());
 	}
 	
-	public Sect(Point center, Herbivore behaviour) {
+	public Sect(Point center, Behaviour behaviour) {
 		center(center);
-		shape = new SimetricShape(center, new Color(41, 128, 185), radius,7);
+		if(behaviour instanceof Carnivore){
+			shape = new SimetricShape(center, new Color(211, 84, 0,200), radius,5);
+		}else{
+			shape = new SimetricShape(center, new Color(41, 128, 185,200), radius,7);
+		}
 		this.behaviour = behaviour;
 		behaviour.init(this);
 	}
 	
 	public void center(Point center) {
-		this.center = (Point) center.clone();
+		if(this.center == null){
+			this.center = (Point) center.clone();
+		}else{
+			this.center.x = center.x;
+			this.center.y = center.y;
+		}
+	}
+	
+	public Point center() {
+		return this.center;
 	}
 
 	public void setEnv(Environment env) {
@@ -53,9 +66,7 @@ public class Sect extends EnvironmentObject {
 	}
 	
 	protected void enteredSight(Something o){
-		if(o.type() == Something.Type.NUTRIENT){
-			behaviour.enteredViewRange(o);
-		}
+		behaviour.enteredViewRange(o);
 	}
 	
 	protected void leftSight(Something o) {
@@ -94,18 +105,18 @@ public class Sect extends EnvironmentObject {
 
 }
 
-class Herbivore implements Sect.Behaviour{
-	protected LinkedList<Something> nutrientsInSight;
-	private Sect sect;
+abstract class TargetFocused  implements Sect.Behaviour{
+	protected LinkedList<Something> targetsInSight;
+	protected Sect sect;
 	
 	public void init(Sect sect) {
 		this.sect = sect;
-		nutrientsInSight = new LinkedList<Something>();
+		targetsInSight = new LinkedList<Something>();
 	}
 
 	public void update() {
 		if (hasATarget()){
-			sect.moveTo(nutrientDirection());
+			sect.moveTo(targetDirection());
 		}
 	}
 
@@ -113,10 +124,10 @@ class Herbivore implements Sect.Behaviour{
 		return target() != null;
 	}
 
-	private Point nutrientDirection() {
+	private Point targetDirection() {
 		Point dir = new Point();
-		dir.x = dimensionDirection(sect.center.x,target().center().x);
-		dir.y = dimensionDirection(sect.center.y,target().center().y);
+		dir.x = dimensionDirection(sect.center().x,target().center().x);
+		dir.y = dimensionDirection(sect.center().y,target().center().y);
 		return dir;
 	}
 
@@ -124,29 +135,53 @@ class Herbivore implements Sect.Behaviour{
 		int direction = oringin > destination  ? -1 : +1;
 		return oringin == destination ? 0 : direction;
 	}
-	
-	public void enteredViewRange(Something n){
-		nutrientsInSight.add(n);
-		Collections.sort(nutrientsInSight, new Comparator<Something>() {
+
+	protected void sortTargets() {
+		Collections.sort(targetsInSight, new Comparator<Something>() {
 			public int compare(Something o1, Something o2) {
 				return distanceTo(o1) - distanceTo(o2);
 			}
 		});
 	}
 
-	private Something target(){
-		if(nutrientsInSight.isEmpty()){
+	protected Something target(){
+		if(targetsInSight.isEmpty()){
 			return null;
 		}
-		return nutrientsInSight.getFirst();
+		return targetsInSight.getFirst();
 	}
 	
-	private int distanceTo(Something n) {
-		return Math.abs(n.center().x-sect.center.x) + Math.abs(n.center().y-sect.center.y);
+	protected int distanceTo(Something n) {
+		return Math.abs(n.center().x-sect.center().x) + Math.abs(n.center().y-sect.center().y);
 	}
 
 	public void leftViewRange(Something n) {
-		nutrientsInSight.remove(n);
+		targetsInSight.remove(n);
 	}
+}
 
+class Herbivore extends TargetFocused{
+	
+	public void enteredViewRange(Something o){
+		if(o.type() == Something.Type.NUTRIENT){
+			targetsInSight.add(o);
+		}
+		sortTargets();
+	}
+}
+
+class Carnivore extends TargetFocused{
+
+	public void enteredViewRange(Something o){
+		if(o.type() == Something.Type.SECT){
+			targetsInSight.add(o);
+		}
+		sortTargets();
+	}
+	
+	@Override
+	public void update() {
+		super.update();
+	}
+	
 }

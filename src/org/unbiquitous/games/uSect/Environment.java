@@ -62,7 +62,7 @@ public class Environment extends GameObject {
 	}
 
 	private void checkEating(Sect s, Nutrient n) {
-		if(n.center.equals(s.center)){
+		if(n.center.equals(s.center())){
 			n.inContactWith(s);
 		}
 	}
@@ -76,7 +76,7 @@ public class Environment extends GameObject {
 	private void checkForNewSects(Sect s) {
 		for(Sect s2 : newSects){
 			if(!s.equals(s2)){
-				s.enteredSight(new Something(s2.id, s2.center, Something.Type.SECT));
+				s.enteredSight(new Something(s2.id, s2.center(), Something.Type.SECT));
 			}
 		}
 	}
@@ -130,7 +130,7 @@ public class Environment extends GameObject {
 
 	public void moveTo(Sect sect, Point dir) {
 		adjustDirection(dir);
-		sect.center = determineFinalPosition(sect, dir);
+		sect.center( determineFinalPosition(sect, dir));
 	}
 
 	private void adjustDirection(Point dir) {
@@ -143,21 +143,21 @@ public class Environment extends GameObject {
 	}
 	
 	private Point determineFinalPosition(Sect sect, Point dir) {
-		Point forwardPosition = new Point(sect.center.x + dir.x, sect.center.y + dir.y);
+		Point forwardPosition = new Point(sect.center().x + dir.x, sect.center().y + dir.y);
 		if(!hasColided(sect, forwardPosition)){
 			return forwardPosition;
 		}else if (random.v() > 0.5){
-			Point backwardsPosition = new Point(sect.center.x - dir.x, sect.center.y - dir.y);
+			Point backwardsPosition = new Point(sect.center().x - dir.x, sect.center().y - dir.y);
 			return backwardsPosition;
 		}
-		return sect.center;
+		return sect.center();
 	}
 
 
 	private boolean hasColided(Sect sect, Point newPos) {
 		boolean hasColided = false;
 		for(Sect s: sects){
-			if(!sect.equals(s) && distanceOf(s.center, newPos) < sect.radius()){
+			if(!sect.equals(s) && distanceOf(s.center(), newPos) < sect.radius()){
 				hasColided = true;
 			}
 		}
