@@ -26,15 +26,17 @@ public class Starter extends GameObjectTreeScene {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
-		screen.open("uSect", width, height, false, null);
+		screen.open("uSect", width, height-60, false, null);
 
 		GameComponents.put(Screen.class, screen);
 		
 		Environment e = new Environment(new DeviceStats());
-		e.addSect(new Sect(new Point()));
-		e.addSect(new Sect(new Point(screen.getWidth(),0)));
-		e.addSect(new Sect(new Point(0,screen.getHeight())));
-		e.addSect(new Sect(new Point(screen.getWidth(),screen.getHeight())));
+		e.addSect(new Sect(new Point(), new Herbivore()));
+		e.addSect(new Sect(new Point(screen.getWidth(),100), new Herbivore()));
+		e.addNutrient(new Point(screen.getWidth()-10,45));
+		e.addSect(new Sect(new Point(screen.getWidth(),0), new Herbivore()));
+		e.addSect(new Sect(new Point(0,screen.getHeight()), new Herbivore()));
+		e.addSect(new Sect(new Point(screen.getWidth(),screen.getHeight()), new Herbivore()));
 		add(e);
 	}
 	

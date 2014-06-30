@@ -25,6 +25,7 @@ public class Environment extends GameObject {
 	Rectangle background;
 	List<Nutrient> nutrients = new ArrayList<Nutrient>();
 	List<Sect> sects = new ArrayList<Sect>();
+	List<Sect> newSects = new ArrayList<Sect>();
 
 	public Environment() {
 		this(new DeviceStats());
@@ -47,7 +48,6 @@ public class Environment extends GameObject {
 			addNutrient();
 		}
 		for(Sect s : sects){
-			
 			Set<Nutrient> forRemoval = new HashSet<Nutrient>();
 			for(Nutrient n : nutrients){
 				n.insightOf(s);
@@ -58,7 +58,14 @@ public class Environment extends GameObject {
 					forRemoval.add(n);
 				}
 			}
-			nutrients.removeAll(forRemoval);
+			nutrients.removeAll(forRemoval); // FIXME: what about other Sects?
+			
+			for(Sect s2 : newSects){
+				if(!s.equals(s2)){
+					s.enteredSight(new Something(s2.id, s2.center, Something.Type.SECT));
+				}
+			}
+			newSects.clear(); // FIXME: what about other Sects?
 			
 			s.update();
 		}
@@ -79,7 +86,9 @@ public class Environment extends GameObject {
 	}
 	
 	protected Sect addSect(Sect s) {
+		s.setEnv(this);
 		sects.add(s);
+		newSects.add(s);
 		return s;
 	}
 
@@ -106,18 +115,49 @@ public class Environment extends GameObject {
 		}
 	}
 
-	@Override
-	protected void wakeup(Object... args) {
-		// TODO Auto-generated method stub
-		
+	protected void wakeup(Object... args) {}
+	protected void destroy() {}
+
+
+	public void moveTo(Sect sect, Point dir) {
+		adjustDirection(dir);
+		sect.center = determineFinalPosition(sect, dir);
 	}
 
-	@Override
-	protected void destroy() {
-		// TODO Auto-generated method stub
-		
+	private void adjustDirection(Point dir) {
+		double lottery = random.v();
+		if(lottery > 0.5 && dir.x != 0){
+			dir.y = 0;
+		}else if (lottery <= 0.5 && dir.y != 0){
+			dir.x = 0;
+		}
+	}
+	
+	private Point determineFinalPosition(Sect sect, Point dir) {
+		Point forwardPosition = new Point(sect.center.x + dir.x, sect.center.y + dir.y);
+		if(!hasColided(sect, forwardPosition)){
+			return forwardPosition;
+		}else if (random.v() > 0.5){
+			Point backwardsPosition = new Point(sect.center.x - dir.x, sect.center.y - dir.y);
+			return backwardsPosition;
+		}
+		return sect.center;
 	}
 
+
+	private boolean hasColided(Sect sect, Point newPos) {
+		boolean hasColided = false;
+		for(Sect s: sects){
+			if(!sect.equals(s) && distanceOf(s.center, newPos) < sect.radius()){
+				hasColided = true;
+			}
+		}
+		return hasColided;
+	}
+
+	private int distanceOf(Point origin, Point desttination) {
+		return Math.abs(origin.x-desttination.x) + Math.abs(origin.y-desttination.y);
+	}
 }
 
 class RandomGenerator{
@@ -142,8 +182,8 @@ abstract class EnvironmentObject extends GameObject {
 	protected void destroy() {}
 	
 	public boolean equals(Object obj) {
-		if(obj instanceof Nutrient){
-			return ((Nutrient)obj).id.equals(this.id) ;
+		if(obj instanceof EnvironmentObject){
+			return ((EnvironmentObject)obj).id.equals(this.id) ;
 		}
 		return false;
 	}

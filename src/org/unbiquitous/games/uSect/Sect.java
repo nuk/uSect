@@ -10,39 +10,52 @@ import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.jse.util.shapes.SimetricShape;
 
 public class Sect extends EnvironmentObject {
-	protected Point center;
-	protected RandomGenerator random =  new RandomGenerator();
 	private Behaviour behaviour;
+	protected Point center;
 	private Point currentDir;
+	private Environment env;
+	
 	private int radius = 30;
+	SimetricShape shape;
 	
 	public interface Behaviour {
-		public void init(Sect s, RandomGenerator random);
+		public void init(Sect s);
 		public void update();
 		public void enteredViewRange(Something o);
 		public void leftViewRange(Something o);
 	}
 	
 	public Sect() {
-		this(new Point());
+		this(new Point(), new Herbivore());
 	}
 	
-	public Sect(Point center) {
+	public Sect(Point center, Herbivore behaviour) {
 		center(center);
-		behaviour = new Herbivore();
-		behaviour.init(this, random);
+		shape = new SimetricShape(center, new Color(41, 128, 185), radius,7);
+		this.behaviour = behaviour;
+		behaviour.init(this);
 	}
 	
 	public void center(Point center) {
 		this.center = (Point) center.clone();
 	}
 
+	public void setEnv(Environment env) {
+		this.env = env;
+	}
+	
+	public int radius() {
+		return radius;
+	}
+	
 	protected void update() {
 		behaviour.update();
 	}
 	
 	protected void enteredSight(Something o){
-		behaviour.enteredViewRange(o);
+		if(o.type() == Something.Type.NUTRIENT){
+			behaviour.enteredViewRange(o);
+		}
 	}
 	
 	protected void leftSight(Something o) {
@@ -51,24 +64,13 @@ public class Sect extends EnvironmentObject {
 
 	protected void moveTo(Point dir) {
 		currentDir = dir;
-		adjustDirection(dir);
-		center.x += dir.x;
-		center.y += dir.y;
+		env.moveTo(this,dir);
 	}
 
-	private void adjustDirection(Point dir) {
-		double lottery = random.v();
-		if(lottery > 0.5 && dir.x != 0){
-			dir.y = 0;
-		}else if (lottery <= 0.5 && dir.y != 0){
-			dir.x = 0;
-		}
-	}
-	
 	protected void render(GameRenderers renderers) {
-		SimetricShape triangle = new SimetricShape(center, Color.RED, radius,3);
-		triangle.rotate(rotationAngle());
-		triangle.render();
+		shape.center(center);
+		shape.rotate(rotationAngle());
+		shape.render();
 	}
 
 	private float rotationAngle() {
@@ -96,7 +98,7 @@ class Herbivore implements Sect.Behaviour{
 	protected LinkedList<Something> nutrientsInSight;
 	private Sect sect;
 	
-	public void init(Sect sect, RandomGenerator random) {
+	public void init(Sect sect) {
 		this.sect = sect;
 		nutrientsInSight = new LinkedList<Something>();
 	}

@@ -22,7 +22,7 @@ public class Sect_Behaviour_HerbivoreTest {
 	@Test public void goesAfterANutrientAfterEachStep(){
 		Nutrient nutrient = e.addNutrient(new Point(20,20));
 		
-		Sect s = e.addSect(new Sect(new Point(21,21)));
+		Sect s = e.addSect(new Sect(new Point(21,21), new Herbivore()));
 		e.update();
 		e.update(); 
 		
@@ -33,37 +33,37 @@ public class Sect_Behaviour_HerbivoreTest {
 	@Test public void goesMovementIsAlwaysOnePixelAtAtimeRandomly(){
 		e.addNutrient(new Point(20,20));
 		
-		Sect s = e.addSect(new Sect(new Point(10, 10)));
+		Sect s = e.addSect(new Sect(new Point(10, 10), new Herbivore()));
 		
-		s.random.setvalue(0.51);
+		e.random.setvalue(0.51);
 		e.update(); 
 		
 		assertThat(s.center).isEqualTo(new Point(11,10));
 
-		s.random.setvalue(0.49);
+		e.random.setvalue(0.49);
 		e.update(); 
 		
 		assertThat(s.center).isEqualTo(new Point(11,11));
 	}
 	
 	@Test public void ifTheresOnlyOneDirectionGoesThatWay(){
-		e.addNutrient(new Point(20,20));
+		e.addNutrient(new Point(40,40));
 		
-		Sect s1 = e.addSect(new Sect(new Point(20, 10)));
-		s1.random.setvalue(0.51);
+		Sect s1 = e.addSect(new Sect(new Point(40, 10), new Herbivore()));
+		e.random.setvalue(0.51);
 		e.update(); 
-		assertThat(s1.center).isEqualTo(new Point(20,11));
+		assertThat(s1.center).isEqualTo(new Point(40,11));
 
-		Sect s2 = e.addSect(new Sect(new Point(10, 20)));
-		s2.random.setvalue(0.49);
+		Sect s2 = e.addSect(new Sect(new Point(10, 40), new Herbivore()));
+		e.random.setvalue(0.49);
 		e.update(); 
-		assertThat(s2.center).isEqualTo(new Point(11,20));
+		assertThat(s2.center).isEqualTo(new Point(11,40));
 	}
 	
 	@Test public void stopsWalkingAfterEatingNutrient(){
 		Nutrient nutrient = e.addNutrient(new Point(20,20));
 		
-		Sect s = e.addSect(new Sect(new Point(30,15)));
+		Sect s = e.addSect(new Sect(new Point(30,15), new Herbivore()));
 		executeThisManyTurns(30);
 		
 		assertThat(s.center.x).isEqualTo(nutrient.center.x);
@@ -74,7 +74,7 @@ public class Sect_Behaviour_HerbivoreTest {
 		e.addNutrient(new Point(20,20));
 		e.addNutrient(new Point(40,40));
 		Nutrient n1 = e.addNutrient(new Point(5,5));
-		Sect s =  e.addSect(new Sect(new Point(10,10)));
+		Sect s =  e.addSect(new Sect(new Point(10,10), new Herbivore()));
 		
 		executeThisManyTurns(10);
 		
@@ -83,7 +83,7 @@ public class Sect_Behaviour_HerbivoreTest {
 
 	@Test public void dontChaseDeadNutrients(){
 		e.addNutrient(new Point(5,5));
-		Sect s =  e.addSect(new Sect(new Point(10,10)));
+		Sect s =  e.addSect(new Sect(new Point(10,10), new Herbivore()));
 		executeThisManyTurns(14);
 		Nutrient n2 = e.addNutrient(new Point(20,20));
 		
@@ -97,7 +97,7 @@ public class Sect_Behaviour_HerbivoreTest {
 		e.addNutrient(new Point(20,20));
 		Nutrient n1 = e.addNutrient(new Point(40,40));
 		e.addNutrient(new Point(5,5));
-		Sect s =  e.addSect(new Sect(new Point(10,10)));
+		Sect s =  e.addSect(new Sect(new Point(10,10), new Herbivore()));
 		
 		executeThisManyTurns(10+4+30+4+40);
 		
@@ -107,8 +107,8 @@ public class Sect_Behaviour_HerbivoreTest {
 	@Test public void doesNotBotherByNutrientsEatenThatAreNotTheTarget(){
 		Nutrient n1 = e.addNutrient(new Point(40,40));
 		e.addNutrient(new Point(5,5));
-		Sect s1 =  e.addSect(new Sect(new Point(10,10)));
-		Sect s2 =  e.addSect(new Sect(new Point(50,50)));
+		Sect s1 =  e.addSect(new Sect(new Point(10,10), new Herbivore()));
+		Sect s2 =  e.addSect(new Sect(new Point(50,50), new Herbivore()));
 		
 		executeThisManyTurns(100);
 		
