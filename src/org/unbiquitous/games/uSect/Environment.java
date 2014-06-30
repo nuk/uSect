@@ -3,18 +3,14 @@ package org.unbiquitous.games.uSect;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.engine.io.Screen;
-import org.unbiquitous.uImpala.jse.util.shapes.Circle;
 import org.unbiquitous.uImpala.jse.util.shapes.Rectangle;
 
 public class Environment extends GameObject {
@@ -104,7 +100,6 @@ public class Environment extends GameObject {
 		return 0.99;
 	}
 
-	@Override
 	protected void render(GameRenderers renderers) {
 		background.render();
 		for(Nutrient n : nutrients){
@@ -172,65 +167,5 @@ class RandomGenerator{
 			return value;
 		}
 		return Math.random();
-	}
-}
-
-abstract class EnvironmentObject extends GameObject {
-	protected UUID id = UUID.randomUUID();
-	protected void update() {}
-	protected void wakeup(Object... args) {}
-	protected void destroy() {}
-	
-	public boolean equals(Object obj) {
-		if(obj instanceof EnvironmentObject){
-			return ((EnvironmentObject)obj).id.equals(this.id) ;
-		}
-		return false;
-	}
-	
-	public int hashCode() {
-		return id.hashCode();
-	}
-	
-}
-
-class Nutrient extends EnvironmentObject{
-	Point center;
-	Set<Sect> targetOf;
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	Map<Sect, Integer> absortionTable = new HashMap();
-	private int radius = 10;
-	
-	boolean hasBeenConsumed = false;
-	
-	public Nutrient(Point center) {
-		this.center = center;
-		targetOf = new HashSet<Sect>();
-	}
-
-	public void inContactWith(Sect s) {
-		absortionTable.put(s, 1+absortionTable.get(s));
-		if(absortionTable.get(s) >= 5){
-			notifyAbsortionToAll();
-			hasBeenConsumed = true;
-		}
-	}
-
-	private void notifyAbsortionToAll() {
-		for(Sect s1: targetOf){
-			s1.leftSight(new Something(id, center, Something.Type.NUTRIENT));
-		}
-	}
-
-	public void insightOf(Sect s) {
-		if(! targetOf.contains(s)){
-			s.enteredSight(new Something(id, center, Something.Type.NUTRIENT)); 
-			targetOf.add(s);
-			absortionTable.put(s, 0);
-		};
-	}
-
-	protected void render(GameRenderers renderers) {
-		new Circle(center, Color.GREEN.darker(), radius).render();
 	}
 }
