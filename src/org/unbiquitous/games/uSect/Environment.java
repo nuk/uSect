@@ -15,6 +15,7 @@ import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.jse.util.shapes.Rectangle;
+import org.unbiquitous.uos.core.InitialProperties;
 
 public class Environment extends GameObject {
 
@@ -28,11 +29,11 @@ public class Environment extends GameObject {
 	List<Sect> newSects = new ArrayList<Sect>();
 	Map<UUID,Point> positionMap = new HashMap<UUID,Point>();
 
-	public Environment() {
-		this(new DeviceStats());
+	public Environment(InitialProperties props) {
+		this(new DeviceStats(),props);
 	}
 	
-	public Environment(DeviceStats deviceStats) {
+	public Environment(DeviceStats deviceStats,InitialProperties props) {
 		this.deviceStats = deviceStats;
 		createBackground();
 	}
@@ -110,7 +111,6 @@ public class Environment extends GameObject {
 	
 	protected Sect addSect(Sect s, Point position) {
 		s.setEnv(this);
-//		s.center(position);
 		positionMap.put(s.id, position);
 		sects.add(s);
 		newSects.add(s);
@@ -121,12 +121,12 @@ public class Environment extends GameObject {
 		long totalMemory = deviceStats.totalMemory();
 		int maxMemory = 16*1024;
 		if(totalMemory >= maxMemory ){
-			return 0.95;
+			return 1-0.05;
 		}else if(totalMemory > 512 ){
 			double memoryRatio = ((double)totalMemory)/maxMemory;
 			return 1-(0.01+0.04*memoryRatio);
 		}
-		return 0.99;
+		return 1-0.01;
 	}
 
 	protected void render(GameRenderers renderers) {

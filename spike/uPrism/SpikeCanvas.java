@@ -73,22 +73,14 @@ public class SpikeCanvas extends GameScene {
 		}
 	}
 
-	@Override
-	protected void wakeup(Object... args) {
-		// TODO Auto-generated method stub
-		
-	}
+	protected void wakeup(Object... args) {}
 
-	@Override
-	protected void destroy() {
-		// TODO Auto-generated method stub
-		
-	}
+	protected void destroy() {}
 
 	@SuppressWarnings({ "unchecked", "serial" })
 	public static void main(String[] args) {
 		Game.run(new GameSettings() {
-			{ // TODO: Game Settings could have helper methods
+			{ 
 				put("first_scene", SpikeCanvas.class);
 				put("input_managers", Arrays.asList(MouseManager.class));
 				put("output_managers", Arrays.asList(ScreenManager.class));
@@ -163,15 +155,9 @@ class SpikeSect extends GameObject {
 	}
 
 	@Override
-	protected void wakeup(Object... args) {
-		// TODO Auto-generated method stub
-		
-	}
+	protected void wakeup(Object... args) {}
 
 	@Override
-	protected void destroy() {
-		// TODO Auto-generated method stub
-		
-	}
+	protected void destroy() {}
 	
 }

@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.jse.impl.io.Screen;
+import org.unbiquitous.uos.core.InitialProperties;
 
 public class Environment_StatsTest {
 
@@ -21,25 +22,25 @@ public class Environment_StatsTest {
 	}
 	
 	@Test public void minimunChanceOfApearingNutrientsIs10percent(){
-		e = new Environment(createStastWithMemory(0));
+		e = new Environment(createStastWithMemory(0), new InitialProperties());
 		testNutrientsProbability(0.01);
 		
-		e = new Environment(createStastWithMemory(512));
+		e = new Environment(createStastWithMemory(512),new InitialProperties());
 		testNutrientsProbability(0.01);
 	}
 
 	@Test public void maximunChanceOfApearingNutrientsIs50percent(){
-		e = new Environment(createStastWithMemory(Integer.MAX_VALUE));
+		e = new Environment(createStastWithMemory(Integer.MAX_VALUE),new InitialProperties());
 		testNutrientsProbability(0.05);
 		
-		e = new Environment(createStastWithMemory(16*1024));
+		e = new Environment(createStastWithMemory(16*1024),new InitialProperties());
 		testNutrientsProbability(0.05);
 	}
 	
 	@Test public void chanceOfApearingNutrientsIsProportionalToMemory(){
-		e = new Environment(createStastWithMemory(1024));
+		e = new Environment(createStastWithMemory(1024),new InitialProperties());
 		testNutrientsProbability(0.0125);
-		e = new Environment(createStastWithMemory(2*1024));
+		e = new Environment(createStastWithMemory(2*1024),new InitialProperties());
 		testNutrientsProbability(0.015);
 	}
 	

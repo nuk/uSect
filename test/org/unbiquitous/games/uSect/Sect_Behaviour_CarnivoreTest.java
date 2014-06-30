@@ -8,13 +8,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.jse.impl.io.Screen;
+import org.unbiquitous.uos.core.InitialProperties;
 
 public class Sect_Behaviour_CarnivoreTest {
 	private Environment e;
 
 	@Before public void setUp(){
 		GameComponents.put(org.unbiquitous.uImpala.engine.io.Screen.class, new Screen());
-		e = new Environment();
+		e = new Environment(new InitialProperties());
 		e.random.setvalue(0);
 	}
 	

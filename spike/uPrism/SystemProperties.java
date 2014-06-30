@@ -20,6 +20,8 @@ public class SystemProperties {
 		CpuInfo cpuInfo = s.getCpuInfoList()[0];
 		System.out.println(cpuInfo.getVendor());
 		System.out.println(cpuInfo.getMhz());
+		
+		System.out.println(Long.MAX_VALUE);
 	}
 	
 	private static String getInfo() {
