@@ -6,6 +6,7 @@ import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
 import java.awt.Point;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
@@ -42,5 +43,17 @@ public class Sect_Behaviour_CarnivoreTest {
 		assertThat(h.center()).isEqualTo(new Point(50,20));
 		assertThat(c.center()).isNotEqualTo(new Point(10,20));
 		assertThat(c.center().x).isGreaterThan(20);
+	}
+	
+	@Ignore
+	@Test public void preferCorpsesThanLiveSects(){
+		e.addCorpse(new Point(100,10));
+		e.random.setvalue(-1);
+		e.addSect(new Sect(new Herbivore()),new Point(10,10));
+		Sect c = e.addSect(new Sect(new Carnivore()),new Point(50,10));
+		
+		executeThisManyTurns(e, 1);
+		
+		assertThat(c.center()).isNotEqualTo(new Point(51,20));
 	}
 }

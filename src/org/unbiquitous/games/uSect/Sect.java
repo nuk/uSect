@@ -1,6 +1,7 @@
 package org.unbiquitous.games.uSect;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Point;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,8 +9,13 @@ import java.util.LinkedList;
 
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
+import org.unbiquitous.uImpala.engine.asset.AssetManager;
+import org.unbiquitous.uImpala.engine.asset.Text;
+import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
+import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.jse.util.shapes.SimetricShape;
+import org.unbiquitous.uImpala.util.Corner;
 
 public class Sect extends EnvironmentObject {
 	private Behaviour behaviour;
@@ -18,6 +24,7 @@ public class Sect extends EnvironmentObject {
 	
 	private int radius = 30;
 	SimetricShape shape;
+	private Text text;
 	
 	public interface Behaviour {
 		public void init(Sect s);
@@ -31,17 +38,27 @@ public class Sect extends EnvironmentObject {
 	}
 	
 	public Sect(Behaviour behaviour) {
+		Font font = new Font("Verdana", Font.BOLD, 12);
+		AssetManager assets = GameComponents.get(AssetManager.class);
+		if(assets != null){
+			text = assets.newText(font, "");
+		}
 		if(behaviour instanceof Carnivore){
 			shape = new SimetricShape(new Point(), new Color(211, 84, 0,200), radius,5);
 		}else{
 			shape = new SimetricShape(new Point(), new Color(41, 128, 185,200), radius,7);
 		}
+		
 		this.behaviour = behaviour;
 		behaviour.init(this);
 	}
 	
 	public Point center() {
 		return env.position(id);
+	}
+	
+	public Long energy() {
+		return env.energy(id);
 	}
 
 	public void setEnv(Environment env) {
@@ -73,6 +90,10 @@ public class Sect extends EnvironmentObject {
 		shape.center(center());
 		shape.rotate(rotationAngle());
 		shape.render();
+		
+		Screen screen = GameComponents.get(Screen.class);
+		text.setText(energy().toString());
+		text.render(screen, (float)center().x, (float)center().y, Corner.TOP_LEFT, 1f, 0f, 1f, 1f, new org.unbiquitous.uImpala.util.Color(0, 0, 0));
 	}
 
 	private float rotationAngle() {
@@ -106,13 +127,17 @@ abstract class TargetFocused  implements Sect.Behaviour{
 	}
 
 	public void update() {
-		if (hasATarget()){
+		if (hasATarget() && !onTopOfTarget()){
 			sect.moveTo(targetDirection());
 		}
 	}
 
 	private boolean hasATarget() {
 		return target() != null;
+	}
+	
+	private boolean onTopOfTarget() {
+		return sect.center().equals(target().center());
 	}
 
 	private Point targetDirection() {

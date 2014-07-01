@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.unbiquitous.games.uSect.Corpse;
 import org.unbiquitous.games.uSect.DeviceStats;
 import org.unbiquitous.games.uSect.Nutrient;
 
@@ -12,6 +13,7 @@ class NutrientManager {
 	private RandomGenerator random;
 	private DeviceStats deviceStats;
 	private List<Nutrient> nutrients = new ArrayList<Nutrient>();
+	private List<Corpse> corpses = new ArrayList<Corpse>();
 	
 	public NutrientManager(Environment env, RandomGenerator random,
 			DeviceStats deviceStats) {
@@ -33,6 +35,14 @@ class NutrientManager {
 		return n;
 	}
 	
+	Corpse addCorpse(Point position) {
+		Corpse n = new Corpse();
+		n.setEnv(env);
+		corpses.add(n);
+		env.stats(n.id).position = position;
+		return n;
+	}
+	
 	public void update() {
 		if(random.v() >= chancesOfNutrients()){
 			env.addNutrient();
@@ -49,5 +59,9 @@ class NutrientManager {
 			return 1-(0.01+0.04*memoryRatio);
 		}
 		return 1-0.01;
+	}
+
+	public List<Corpse> corpses() {
+		return corpses;
 	}
 }

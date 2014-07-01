@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.util.Arrays;
 
 import org.unbiquitous.games.uSect.environment.Environment;
+import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObjectTreeScene;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
@@ -31,6 +32,7 @@ public class Starter extends GameObjectTreeScene {
 		screen.open("uSect", width, height-60, false, null);
 
 		GameComponents.put(Screen.class, screen);
+		GameComponents.put(AssetManager.class,assets);
 		//TODO: How to get Props from uImpala?
 		Environment e = new Environment(new DeviceStats(),new InitialProperties());
 		e.addSect(new Sect(new Herbivore()),new Point());

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.unbiquitous.games.uSect.Corpse;
 import org.unbiquitous.games.uSect.DeviceStats;
 import org.unbiquitous.games.uSect.Nutrient;
 import org.unbiquitous.games.uSect.Sect;
@@ -67,6 +68,13 @@ public class Environment extends GameObject {
 		return (Point) dataMap.get(objectId).position.clone();
 	}
 	
+	public Long energy(UUID objectId){
+		if(!dataMap.containsKey(objectId)){
+			return null;
+		}
+		return dataMap.get(objectId).energy;
+	}
+	
 	protected Stats stats(UUID objectId){
 		if (!dataMap.containsKey(objectId)){
 			dataMap.put(objectId, new Stats(new Point(),0));
@@ -85,6 +93,10 @@ public class Environment extends GameObject {
 		return nutrients.addNutrient(position);
 	}
 	
+	public Corpse addCorpse(Point position) {
+		return nutrients.addCorpse(position);
+	}
+	
 	public Sect addSect(Sect s, Point position) {
 		return sects.addSect(s, position);
 	}
@@ -99,6 +111,10 @@ public class Environment extends GameObject {
 	
 	public List<Nutrient> nutrients(){
 		return nutrients.nutrients();
+	}
+	
+	public List<Corpse> corpses(){
+		return nutrients.corpses();
 	}
 	
 	protected void render(GameRenderers renderers) {
@@ -117,8 +133,12 @@ public class Environment extends GameObject {
 		for(Nutrient n : nutrients()){
 			n.render(null);
 		}
+		for(Nutrient n : corpses()){
+			n.render(null);
+		}
 	}
 
 	protected void wakeup(Object... args) {}
 	protected void destroy() {}
 }
+

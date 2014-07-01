@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
-import org.unbiquitous.uImpala.jse.impl.io.Screen;
+import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uos.core.InitialProperties;
 
 public class Sect_Behaviour_HerbivoreTest {
@@ -18,7 +18,7 @@ public class Sect_Behaviour_HerbivoreTest {
 	private Environment e;
 
 	@Before public void setUp(){
-		GameComponents.put(org.unbiquitous.uImpala.engine.io.Screen.class, new Screen());
+		GameComponents.put(Screen.class, new org.unbiquitous.uImpala.jse.impl.io.Screen());
 		e = new Environment(new InitialProperties());
 		e.random.setvalue(0);
 	}
@@ -155,11 +155,31 @@ public class Sect_Behaviour_HerbivoreTest {
 		e.update();
 		assertThat(e.sects()).containsOnly(s);
 		
-		e.random.setvalue(1);
 		executeThisManyTurns(e, INITIAL_ENERGY/2-2);
 		assertThat(e.sects()).containsOnly(s);
 		
 		e.update();
 		assertThat(e.sects()).isEmpty();
+	}
+	
+	@Test public void sectGainsEnergyFromNutrients(){
+		Sect s = e.addSect(new Sect(), new Point(10,10));
+		e.addNutrient(new Point(10,10));
+		
+		int NUTRIENT_INCREMENT = 30*60;
+		executeThisManyTurns(e, INITIAL_ENERGY+NUTRIENT_INCREMENT);
+		assertThat(e.sects()).containsOnly(s);
+		
+		e.update();
+		assertThat(e.sects()).isEmpty();
+	}
+	
+	@Test public void deadSectsBecomesCorpses(){
+		e.addSect(new Sect(), new Point(50,50));
+		
+		executeThisManyTurns(e, INITIAL_ENERGY);
+		assertThat(e.sects()).isEmpty();
+		assertThat(e.corpses()).hasSize(1);
+		assertThat(e.corpses().get(0).center()).isEqualTo(new Point(50,50));
 	}
 }

@@ -15,13 +15,13 @@ import org.unbiquitous.uImpala.jse.util.shapes.Circle;
 public class Nutrient extends EnvironmentObject{
 	private Set<Sect> targetOf;
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private Map<Sect, Integer> absortionTable = new HashMap();
+	protected Map<Sect, Integer> absortionTable = new HashMap();
 	
-	private int radius = 10;
-	private Environment env;
+	protected int radius = 10;
+	protected Environment env;
+	protected Circle shape = new Circle(new Point(), Color.GREEN.darker(), radius);
 	
-	//TODO: fix this
-	public boolean hasBeenConsumed = false;
+	private Sect hasBeenConsumedBy;
 
 	public Nutrient() {
 		targetOf = new HashSet<Sect>();
@@ -35,11 +35,15 @@ public class Nutrient extends EnvironmentObject{
 		return env.position(id);
 	}
 	
+	public Sect hasBeenConsumedBy() {
+		return hasBeenConsumedBy;
+	}
+	
 	public void inContactWith(Sect s) {
 		absortionTable.put(s, 1+absortionTable.get(s));
 		if(absortionTable.get(s) >= 5){
 			notifyAbsortionToAll();
-			hasBeenConsumed = true;
+			hasBeenConsumedBy = s;
 		}
 	}
 
@@ -58,6 +62,7 @@ public class Nutrient extends EnvironmentObject{
 	}
 
 	public void render(GameRenderers renderers) {
-		new Circle(center(), Color.GREEN.darker(), radius).render();
+		shape.center(center());
+		shape.render();
 	}
 }
