@@ -14,12 +14,20 @@ import org.unbiquitous.uos.core.InitialProperties;
 
 public class Sect_Behaviour_HerbivoreTest {
 
+	private static final int INITIAL_ENERGY = (int) (30*60*10);
 	private Environment e;
 
 	@Before public void setUp(){
 		GameComponents.put(org.unbiquitous.uImpala.engine.io.Screen.class, new Screen());
 		e = new Environment(new InitialProperties());
 		e.random.setvalue(0);
+	}
+	
+	@Test public void standStillOnEmptyEnvironment(){
+		Sect s = e.addSect(new Sect(),new Point(21,21));
+		executeThisManyTurns(e, 100); 
+		
+		assertThat(s.center()).isEqualTo(new Point(21,21));
 	}
 	
 	@Test public void goesAfterANutrientAfterEachStep(){
@@ -118,14 +126,37 @@ public class Sect_Behaviour_HerbivoreTest {
 		assertThat(s1.center()).isNotEqualTo(n1.center());
 		assertThat(s2.center()).isEqualTo(n1.center());
 	}
+	
+	@Test public void standStillIfTheresNoOtherNutrientAtSight(){
+		Nutrient n1 = e.addNutrient(new Point(40,40));
+		Sect s1 =  e.addSect(new Sect(),new Point(10,10));
+		
+		executeThisManyTurns(e, 100);
+		
+		assertThat(s1.center()).isEqualTo(n1.center());
+	}
 
 	@Test public void sectDiesAfter10minutesStandingStill(){
 		Sect s = e.addSect(new Sect(), new Point(10,10));
 		e.update();
 		assertThat(e.sects()).containsOnly(s);
 		
+		e.random.setvalue(0);
+		executeThisManyTurns(e, INITIAL_ENERGY-2);
+		assertThat(e.sects()).containsOnly(s);
+		
+		e.update();
+		assertThat(e.sects()).isEmpty();
+	}
+	
+	@Test public void sectDiesTwiceAsFastWhenWalking(){
+		Sect s = e.addSect(new Sect(), new Point(0,0));
+		e.addNutrient(new Point(INITIAL_ENERGY,0));
+		e.update();
+		assertThat(e.sects()).containsOnly(s);
+		
 		e.random.setvalue(1);
-		executeThisManyTurns(e, (int) (30*60*10*0.05)-2);
+		executeThisManyTurns(e, INITIAL_ENERGY/2-2);
 		assertThat(e.sects()).containsOnly(s);
 		
 		e.update();

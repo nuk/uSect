@@ -16,7 +16,8 @@ class MovementManager {
 
 	public void moveTo(Sect sect, Point dir) {
 		adjustDirection(dir);
-		env.stats(sect.id).position = determineFinalPosition(sect, dir); 
+		env.stats(sect.id).position = determineFinalPosition(sect, dir);
+		env.stats(sect.id).energy -= 1;
 	}
 
 	private void adjustDirection(Point dir) {

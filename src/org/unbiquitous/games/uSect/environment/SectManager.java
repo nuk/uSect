@@ -26,7 +26,7 @@ class SectManager {
 	Sect addSect(Sect s, Point position){
 		s.setEnv(env);
 		env.stats(s.id).position = position;
-		env.stats(s.id).energy = (long) (30*60*10*0.05);
+		env.stats(s.id).energy = (long) (30*60*10);
 		sects.add(s);
 		sectsAddedThisTurn.add(s);
 		return s;
