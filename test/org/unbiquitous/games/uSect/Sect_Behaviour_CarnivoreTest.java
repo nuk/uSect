@@ -1,6 +1,7 @@
 package org.unbiquitous.games.uSect;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.unbiquitous.games.uSect.TestUtils.*;
 
 import java.awt.Point;
 
@@ -36,9 +37,7 @@ public class Sect_Behaviour_CarnivoreTest {
 		Sect h = e.addSect(new Sect(new Herbivore()),new Point(10,20));
 		Sect c = e.addSect(new Sect(new Carnivore()),new Point(20,60));
 		
-		for(int i = 0 ; i < 40; i ++){
-			e.update();
-		}
+		executeThisManyTurns(e, 40);
 		
 		assertThat(h.center()).isEqualTo(new Point(50,20));
 		assertThat(c.center()).isNotEqualTo(new Point(10,20));

@@ -22,10 +22,10 @@ public class Environment extends GameObject {
 	private Screen screen;
 	//TODO: fix this
 	public RandomGenerator random =  new RandomGenerator();
-	Rectangle background;
+	private Rectangle background;
 	
-	Map<UUID,Point> positionMap = new HashMap<UUID,Point>();
-	Map<UUID,Long> energyMap = new HashMap<UUID,Long>();
+	private Map<UUID,Point> positionMap = new HashMap<UUID,Point>();
+	private Map<UUID,Long> energyMap = new HashMap<UUID,Long>();
 	private NutrientManager nutrients;
 	private SectManager sects;
 	private MovementManager mover;

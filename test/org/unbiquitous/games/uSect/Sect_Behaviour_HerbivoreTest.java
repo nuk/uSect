@@ -1,6 +1,7 @@
 package org.unbiquitous.games.uSect;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.unbiquitous.games.uSect.TestUtils.*;
 
 import java.awt.Point;
 
@@ -66,7 +67,7 @@ public class Sect_Behaviour_HerbivoreTest {
 		Nutrient nutrient = e.addNutrient(new Point(20,20));
 		
 		Sect s = e.addSect(new Sect(),new Point(30,15));
-		executeThisManyTurns(30);
+		executeThisManyTurns(e, 30);
 		
 		assertThat(s.center().x).isEqualTo(nutrient.center().x);
 		assertThat(s.center().y).isEqualTo(nutrient.center().y);
@@ -78,7 +79,7 @@ public class Sect_Behaviour_HerbivoreTest {
 		Nutrient n1 = e.addNutrient(new Point(5,5));
 		Sect s =  e.addSect(new Sect(),new Point(10,10));
 		
-		executeThisManyTurns(10);
+		executeThisManyTurns(e, 10);
 		
 		assertThat(s.center()).isEqualTo(n1.center());
 	}
@@ -86,10 +87,10 @@ public class Sect_Behaviour_HerbivoreTest {
 	@Test public void dontChaseDeadNutrients(){
 		e.addNutrient(new Point(5,5));
 		Sect s =  e.addSect(new Sect(),new Point(10,10));
-		executeThisManyTurns(14);
+		executeThisManyTurns(e, 14);
 		Nutrient n2 = e.addNutrient(new Point(20,20));
 		
-		executeThisManyTurns(30);
+		executeThisManyTurns(e, 30);
 		
 		assertThat(s.center()).isEqualTo(n2.center());
 	}
@@ -101,7 +102,7 @@ public class Sect_Behaviour_HerbivoreTest {
 		e.addNutrient(new Point(5,5));
 		Sect s =  e.addSect(new Sect(),new Point(10,10));
 		
-		executeThisManyTurns(10+4+30+4+40);
+		executeThisManyTurns(e, 10+4+30+4+40);
 		
 		assertThat(s.center()).isEqualTo(n1.center());
 	}
@@ -112,7 +113,7 @@ public class Sect_Behaviour_HerbivoreTest {
 		Sect s1 =  e.addSect(new Sect(),new Point(10,10));
 		Sect s2 =  e.addSect(new Sect(),new Point(50,50));
 		
-		executeThisManyTurns(100);
+		executeThisManyTurns(e, 100);
 		
 		assertThat(s1.center()).isNotEqualTo(n1.center());
 		assertThat(s2.center()).isEqualTo(n1.center());
@@ -124,18 +125,10 @@ public class Sect_Behaviour_HerbivoreTest {
 		assertThat(e.sects()).containsOnly(s);
 		
 		e.random.setvalue(1);
-		executeThisManyTurns((int) (30*60*10*0.05)-2);
+		executeThisManyTurns(e, (int) (30*60*10*0.05)-2);
 		assertThat(e.sects()).containsOnly(s);
 		
 		e.update();
 		assertThat(e.sects()).isEmpty();
 	}
-	
-	private void executeThisManyTurns(int numberOfTurns) {
-		for (int i = 0; i < numberOfTurns; i++){
-			e.update();
-		}
-	}
-
-	
 }

@@ -1,6 +1,7 @@
 package org.unbiquitous.games.uSect.environment;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.unbiquitous.games.uSect.TestUtils.*;
 
 import java.awt.Point;
 
@@ -41,10 +42,7 @@ public class Environment_NotifiesSectsAboutEvents {
 			}
 		},new Point(10,10));
 		
-		for(int i = 0; i < 10; i++){
-			e.update();
-		}
-		
+		executeThisManyTurns(e, 10);
 		assertThat(count[0]).isEqualTo(1);
 	}
 	
@@ -57,9 +55,7 @@ public class Environment_NotifiesSectsAboutEvents {
 			}
 		},new Point(9,10));
 		
-		for(int i = 0; i < 5; i++){
-			e.update();
-		}
+		executeThisManyTurns(e, 5);
 		assertThat(count[0]).isEqualTo(0);
 		assertThat(e.nutrients()).contains(n);
 		
@@ -91,9 +87,7 @@ public class Environment_NotifiesSectsAboutEvents {
 		},new Point(100,100));
 		
 		
-		for(int i = 0; i <= 5; i++){
-			e.update();
-		}
+		executeThisManyTurns(e, 6);
 		assertThat(count[0]).isEqualTo(1);
 		assertThat(count[1]).isEqualTo(1);
 		assertThat(count[2]).isEqualTo(1);
