@@ -15,24 +15,20 @@ import org.unbiquitous.games.uSect.Something;
 class SectManager {
 	private Environment env;
 	private List<Sect> sects;
-	private Map<UUID,Point> positionMap;
 	private List<Sect> sectsAddedThisTurn;
 	private List<Sect> sectsThatDiedThisTurn;
-	private Map<UUID,Long> energyMap ;
 
-	public SectManager(Environment env, Map<UUID,Point> positionMap, Map<UUID, Long> energyMap) {
+	public SectManager(Environment env) {
 		this.env = env;
 		this.sects = new ArrayList<Sect>();
 		this.sectsAddedThisTurn = new ArrayList<Sect>();
 		this.sectsThatDiedThisTurn = new ArrayList<Sect>();
-		this.positionMap = positionMap;
-		this.energyMap = energyMap;
 	}
 
 	Sect addSect(Sect s, Point position){
 		s.setEnv(env);
-		positionMap.put(s.id, position);
-		energyMap.put(s.id, (long) (30*60*10*0.05));
+		env.stats(s.id).position = position;
+		env.stats(s.id).energy = (long) (30*60*10*0.05);
 		sects.add(s);
 		sectsAddedThisTurn.add(s);
 		return s;
@@ -55,8 +51,8 @@ class SectManager {
 		checkNutrients(s);
 		checkForNewSects(s);
 		s.update();
-		energyMap.put(s.id, energyMap.get(s.id)-1);
-		if(energyMap.get(s.id) <= 0){
+		env.stats(s.id).energy -= 1;
+		if(env.stats(s.id).energy <= 0){
 			sectsThatDiedThisTurn.add(s);
 		}
 	}

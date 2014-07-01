@@ -24,20 +24,28 @@ public class Environment extends GameObject {
 	public RandomGenerator random =  new RandomGenerator();
 	private Rectangle background;
 	
-	private Map<UUID,Point> positionMap = new HashMap<UUID,Point>();
-	private Map<UUID,Long> energyMap = new HashMap<UUID,Long>();
+	private Map<UUID,Stats> dataMap = new HashMap<UUID,Stats>();
 	private NutrientManager nutrients;
 	private SectManager sects;
 	private MovementManager mover;
 
+	static class Stats {
+		Point position;
+		long energy;
+		public Stats(Point position, long energy) {
+			this.position = position;
+			this.energy = energy;
+		}
+	}
+	
 	public Environment(InitialProperties props) {
 		this(new DeviceStats(),props);
 	}
 	
 	public Environment(DeviceStats deviceStats,InitialProperties props) {
-		nutrients = new NutrientManager(this, random, deviceStats, positionMap);
-		sects = new SectManager(this, positionMap, energyMap);
-		mover = new MovementManager(this, positionMap, random);
+		nutrients = new NutrientManager(this, random, deviceStats);
+		sects = new SectManager(this);
+		mover = new MovementManager(this, random);
 		createBackground();
 	}
 
@@ -53,10 +61,18 @@ public class Environment extends GameObject {
 	}
 
 	public Point position(UUID objectId){
-		if(!positionMap.containsKey(objectId)){
+		if(!dataMap.containsKey(objectId)){
 			return null;
 		}
-		return (Point) positionMap.get(objectId).clone();
+		return (Point) dataMap.get(objectId).position.clone();
+	}
+	
+	protected Stats stats(UUID objectId){
+		if (!dataMap.containsKey(objectId)){
+			dataMap.put(objectId, new Stats(new Point(),0));
+		}
+		//TODO: Shouldn't change stats directly
+		return dataMap.get(objectId);
 	}
 	
 	public Nutrient addNutrient() {

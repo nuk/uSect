@@ -9,21 +9,20 @@ import java.util.UUID;
 
 import org.unbiquitous.games.uSect.DeviceStats;
 import org.unbiquitous.games.uSect.Nutrient;
+import org.unbiquitous.games.uSect.environment.Environment.Stats;
 
 class NutrientManager {
 	Environment env;
 	private RandomGenerator random;
 	private DeviceStats deviceStats;
 	private List<Nutrient> nutrients = new ArrayList<Nutrient>();
-	private Map<UUID,Point> positionMap = new HashMap<UUID,Point>();
 	
 	public NutrientManager(Environment env, RandomGenerator random,
-			DeviceStats deviceStats, Map<UUID,Point> positionMap) {
+			DeviceStats deviceStats) {
 		super();
 		this.env = env;
 		this.random = random;
 		this.deviceStats = deviceStats;
-		this.positionMap = positionMap;
 	}
 
 	List<Nutrient> nutrients(){
@@ -34,7 +33,7 @@ class NutrientManager {
 		Nutrient n = new Nutrient();
 		n.setEnv(env);
 		nutrients.add(n);
-		positionMap.put(n.id, position);
+		env.stats(n.id).position = position;
 		return n;
 	}
 	

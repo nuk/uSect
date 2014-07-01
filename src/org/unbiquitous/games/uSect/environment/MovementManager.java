@@ -8,20 +8,17 @@ import org.unbiquitous.games.uSect.Sect;
 
 class MovementManager {
 	private Environment env;
-	private Map<UUID,Point> positionMap;
 	private RandomGenerator random;
 	
-	public MovementManager(Environment env, Map<UUID, Point> positionMap,
-			RandomGenerator random) {
+	public MovementManager(Environment env, RandomGenerator random) {
 		super();
 		this.env = env;
-		this.positionMap = positionMap;
 		this.random = random;
 	}
 
 	public void moveTo(Sect sect, Point dir) {
 		adjustDirection(dir);
-		positionMap.put(sect.id, determineFinalPosition(sect, dir));
+		env.stats(sect.id).position = determineFinalPosition(sect, dir); 
 	}
 
 	private void adjustDirection(Point dir) {
