@@ -1,9 +1,10 @@
-package org.unbiquitous.games.uSect;
+package org.unbiquitous.games.uSect.environment;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.unbiquitous.games.uSect.DeviceStats;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.jse.impl.io.Screen;
@@ -49,10 +50,10 @@ public class Environment_StatsTest {
 		double value = 1-chances;
 		e.random.setvalue(value-0.0001);
 		e.update();
-		assertThat(e.nutrients).isEmpty();;
+		assertThat(e.nutrients()).isEmpty();;
 		e.random.setvalue(value);
 		e.update();
-		assertThat(e.nutrients).hasSize(1);
+		assertThat(e.nutrients()).hasSize(1);
 	}
 	
 	private DeviceStats createStastWithMemory(final int memoryInMB) {

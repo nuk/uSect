@@ -1,10 +1,10 @@
-package org.unbiquitous.games.uSect;
+package org.unbiquitous.games.uSect.environment;
 
 import java.util.UUID;
 
 import org.unbiquitous.uImpala.engine.core.GameObject;
 
-abstract class EnvironmentObject extends GameObject {
+public abstract class EnvironmentObject extends GameObject {
 	protected UUID id = UUID.randomUUID();
 	protected void update() {}
 	protected void wakeup(Object... args) {}

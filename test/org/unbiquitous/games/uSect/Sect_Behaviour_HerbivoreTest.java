@@ -6,6 +6,7 @@ import java.awt.Point;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.jse.impl.io.Screen;
 import org.unbiquitous.uos.core.InitialProperties;
@@ -117,11 +118,24 @@ public class Sect_Behaviour_HerbivoreTest {
 		assertThat(s2.center()).isEqualTo(n1.center());
 	}
 
+	@Test public void sectDiesAfter10minutesStandingStill(){
+		Sect s = e.addSect(new Sect(), new Point(10,10));
+		e.update();
+		assertThat(e.sects()).containsOnly(s);
+		
+		e.random.setvalue(1);
+		executeThisManyTurns((int) (30*60*10*0.05)-2);
+		assertThat(e.sects()).containsOnly(s);
+		
+		e.update();
+		assertThat(e.sects()).isEmpty();
+	}
+	
 	private void executeThisManyTurns(int numberOfTurns) {
 		for (int i = 0; i < numberOfTurns; i++){
 			e.update();
 		}
 	}
 
-	//TODO: check energy status and feeding process
+	
 }

@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
+import org.unbiquitous.games.uSect.environment.Environment;
+import org.unbiquitous.games.uSect.environment.EnvironmentObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.jse.util.shapes.SimetricShape;
 
@@ -50,15 +52,15 @@ public class Sect extends EnvironmentObject {
 		return radius;
 	}
 	
-	protected void update() {
+	public void update() {
 		behaviour.update();
 	}
 	
-	protected void enteredSight(Something o){
+	public void enteredSight(Something o){
 		behaviour.enteredViewRange(o);
 	}
 	
-	protected void leftSight(Something o) {
+	public void leftSight(Something o) {
 		behaviour.leftViewRange(o);
 	}
 
@@ -67,7 +69,7 @@ public class Sect extends EnvironmentObject {
 		env.moveTo(this,dir);
 	}
 
-	protected void render(GameRenderers renderers) {
+	public void render(GameRenderers renderers) {
 		shape.center(center());
 		shape.rotate(rotationAngle());
 		shape.render();

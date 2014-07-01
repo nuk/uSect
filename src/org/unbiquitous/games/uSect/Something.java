@@ -3,8 +3,10 @@ package org.unbiquitous.games.uSect;
 import java.awt.Point;
 import java.util.UUID;
 
-class Something {
-	enum Type {NUTRIENT,SECT}
+import org.unbiquitous.games.uSect.environment.Environment;
+
+public class Something {
+	public enum Type {NUTRIENT,SECT}
 	
 	private UUID id; 
 	private Type type;

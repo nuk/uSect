@@ -5,6 +5,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.util.Arrays;
 
+import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObjectTreeScene;
 import org.unbiquitous.uImpala.engine.core.GameSettings;

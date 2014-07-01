@@ -7,10 +7,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.unbiquitous.games.uSect.environment.Environment;
+import org.unbiquitous.games.uSect.environment.EnvironmentObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.jse.util.shapes.Circle;
 
-class Nutrient extends EnvironmentObject{
+public class Nutrient extends EnvironmentObject{
 	private Set<Sect> targetOf;
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Map<Sect, Integer> absortionTable = new HashMap();
@@ -18,7 +20,8 @@ class Nutrient extends EnvironmentObject{
 	private int radius = 10;
 	private Environment env;
 	
-	boolean hasBeenConsumed = false;
+	//TODO: fix this
+	public boolean hasBeenConsumed = false;
 
 	public Nutrient() {
 		targetOf = new HashSet<Sect>();
@@ -54,7 +57,7 @@ class Nutrient extends EnvironmentObject{
 		};
 	}
 
-	protected void render(GameRenderers renderers) {
+	public void render(GameRenderers renderers) {
 		new Circle(center(), Color.GREEN.darker(), radius).render();
 	}
 }

@@ -1,4 +1,4 @@
-package org.unbiquitous.games.uSect;
+package org.unbiquitous.games.uSect.environment;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -6,6 +6,9 @@ import java.awt.Point;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.unbiquitous.games.uSect.Nutrient;
+import org.unbiquitous.games.uSect.Sect;
+import org.unbiquitous.games.uSect.Something;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.jse.impl.io.Screen;
 import org.unbiquitous.uos.core.InitialProperties;
@@ -33,7 +36,7 @@ public class Environment_NotifiesSectsAboutEvents {
 		e.addNutrient();
 		final int[] count = new int[]{0};
 		e.addSect(new Sect(){
-			protected void enteredSight(Something n) {
+			public void enteredSight(Something n) {
 				count[0]++;
 			}
 		},new Point(10,10));
@@ -49,7 +52,7 @@ public class Environment_NotifiesSectsAboutEvents {
 		Nutrient n = e.addNutrient(new Point(10,10));
 		final int[] count = new int[]{0};
 		e.addSect(new Sect(){
-			protected void leftSight(Something n) {
+			public void leftSight(Something n) {
 				count[0]++;
 			}
 		},new Point(9,10));
@@ -58,11 +61,11 @@ public class Environment_NotifiesSectsAboutEvents {
 			e.update();
 		}
 		assertThat(count[0]).isEqualTo(0);
-		assertThat(e.nutrients).contains(n);
+		assertThat(e.nutrients()).contains(n);
 		
 		e.update();
 		assertThat(count[0]).isEqualTo(1);
-		assertThat(e.nutrients).doesNotContain(n);
+		assertThat(e.nutrients()).doesNotContain(n);
 		
 		e.update();
 		assertThat(count[0]).isEqualTo(1);
@@ -71,18 +74,18 @@ public class Environment_NotifiesSectsAboutEvents {
 	@Test public void notifiesAllSectsInSightAboutTheNutrientThatHasBeenEaten(){
 		Nutrient n = e.addNutrient(new Point(10,10));
 		final int[] count = new int[]{0,0,0};
-		e.addSect(new Sect(new Herbivore()){
-			protected void leftSight(Something n) {
+		e.addSect(new Sect(){
+			public void leftSight(Something n) {
 				count[0]++;
 			}
 		},new Point(9,10));
-		e.addSect(new Sect(new Herbivore()){
-			protected void leftSight(Something n) {
+		e.addSect(new Sect(){
+			public void leftSight(Something n) {
 				count[1]++;
 			}
 		},new Point(40,40));
-		e.addSect(new Sect(new Herbivore()){
-			protected void leftSight(Something n) {
+		e.addSect(new Sect(){
+			public void leftSight(Something n) {
 				count[2]++;
 			}
 		},new Point(100,100));
@@ -94,18 +97,18 @@ public class Environment_NotifiesSectsAboutEvents {
 		assertThat(count[0]).isEqualTo(1);
 		assertThat(count[1]).isEqualTo(1);
 		assertThat(count[2]).isEqualTo(1);
-		assertThat(e.nutrients).doesNotContain(n);
+		assertThat(e.nutrients()).doesNotContain(n);
 	}
 	
 	@Test public void whenTheresAsectNotifiesOthers(){
 		final int[] count = new int[]{0,0};
 		e.addSect(new Sect(){
-			protected void enteredSight(Something n) {
+			public void enteredSight(Something n) {
 				count[0]++;
 			}
 		},new Point(9,10));
 		e.addSect(new Sect(){
-			protected void enteredSight(Something n) {
+			public void enteredSight(Something n) {
 				count[1]++;
 			}
 		},new Point(90,100));
