@@ -1,8 +1,6 @@
 package org.unbiquitous.games.uSect.environment;
 
 import java.awt.Point;
-import java.util.Map;
-import java.util.UUID;
 
 import org.unbiquitous.games.uSect.Sect;
 

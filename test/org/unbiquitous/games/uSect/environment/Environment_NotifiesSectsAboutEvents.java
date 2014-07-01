@@ -1,7 +1,7 @@
 package org.unbiquitous.games.uSect.environment;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.unbiquitous.games.uSect.TestUtils.*;
+import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
 
 import java.awt.Point;
 

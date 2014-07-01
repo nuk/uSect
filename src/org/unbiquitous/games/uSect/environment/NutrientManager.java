@@ -2,14 +2,10 @@ package org.unbiquitous.games.uSect.environment;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import org.unbiquitous.games.uSect.DeviceStats;
 import org.unbiquitous.games.uSect.Nutrient;
-import org.unbiquitous.games.uSect.environment.Environment.Stats;
 
 class NutrientManager {
 	Environment env;
