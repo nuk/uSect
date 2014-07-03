@@ -138,6 +138,4 @@ public class Environment_NotifiesSectsAboutEvents {
 		
 		assertThat(s2.center()).isEqualTo(new Point(10+s1.radius()+1,10));
 	}
-	
-	//TODO: notifies that a sect has left
 }

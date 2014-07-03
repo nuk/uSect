@@ -10,5 +10,7 @@ public class Corpse extends Nutrient{
 	public Corpse() {
 		radius = 30;
 		shape = new Circle(new Point(), Color.GRAY, radius);
+		type = Something.Type.CORPSE;
+		energy *= 5;
 	}
 }

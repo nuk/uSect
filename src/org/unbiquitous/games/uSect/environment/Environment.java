@@ -30,12 +30,16 @@ public class Environment extends GameObject {
 	private SectManager sects;
 	private MovementManager mover;
 
-	static class Stats {
+	static class Stats implements Cloneable{
 		Point position;
 		long energy;
 		public Stats(Point position, long energy) {
 			this.position = position;
 			this.energy = energy;
+		}
+		
+		public Stats clone() {
+			return new Stats((Point)position.clone(), energy);
 		}
 	}
 	
@@ -77,10 +81,27 @@ public class Environment extends GameObject {
 	
 	protected Stats stats(UUID objectId){
 		if (!dataMap.containsKey(objectId)){
-			dataMap.put(objectId, new Stats(new Point(),0));
+			return new Stats(new Point(),0);
 		}
-		//TODO: Shouldn't change stats directly
-		return dataMap.get(objectId);
+		return dataMap.get(objectId).clone();
+	}
+	
+	protected Stats add(UUID objectId, Point position, long energy){
+		Stats stats = new Stats(position,energy);
+		dataMap.put(objectId, stats);
+		return stats;
+	}
+	
+	protected Stats moveTo(UUID objectId, Point position){
+		Stats stats = dataMap.get(objectId);
+		stats.position = position;
+		return stats;
+	}
+	
+	protected Stats addEnergy(UUID objectId, long increment){
+		Stats stats = dataMap.get(objectId);
+		stats.energy += increment;
+		return stats;
 	}
 	
 	public Nutrient addNutrient() {

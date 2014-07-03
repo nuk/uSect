@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.unbiquitous.games.uSect.environment.Environment;
 
 public class Something {
-	public enum Type {NUTRIENT,SECT}
+	public enum Type {NUTRIENT,SECT, CORPSE}
 	
 	private UUID id; 
 	private Type type;

@@ -189,14 +189,27 @@ class Herbivore extends TargetFocused{
 class Carnivore extends TargetFocused{
 
 	public void enteredViewRange(Something o){
-		if(o.type() == Something.Type.SECT){
+		if(isSect(o) || isCorpse(o)){
 			targetsInSight.add(o);
 		}
 		sortTargets();
 	}
+
+	private boolean isCorpse(Something o) {
+		return o.type() == Something.Type.CORPSE;
+	}
+
+	private boolean isSect(Something o) {
+		return o.type() == Something.Type.SECT;
+	}
 	
 	@Override
-	public void update() {
-		super.update();
+	protected Something target() {
+		for(Something s : targetsInSight){
+			if(isCorpse(s)){
+				return s;
+			}
+		}
+		return super.target();
 	}
 }
