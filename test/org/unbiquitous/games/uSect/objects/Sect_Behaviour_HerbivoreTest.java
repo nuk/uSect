@@ -1,4 +1,4 @@
-package org.unbiquitous.games.uSect;
+package org.unbiquitous.games.uSect.objects;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;

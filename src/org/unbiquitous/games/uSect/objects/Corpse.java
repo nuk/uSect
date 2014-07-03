@@ -1,4 +1,4 @@
-package org.unbiquitous.games.uSect;
+package org.unbiquitous.games.uSect.objects;
 
 import java.awt.Color;
 import java.awt.Point;

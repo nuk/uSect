@@ -1,4 +1,4 @@
-package org.unbiquitous.games.uSect;
+package org.unbiquitous.games.uSect.objects;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
@@ -8,6 +8,8 @@ import java.awt.Point;
 import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
+import org.unbiquitous.games.uSect.objects.behaviour.Carnivore;
+import org.unbiquitous.games.uSect.objects.behaviour.Herbivore;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.jse.impl.io.Screen;
 import org.unbiquitous.uos.core.InitialProperties;

@@ -6,6 +6,9 @@ import java.awt.Point;
 import java.util.Arrays;
 
 import org.unbiquitous.games.uSect.environment.Environment;
+import org.unbiquitous.games.uSect.objects.Sect;
+import org.unbiquitous.games.uSect.objects.behaviour.Carnivore;
+import org.unbiquitous.games.uSect.objects.behaviour.Herbivore;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObjectTreeScene;

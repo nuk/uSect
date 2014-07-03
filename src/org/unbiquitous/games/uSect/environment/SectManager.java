@@ -4,8 +4,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.unbiquitous.games.uSect.Sect;
-import org.unbiquitous.games.uSect.Something;
+import org.unbiquitous.games.uSect.objects.Sect;
+import org.unbiquitous.games.uSect.objects.Something;
 
 class SectManager {
 	private static final int INITIAL_ENERGY = 30*60 * 10;

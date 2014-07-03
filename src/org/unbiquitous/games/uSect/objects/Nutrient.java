@@ -1,4 +1,4 @@
-package org.unbiquitous.games.uSect;
+package org.unbiquitous.games.uSect.objects;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -7,9 +7,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.unbiquitous.games.uSect.Something.Type;
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
+import org.unbiquitous.games.uSect.objects.Something.Type;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.jse.util.shapes.Circle;
 

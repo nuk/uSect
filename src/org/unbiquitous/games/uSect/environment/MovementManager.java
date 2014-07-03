@@ -2,7 +2,7 @@ package org.unbiquitous.games.uSect.environment;
 
 import java.awt.Point;
 
-import org.unbiquitous.games.uSect.Sect;
+import org.unbiquitous.games.uSect.objects.Sect;
 
 class MovementManager {
 	private Environment env;

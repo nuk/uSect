@@ -1,14 +1,13 @@
-package org.unbiquitous.games.uSect;
+package org.unbiquitous.games.uSect.objects;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
 
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
+import org.unbiquitous.games.uSect.objects.behaviour.Carnivore;
+import org.unbiquitous.games.uSect.objects.behaviour.Herbivore;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.asset.Text;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
@@ -81,7 +80,7 @@ public class Sect extends EnvironmentObject {
 		behaviour.leftViewRange(o);
 	}
 
-	protected void moveTo(Point dir) {
+	public void moveTo(Point dir) {
 		currentDir = dir;
 		env.moveTo(this,dir);
 	}
@@ -115,101 +114,4 @@ public class Sect extends EnvironmentObject {
 		return 0;
 	}
 
-}
-
-abstract class TargetFocused  implements Sect.Behaviour{
-	protected LinkedList<Something> targetsInSight;
-	protected Sect sect;
-	
-	public void init(Sect sect) {
-		this.sect = sect;
-		targetsInSight = new LinkedList<Something>();
-	}
-
-	public void update() {
-		if (hasATarget() && !onTopOfTarget()){
-			sect.moveTo(targetDirection());
-		}
-	}
-
-	private boolean hasATarget() {
-		return target() != null;
-	}
-	
-	private boolean onTopOfTarget() {
-		return sect.center().equals(target().center());
-	}
-
-	private Point targetDirection() {
-		Point dir = new Point();
-		dir.x = dimensionDirection(sect.center().x,target().center().x);
-		dir.y = dimensionDirection(sect.center().y,target().center().y);
-		return dir;
-	}
-
-	private int dimensionDirection(int oringin, int destination) {
-		int direction = oringin > destination  ? -1 : +1;
-		return oringin == destination ? 0 : direction;
-	}
-
-	protected void sortTargets() {
-		Collections.sort(targetsInSight, new Comparator<Something>() {
-			public int compare(Something o1, Something o2) {
-				return distanceTo(o1) - distanceTo(o2);
-			}
-		});
-	}
-
-	protected Something target(){
-		if(targetsInSight.isEmpty()){
-			return null;
-		}
-		return targetsInSight.getFirst();
-	}
-	
-	protected int distanceTo(Something n) {
-		return Math.abs(n.center().x-sect.center().x) + Math.abs(n.center().y-sect.center().y);
-	}
-
-	public void leftViewRange(Something n) {
-		targetsInSight.remove(n);
-	}
-}
-
-class Herbivore extends TargetFocused{
-	
-	public void enteredViewRange(Something o){
-		if(o.type() == Something.Type.NUTRIENT){
-			targetsInSight.add(o);
-		}
-		sortTargets();
-	}
-}
-
-class Carnivore extends TargetFocused{
-
-	public void enteredViewRange(Something o){
-		if(isSect(o) || isCorpse(o)){
-			targetsInSight.add(o);
-		}
-		sortTargets();
-	}
-
-	private boolean isCorpse(Something o) {
-		return o.type() == Something.Type.CORPSE;
-	}
-
-	private boolean isSect(Something o) {
-		return o.type() == Something.Type.SECT;
-	}
-	
-	@Override
-	protected Something target() {
-		for(Something s : targetsInSight){
-			if(isCorpse(s)){
-				return s;
-			}
-		}
-		return super.target();
-	}
 }

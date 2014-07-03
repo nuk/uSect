@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.unbiquitous.games.uSect.Corpse;
 import org.unbiquitous.games.uSect.DeviceStats;
-import org.unbiquitous.games.uSect.Nutrient;
-import org.unbiquitous.games.uSect.Sect;
+import org.unbiquitous.games.uSect.objects.Corpse;
+import org.unbiquitous.games.uSect.objects.Nutrient;
+import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;

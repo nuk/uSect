@@ -7,9 +7,9 @@ import java.awt.Point;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.unbiquitous.games.uSect.Nutrient;
-import org.unbiquitous.games.uSect.Sect;
-import org.unbiquitous.games.uSect.Something;
+import org.unbiquitous.games.uSect.objects.Nutrient;
+import org.unbiquitous.games.uSect.objects.Sect;
+import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.jse.impl.io.Screen;
 import org.unbiquitous.uos.core.InitialProperties;

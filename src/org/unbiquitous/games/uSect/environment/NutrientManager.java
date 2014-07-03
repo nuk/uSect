@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.unbiquitous.games.uSect.Corpse;
 import org.unbiquitous.games.uSect.DeviceStats;
-import org.unbiquitous.games.uSect.Nutrient;
-import org.unbiquitous.games.uSect.Sect;
+import org.unbiquitous.games.uSect.objects.Corpse;
+import org.unbiquitous.games.uSect.objects.Nutrient;
+import org.unbiquitous.games.uSect.objects.Sect;
 
 class NutrientManager {
 	Environment env;
