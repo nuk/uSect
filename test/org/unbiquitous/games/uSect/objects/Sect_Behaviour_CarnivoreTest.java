@@ -6,7 +6,6 @@ import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
 import java.awt.Point;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.objects.behaviour.Carnivore;
