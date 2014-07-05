@@ -13,17 +13,22 @@ import org.unbiquitous.uImpala.engine.asset.Text;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.engine.io.Screen;
+import org.unbiquitous.uImpala.jse.util.shapes.Circle;
 import org.unbiquitous.uImpala.jse.util.shapes.SimetricShape;
 import org.unbiquitous.uImpala.util.Corner;
 
 public class Sect extends EnvironmentObject {
+	private static final Color ATTACK_PAINT = new Color(192, 57, 43,128);
+	
 	private Behaviour behaviour;
 	private Point currentDir;
 	private Environment env;
 	
 	private int radius = 30;
-	SimetricShape shape;
+	private SimetricShape shape;
+	private Circle influence;
 	private Text text;
+	private int influenceRadius = 50; 
 	
 	public interface Behaviour {
 		public void init(Sect s);
@@ -47,6 +52,7 @@ public class Sect extends EnvironmentObject {
 		}else{
 			shape = new SimetricShape(new Point(), new Color(41, 128, 185,200), radius,7);
 		}
+		influence = new Circle(new Point(), ATTACK_PAINT, influenceRadius);
 		
 		this.behaviour = behaviour;
 		behaviour.init(this);
@@ -68,6 +74,10 @@ public class Sect extends EnvironmentObject {
 		return radius;
 	}
 	
+	public int influenceRadius() {
+		return influenceRadius;
+	}
+	
 	public void update() {
 		behaviour.update();
 	}
@@ -85,7 +95,17 @@ public class Sect extends EnvironmentObject {
 		env.moveTo(this,dir);
 	}
 
+	public void attack() {
+		env.attack(this);
+	}
+	
 	public void render(GameRenderers renderers) {
+		if(env.cooldown(id) > 0){
+			influence.radius(influenceRadius*env.cooldown(id)/5);
+			influence.center(center());
+			influence.render();
+		}
+		
 		shape.center(center());
 		shape.rotate(rotationAngle());
 		shape.render();

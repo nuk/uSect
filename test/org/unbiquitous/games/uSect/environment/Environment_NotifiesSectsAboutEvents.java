@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.unbiquitous.games.uSect.objects.Nutrient;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Something;
+import org.unbiquitous.games.uSect.objects.behaviour.Carnivore;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.jse.impl.io.Screen;
 import org.unbiquitous.uos.core.InitialProperties;
@@ -115,6 +116,25 @@ public class Environment_NotifiesSectsAboutEvents {
 		e.update();
 		assertThat(count[0]).isEqualTo(2);
 		assertThat(count[1]).isEqualTo(2);
+	}
+	
+	@Test public void whenAsectDiesNotifiesOthers(){
+		final int[] count = new int[]{0,0};
+		final Sect h = e.addSect(new Sect(){
+			public void leftSight(Something n) {
+				count[0]++;
+			}
+		},new Point(10,10));
+		e.addSect(new Sect(new Carnivore()){
+			public void leftSight(Something n) {
+				if(n.id() == h.id){
+					count[1]++;
+				}
+			}
+		},new Point(60,10));
+		executeThisManyTurns(e, 100);
+		assertThat(count[0]).isEqualTo(0);
+		assertThat(count[1]).isEqualTo(1);
 	}
 	
 	@Test public void whenTwoSectsHasHalfChanceOfNotMoving(){

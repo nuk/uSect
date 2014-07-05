@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Something;
+import org.unbiquitous.games.uSect.objects.Something.Type;
 
 class SectManager {
 	private static final int INITIAL_ENERGY = 30*60 * 10;
@@ -39,6 +40,12 @@ class SectManager {
 		}
 		//TODO: clear stats
 		sects.removeAll(sectsThatDiedThisTurn);
+		for(Sect dead: sectsThatDiedThisTurn){
+			env.addCorpse(dead.center());
+			for(Sect s : sects()){
+				s.leftSight(new Something(dead.id, env, Type.SECT));
+			}
+		}
 		sectsThatDiedThisTurn.clear(); //TODO: remove from other places
 		sectsAddedThisTurn.clear(); //TODO: remove from other places 
 	}
@@ -48,7 +55,6 @@ class SectManager {
 		s.update();
 		env.addEnergy(s.id, -1);
 		if(env.stats(s.id).energy <= 0){
-			env.addCorpse(s.center());
 			sectsThatDiedThisTurn.add(s);
 		}
 	}

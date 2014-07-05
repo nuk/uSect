@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.util.Arrays;
 
 import org.unbiquitous.games.uSect.environment.Environment;
+import org.unbiquitous.games.uSect.objects.Player;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.behaviour.Carnivore;
 import org.unbiquitous.games.uSect.objects.behaviour.Herbivore;
@@ -13,6 +14,7 @@ import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObjectTreeScene;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
+import org.unbiquitous.uImpala.engine.io.KeyboardManager;
 import org.unbiquitous.uImpala.engine.io.MouseManager;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.engine.io.ScreenManager;
@@ -37,7 +39,9 @@ public class Starter extends GameObjectTreeScene {
 		GameComponents.put(Screen.class, screen);
 		GameComponents.put(AssetManager.class,assets);
 		//TODO: How to get Props from uImpala?
-		Environment e = new Environment(new DeviceStats(),new InitialProperties());
+		InitialProperties props = new InitialProperties();
+//		props.put("debug", false);
+		Environment e = new Environment(new DeviceStats(),props);
 		e.addSect(new Sect(new Herbivore()),new Point());
 		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth(),0));
 		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth()/2,0));
@@ -49,6 +53,8 @@ public class Starter extends GameObjectTreeScene {
 		
 		e.addSect(new Sect(new Carnivore()),new Point(screen.getWidth()/4,screen.getHeight()/4));
 		e.addSect(new Sect(new Carnivore()),new Point(3*screen.getWidth()/4,3*screen.getHeight()/4));
+		
+		e.addPlayer(new Player(), new Point(screen.getWidth()/2,screen.getHeight()));
 		
 		add(e);
 	}
@@ -66,7 +72,7 @@ public class Starter extends GameObjectTreeScene {
 		Game.run(new GameSettings() {
 			{ 
 				put("first_scene", Starter.class);
-				put("input_managers", Arrays.asList(MouseManager.class));
+				put("input_managers", Arrays.asList(MouseManager.class, KeyboardManager.class));
 				put("output_managers", Arrays.asList(ScreenManager.class));
 			}
 		});

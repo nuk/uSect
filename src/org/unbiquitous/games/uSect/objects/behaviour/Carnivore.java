@@ -28,4 +28,12 @@ public class Carnivore extends TargetFocused{
 		}
 		return super.target();
 	}
+	
+	@Override
+	public void update() {
+		super.update();
+		if (target() != null && distanceTo(target()) < sect.influenceRadius()){
+			sect.attack();
+		}
+	}
 }
