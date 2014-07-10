@@ -12,9 +12,10 @@ import org.unbiquitous.games.uSect.objects.Nutrient;
 import org.unbiquitous.games.uSect.objects.Sect;
 
 class NutrientManager {
-	Environment env;
+	private Environment env;
 	private RandomGenerator random;
 	private DeviceStats deviceStats;
+	private boolean createNutrients = true; 
 	private List<Nutrient> nutrients = new ArrayList<Nutrient>();
 	private List<Corpse> corpses = new ArrayList<Corpse>();
 	
@@ -47,7 +48,7 @@ class NutrientManager {
 	}
 	
 	public void update() {
-		if(random.v() >= chancesOfNutrients()){
+		if(createNutrients && random.v() >= chancesOfNutrients()){
 			env.addNutrient();
 		}
 		for(Sect s : env.sects()){
@@ -106,5 +107,9 @@ class NutrientManager {
 
 	public List<Corpse> corpses() {
 		return corpses;
+	}
+
+	public void disableCreation() {
+		createNutrients = false;
 	}
 }

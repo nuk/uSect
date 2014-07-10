@@ -35,24 +35,27 @@ public class Environment extends GameObject {
 	private SectManager sects;
 	private MovementManager mover;
 	private List<Player> players = new ArrayList<Player>();
-	private Set<Sect> attackersDuringThisTurn = new HashSet<Sect>();
+
+	private Set<Sect> matingDuringThisTurn = new HashSet<Sect>();
 
 	static class Stats implements Cloneable{
 		Point position;
 		long energy;
 		int attackCoolDown = 0;
+		private int busyCoolDown;
 		public Stats(Point position, long energy) {
-			this(position, energy, 0);
+			this(position, energy, 0,0);
 		}
 		
-		private Stats(Point position, long energy, int attackCoolDown) {
+		private Stats(Point position, long energy, int attackCoolDown, int busyCoolDown) {
 			this.position = position;
 			this.energy = energy;
 			this.attackCoolDown = attackCoolDown;
+			this.busyCoolDown = busyCoolDown;
 		}
 		
 		public Stats clone() {
-			return new Stats((Point)position.clone(), energy, attackCoolDown);
+			return new Stats((Point)position.clone(), energy, attackCoolDown,0);
 		}
 	}
 	
@@ -73,21 +76,32 @@ public class Environment extends GameObject {
 		background = new Rectangle(center, Color.WHITE, screen.getWidth(), screen.getHeight());
 	}
 	
+	
+	
 	public void update() {
 		nutrients.update();
 		sects.update();
-		for(Sect attacker: attackersDuringThisTurn){
-			for(Sect deffendant : sects.sects()){
-				if (attacker.id != deffendant.id 
-						&& distanceOf(attacker.center(), deffendant.center()) <= attacker.influenceRadius()
-						&& stats(attacker.id).attackCoolDown <= 0){
-					dataMap.get(attacker.id).attackCoolDown = 5+1;
-					addEnergy(deffendant.id, -30*60);
-				}
-			}
-			dataMap.get(attacker.id).attackCoolDown --;
-		}
-		attackersDuringThisTurn.clear();
+		updateAttack();
+		
+//		Set<Sect> remove = new HashSet<Sect>();
+//		for(Sect male: matingDuringThisTurn){
+//			for(Sect female : sects.sects()){
+//				if (male.id != female.id 
+//						&& distanceOf(male.center(), female.center()) <= male.influenceRadius()
+//						&& stats(male.id).busyCoolDown <= 0){
+//					dataMap.get(male.id).busyCoolDown = 20;
+////					addEnergy(deffendant.id, -30*60);
+//				}
+//			}
+//			dataMap.get(male.id).busyCoolDown --;
+//			if(stats(male.id).busyCoolDown <= 0){
+//				remove.add(male);
+//			}
+//		}
+//		matingDuringThisTurn.removeAll(remove);
+//		matingDuringThisTurn.clear();
+		
+		
 		
 		//TODO: untested
 		if (screen.getKeyboard() != null){
@@ -105,6 +119,45 @@ public class Environment extends GameObject {
 		}
 	}
 
+	private Set<Sect> attackersDuringThisTurn = new HashSet<Sect>();
+	private Set<Sect> busyAttackers = new HashSet<Sect>();
+	
+	private void updateAttack() {
+		processAttacks();
+		updateAttackCoolDown();
+	}
+
+	private void processAttacks() {
+		for(Sect attacker: attackersDuringThisTurn){
+			for(Sect deffendant : sects.sects()){
+				checkAttack(attacker, deffendant);
+			}
+		}
+		attackersDuringThisTurn.clear();
+	}
+
+	private void checkAttack(Sect attacker, Sect deffendant) {
+		if (attacker.id != deffendant.id 
+				&& distanceOf(attacker.center(), deffendant.center()) <= attacker.influenceRadius()
+				&& stats(attacker.id).attackCoolDown <= 0){
+			dataMap.get(attacker.id).attackCoolDown = 5;
+			busyAttackers.add(attacker);
+			addEnergy(deffendant.id, -30*60);
+			System.out.println("a");
+		}
+	}
+
+	private void updateAttackCoolDown() {
+		Set<Sect> remove = new HashSet<Sect>();
+		for(Sect coller: busyAttackers){
+			dataMap.get(coller.id).attackCoolDown --;
+			if(stats(coller.id).attackCoolDown <= 0){
+				remove.add(coller);
+			}
+		}
+		busyAttackers.removeAll(remove);
+	}
+	
 	//TODO: duplicated
 	private int distanceOf(Point origin, Point desttination) {
 		return Math.abs(origin.x-desttination.x) + Math.abs(origin.y-desttination.y);
@@ -150,7 +203,8 @@ public class Environment extends GameObject {
 		return stats;
 	}
 	
-	protected Stats addEnergy(UUID objectId, long increment){
+	//FIXME: I don't like the idea of this to be public
+	public Stats addEnergy(UUID objectId, long increment){
 		Stats stats = dataMap.get(objectId);
 		stats.energy += increment;
 		return stats;
@@ -163,7 +217,13 @@ public class Environment extends GameObject {
 	}
 
 	public void attack(Sect sect) {
-		attackersDuringThisTurn.add(sect);
+		if(!busyAttackers.contains(sect)){
+			attackersDuringThisTurn.add(sect);
+		}
+	}
+	
+	public void mate(Sect sect) {
+		matingDuringThisTurn.add(sect);
 	}
 	
 	public Nutrient addNutrient(Point position) {
@@ -201,8 +261,6 @@ public class Environment extends GameObject {
 		return nutrients.corpses();
 	}
 	
-	
-	
 	protected void render(GameRenderers renderers) {
 		background.render();
 		renderNutrients();
@@ -229,6 +287,10 @@ public class Environment extends GameObject {
 
 	protected void wakeup(Object... args) {}
 	protected void destroy() {}
+
+	public void disableNutrientsCreation() {
+		nutrients.disableCreation();
+	}
 
 }
 

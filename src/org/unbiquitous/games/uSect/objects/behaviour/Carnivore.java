@@ -29,11 +29,20 @@ public class Carnivore extends TargetFocused{
 		return super.target();
 	}
 	
+	//REMOVE this
+	private static final int ATTACK_ENERGY = 30*60;
+	private static final int INITIAL_ENERGY = (int) (ATTACK_ENERGY * 10);
+	
 	@Override
 	public void update() {
 		super.update();
+		
 		if (target() != null && distanceTo(target()) < sect.influenceRadius()){
-			sect.attack();
+			if(sect.energy() >= 2*INITIAL_ENERGY){
+				sect.mate();
+			}else{
+				sect.attack();
+			}
 		}
 	}
 }

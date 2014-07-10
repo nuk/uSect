@@ -12,7 +12,7 @@ import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uos.core.InitialProperties;
 
-public class Sect_Behaviour_HerbivoreTest {
+public class Sect_Behavior_HerbivoreTest {
 
 	private static final int INITIAL_ENERGY = (int) (30*60*10);
 	private Environment e;

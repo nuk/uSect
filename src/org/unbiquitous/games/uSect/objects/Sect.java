@@ -28,7 +28,7 @@ public class Sect extends EnvironmentObject {
 	private SimetricShape shape;
 	private Circle influence;
 	private Text text;
-	private int influenceRadius = 50; 
+	private int influenceRadius = 50;
 	
 	public interface Behaviour {
 		public void init(Sect s);
@@ -97,6 +97,10 @@ public class Sect extends EnvironmentObject {
 
 	public void attack() {
 		env.attack(this);
+	}
+	
+	public void mate() {
+		env.mate(this);
 	}
 	
 	public void render(GameRenderers renderers) {

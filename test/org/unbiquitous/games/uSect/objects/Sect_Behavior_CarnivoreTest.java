@@ -14,7 +14,7 @@ import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.jse.impl.io.Screen;
 import org.unbiquitous.uos.core.InitialProperties;
 
-public class Sect_Behaviour_CarnivoreTest {
+public class Sect_Behavior_CarnivoreTest {
 	private static final int ATTACK_ENERGY = 30*60;
 	private static final int INITIAL_ENERGY = (int) (ATTACK_ENERGY * 10);
 	private Environment e;
@@ -92,6 +92,15 @@ public class Sect_Behaviour_CarnivoreTest {
 		executeThisManyTurns(e, 50+5);
 		
 		assertThat(e.energy(h.id())).isEqualTo((long)INITIAL_ENERGY-50-5-ATTACK_ENERGY);
+	}
+	
+	@Test public void afterCoolDowncanattackAgain(){
+		e.random.setvalue(0);
+		Sect h = e.addSect(new Sect(new Herbivore()),new Point(10,20));
+				 e.addSect(new Sect(new Carnivore()),new Point(10,120));
+		
+		executeThisManyTurns(e, 50+5+1);
+		assertThat(e.energy(h.id())).isEqualTo((long)INITIAL_ENERGY-50-5-2*ATTACK_ENERGY-1);
 	}
 	
 	//TODO: Check malicious behaviors (multiple attacks, moves, etc) during turns

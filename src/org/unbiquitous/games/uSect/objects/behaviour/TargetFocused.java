@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Something;
 
+//TODO: its Behavior
 public abstract class TargetFocused  implements Sect.Behaviour{
 	protected LinkedList<Something> targetsInSight;
 	protected Sect sect;
