@@ -27,8 +27,6 @@ import org.unbiquitous.uos.core.InitialProperties;
 public class Environment extends GameObject {
 
 	private Screen screen;
-	//TODO: fix this
-	public RandomGenerator random =  new RandomGenerator();
 	private Rectangle background;
 	
 	private Map<UUID,Stats> dataMap = new HashMap<UUID,Stats>();
@@ -42,9 +40,9 @@ public class Environment extends GameObject {
 	}
 	
 	public Environment(DeviceStats deviceStats,InitialProperties props) {
-		nutrients = new NutrientManager(this, random, deviceStats);
+		nutrients = new NutrientManager(this, deviceStats);
 		sects = new SectManager(this);
-		mover = new MovementManager(this, random);
+		mover = new MovementManager(this);
 		createBackground();
 	}
 

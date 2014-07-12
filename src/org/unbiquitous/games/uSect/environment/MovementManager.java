@@ -6,12 +6,10 @@ import org.unbiquitous.uImpala.util.math.Point;
 
 class MovementManager {
 	private Environment env;
-	private RandomGenerator random;
 	
-	public MovementManager(Environment env, RandomGenerator random) {
+	public MovementManager(Environment env) {
 		super();
 		this.env = env;
-		this.random = random;
 	}
 
 	public void moveTo(Sect sect, Point dir) {
@@ -21,7 +19,7 @@ class MovementManager {
 	}
 
 	private void adjustDirection(Point dir) {
-		double lottery = random.v();
+		double lottery = Random.v();
 		if(lottery > 0.5 && dir.x != 0){
 			dir.y = 0;
 		}else if (lottery <= 0.5 && dir.y != 0){
@@ -33,7 +31,7 @@ class MovementManager {
 		Point forwardPosition = new Point(sect.position().x + dir.x, sect.position().y + dir.y);
 		if(!hasColided(sect, forwardPosition)){
 			return forwardPosition;
-		}else if (random.v() > 0.5){
+		}else if (Random.v() > 0.5){
 			Point backwardsPosition = new Point(sect.position().x - dir.x, sect.position().y - dir.y);
 			return backwardsPosition;
 		}

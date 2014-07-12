@@ -24,6 +24,7 @@ public class Sect extends EnvironmentObject {
 	private Point currentDir;
 	private Environment env;
 	
+	
 	private int radius = 30;
 	private SimetricShape shape;
 	private Circle influence;
@@ -33,6 +34,7 @@ public class Sect extends EnvironmentObject {
 
 	
 	public interface Behaviour {
+		public Something.Feeding feeding();
 		public void init(Sect s);
 		public void update();
 		public void enteredViewRange(Something o);
@@ -79,6 +81,10 @@ public class Sect extends EnvironmentObject {
 	
 	public int influenceRadius() {
 		return influenceRadius;
+	}
+	
+	public Behaviour behaviour() {
+		return behaviour;
 	}
 	
 	public void update() {

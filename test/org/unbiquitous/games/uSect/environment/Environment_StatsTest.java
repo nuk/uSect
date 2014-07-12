@@ -48,10 +48,10 @@ public class Environment_StatsTest {
 	@Test public void nutrientCreationCanBeDisabled(){
 		e = new Environment(createStastWithMemory(2*1024),new InitialProperties());
 		e.disableNutrientsCreation();
-		e.random.setvalue(1);
+		Random.setvalue(1);
 		e.update();
 		assertThat(e.nutrients()).isEmpty();
-		e.random.setvalue(0);
+		Random.setvalue(0);
 		e.update();
 		assertThat(e.nutrients()).isEmpty();
 	}
@@ -59,10 +59,10 @@ public class Environment_StatsTest {
 	
 	private void testNutrientsProbability(double chances) {
 		double value = 1-chances;
-		e.random.setvalue(value-0.0001);
+		Random.setvalue(value-0.0001);
 		e.update();
 		assertThat(e.nutrients()).isEmpty();
-		e.random.setvalue(value);
+		Random.setvalue(value);
 		e.update();
 		assertThat(e.nutrients()).hasSize(1);
 	}

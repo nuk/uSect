@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
+import org.unbiquitous.games.uSect.objects.Something.Feeding;
 import org.unbiquitous.games.uSect.objects.Something.Type;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.jse.util.shapes.Circle;
@@ -55,14 +56,14 @@ public class Nutrient extends EnvironmentObject{
 	}
 
 	private void notifyAbsortionToAll() {
-		for(Sect s1: targetOf){
-			s1.leftSight(new Something(id, env, type));
+		for(Sect s: targetOf){
+			s.leftSight(new Something(id, env, type, Feeding.NONE));
 		}
 	}
 
 	public void insightOf(Sect s) {
 		if(! targetOf.contains(s)){
-			s.enteredSight(new Something(id, env, type)); 
+			s.enteredSight(new Something(id, env, type, Feeding.NONE)); 
 			targetOf.add(s);
 			absortionTable.put(s, 0);
 		};

@@ -4,12 +4,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
+import org.unbiquitous.games.uSect.environment.Random;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.uImpala.util.math.Point;
 
 //TODO: its Behavior
 public abstract class TargetFocused  implements Sect.Behaviour{
+	//REMOVE this
+	protected static final int ATTACK_ENERGY = 30*60;
+	protected static final int INITIAL_ENERGY = (int) (ATTACK_ENERGY * 10);
+	
 	protected LinkedList<Something> targetsInSight;
 	protected Sect sect;
 	
@@ -65,5 +70,24 @@ public abstract class TargetFocused  implements Sect.Behaviour{
 	
 	public void leftViewRange(Something n) {
 		targetsInSight.remove(n);
+	}
+	
+	protected boolean insideInfluenceRadius(Something target) {
+		return distanceTo(target) < sect.influenceRadius();
+	}
+	
+	protected boolean wantToMate(Something mate) {
+		return Random.v() > 1-matingChance(mate);
+	}
+
+	protected double matingChance(Something mate) {
+		double chance = 0.50;
+			if(mate.feeding() != this.feeding()){
+				chance = 0.25;
+			}
+		return chance;
+	}
+	protected boolean hasMatingEnergy() {
+		return sect.energy() >= 2*INITIAL_ENERGY;
 	}
 }

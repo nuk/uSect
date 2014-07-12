@@ -22,7 +22,7 @@ public class Environment_NotifiesSectsAboutEvents {
 	@Before public void setUp(){
 		GameComponents.put(org.unbiquitous.uImpala.engine.io.Screen.class, new Screen());
 		e = new Environment(new InitialProperties());
-		e.random.setvalue(0);
+		Random.setvalue(0);
 	}
 	
 	@Test public void notifiesSectOfNutrientPresence(){
@@ -47,6 +47,7 @@ public class Environment_NotifiesSectsAboutEvents {
 		assertThat(count[0]).isEqualTo(1);
 	}
 	
+	//TODO This is behavior
 	@Test public void ifASectStaysMoreThan5turnsOnTopOfANutrientItEatsIt(){
 		Nutrient n = e.addNutrient(new Point(10,10));
 		final int[] count = new int[]{0};
@@ -99,12 +100,12 @@ public class Environment_NotifiesSectsAboutEvents {
 		final int[] count = new int[]{0,0};
 		e.addSect(new Sect(){
 			public void enteredSight(Something n) {
-				count[0]++;
+				if(n.id() != this.id())	count[0]++;
 			}
 		},new Point(9,10));
 		e.addSect(new Sect(){
 			public void enteredSight(Something n) {
-				count[1]++;
+				if(n.id() != this.id())	count[1]++;
 			}
 		},new Point(90,100));
 		e.addSect(new Sect(),new Point(0,0));
@@ -139,7 +140,7 @@ public class Environment_NotifiesSectsAboutEvents {
 	
 	@Test public void whenTwoSectsHasHalfChanceOfNotMoving(){
 		e.addNutrient(new Point(10,10));
-		e.random.setvalue(0.49);
+		Random.setvalue(0.49);
 		Sect s1 = e.addSect(new Sect(),new Point(10,10));
 		Sect s2 = e.addSect(new Sect(),new Point(10+(s1.radius()),10));
 		
@@ -150,7 +151,7 @@ public class Environment_NotifiesSectsAboutEvents {
 	
 	@Test public void whenTwoSectsHasHalfChanceOfBackingOf(){
 		e.addNutrient(new Point(10,10));
-		e.random.setvalue(0.51);
+		Random.setvalue(0.51);
 		Sect s1 = e.addSect(new Sect(),new Point(10,10));
 		Sect s2 = e.addSect(new Sect(),new Point(10+(s1.radius()),10));
 		

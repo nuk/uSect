@@ -6,6 +6,7 @@ import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
 import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
+import org.unbiquitous.games.uSect.environment.Random;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.util.math.Point;
@@ -19,7 +20,7 @@ public class Sect_Behavior_HerbivoreTest {
 	@Before public void setUp(){
 		GameComponents.put(Screen.class, new org.unbiquitous.uImpala.jse.impl.io.Screen());
 		e = new Environment(new InitialProperties());
-		e.random.setvalue(0);
+		Random.setvalue(0);
 	}
 	
 	@Test public void standStillOnEmptyEnvironment(){
@@ -45,12 +46,12 @@ public class Sect_Behavior_HerbivoreTest {
 		
 		Sect s = e.addSect(new Sect(),new Point(10, 10));
 		
-		e.random.setvalue(0.51);
+		Random.setvalue(0.51);
 		e.update(); 
 		
 		assertThat(s.position()).isEqualTo(new Point(11,10));
 
-		e.random.setvalue(0.49);
+		Random.setvalue(0.49);
 		e.update(); 
 		
 		assertThat(s.position()).isEqualTo(new Point(11,11));
@@ -60,12 +61,12 @@ public class Sect_Behavior_HerbivoreTest {
 		e.addNutrient(new Point(40,40));
 		
 		Sect s1 = e.addSect(new Sect(),new Point(40, 10));
-		e.random.setvalue(0.51);
+		Random.setvalue(0.51);
 		e.update(); 
 		assertThat(s1.position()).isEqualTo(new Point(40,11));
 
 		Sect s2 = e.addSect(new Sect(),new Point(10, 40));
-		e.random.setvalue(0.49);
+		Random.setvalue(0.49);
 		e.update(); 
 		assertThat(s2.position()).isEqualTo(new Point(11,40));
 	}
@@ -140,7 +141,7 @@ public class Sect_Behavior_HerbivoreTest {
 		e.update();
 		assertThat(e.sects()).containsOnly(s);
 		
-		e.random.setvalue(0);
+		Random.setvalue(0);
 		executeThisManyTurns(e, INITIAL_ENERGY-2);
 		assertThat(e.sects()).containsOnly(s);
 		

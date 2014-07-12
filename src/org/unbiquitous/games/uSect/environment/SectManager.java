@@ -44,7 +44,7 @@ class SectManager {
 		for(Sect dead: sectsThatDiedThisTurn){
 			env.addCorpse(dead.position());
 			for(Sect s : sects()){
-				s.leftSight(new Something(dead.id, env, Type.SECT));
+				s.leftSight(new Something(dead.id, env, Type.SECT, s.behaviour().feeding()));
 			}
 		}
 		sectsThatDiedThisTurn.clear(); //TODO: remove from other places
@@ -61,9 +61,9 @@ class SectManager {
 	}
 
 	private void checkForNewSects(Sect s) {
-		for(Sect s2 : sectsAddedThisTurn){
-			if(!s.equals(s2)){
-				s.enteredSight(new Something(s2.id, env, Something.Type.SECT));
+		for(Sect newSect : sectsAddedThisTurn){
+			if(!s.equals(newSect)){
+				s.enteredSight(new Something(newSect.id, env, Something.Type.SECT, newSect.behaviour().feeding()));
 			}
 		}
 	}

@@ -6,6 +6,7 @@ import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
 import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
+import org.unbiquitous.games.uSect.environment.Random;
 import org.unbiquitous.games.uSect.objects.behaviour.Carnivore;
 import org.unbiquitous.games.uSect.objects.behaviour.Herbivore;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
@@ -21,7 +22,7 @@ public class Sect_Behavior_CarnivoreTest {
 	@Before public void setUp(){
 		GameComponents.put(org.unbiquitous.uImpala.engine.io.Screen.class, new Screen());
 		e = new Environment(new InitialProperties());
-		e.random.setvalue(0);
+		Random.setvalue(0);
 	}
 	
 	@Test public void goesAfterAHerbivoreAfterEachStep(){
@@ -48,7 +49,7 @@ public class Sect_Behavior_CarnivoreTest {
 	
 	@Test public void preferCorpsesThanLiveSects(){
 		e.addCorpse(new Point(100,10));
-		e.random.setvalue(-1);
+		Random.setvalue(-1);
 		e.addSect(new Sect(new Herbivore()),new Point(0,10));
 		Sect c = e.addSect(new Sect(new Carnivore()),new Point(50,10));
 		
@@ -70,7 +71,7 @@ public class Sect_Behavior_CarnivoreTest {
 	}
 	
 	@Test public void launchesAnAttackWhenIsNearItsTarget(){
-		e.random.setvalue(0);
+		Random.setvalue(0);
 		Sect h = e.addSect(new Sect(new Herbivore()),new Point(10,20));
 				 e.addSect(new Sect(new Carnivore()),new Point(10,120));
 		
@@ -84,7 +85,7 @@ public class Sect_Behavior_CarnivoreTest {
 	}
 	
 	@Test public void anAttackHasACoolDownOf5turns(){
-		e.random.setvalue(0);
+		Random.setvalue(0);
 		Sect h = e.addSect(new Sect(new Herbivore()),new Point(10,20));
 				 e.addSect(new Sect(new Carnivore()),new Point(10,120));
 		
@@ -94,7 +95,7 @@ public class Sect_Behavior_CarnivoreTest {
 	}
 	
 	@Test public void afterCoolDowncanattackAgain(){
-		e.random.setvalue(0);
+		Random.setvalue(0);
 		Sect h = e.addSect(new Sect(new Herbivore()),new Point(10,20));
 				 e.addSect(new Sect(new Carnivore()),new Point(10,120));
 		

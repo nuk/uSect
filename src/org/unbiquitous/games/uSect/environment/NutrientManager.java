@@ -14,17 +14,14 @@ import org.unbiquitous.uImpala.util.math.Point;
 
 class NutrientManager {
 	private Environment env;
-	private RandomGenerator random;
 	private DeviceStats deviceStats;
 	private boolean createNutrients = true; 
 	private List<Nutrient> nutrients = new ArrayList<Nutrient>();
 	private List<Corpse> corpses = new ArrayList<Corpse>();
 	
-	public NutrientManager(Environment env, RandomGenerator random,
-			DeviceStats deviceStats) {
+	public NutrientManager(Environment env, DeviceStats deviceStats) {
 		super();
 		this.env = env;
-		this.random = random;
 		this.deviceStats = deviceStats;
 	}
 
@@ -49,7 +46,7 @@ class NutrientManager {
 	}
 	
 	public void update() {
-		if(createNutrients && random.v() >= chancesOfNutrients()){
+		if(createNutrients && Random.v() >= chancesOfNutrients()){
 			env.addNutrient();
 		}
 		for(Sect s : env.sects()){
