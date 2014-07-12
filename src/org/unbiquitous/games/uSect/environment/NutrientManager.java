@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.unbiquitous.games.uSect.DeviceStats;
+import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.games.uSect.objects.Corpse;
 import org.unbiquitous.games.uSect.objects.Nutrient;
 import org.unbiquitous.games.uSect.objects.Sect;
@@ -34,7 +35,7 @@ class NutrientManager {
 	Nutrient addNutrient(Point position) {
 		Nutrient n = new Nutrient();
 		n.setEnv(env);
-		env.add(n.id, position,0);
+		env.add(n, new Stats(position,0));
 		nutrients.add(n);
 		return n;
 	}
@@ -42,7 +43,7 @@ class NutrientManager {
 	Corpse addCorpse(Point position) {
 		Corpse n = new Corpse();
 		n.setEnv(env);
-		env.add(n.id, position,0);
+		env.add(n, new Stats(position,0));
 		corpses.add(n);
 		return n;
 	}
@@ -88,7 +89,7 @@ class NutrientManager {
 	private void checkConsumtion(Set<Nutrient> forRemoval, Nutrient n) {
 		Sect eater = n.hasBeenConsumedBy();
 		if(eater != null){
-			env.addEnergy(eater.id, n.energy()+1);
+			env.changeStats(eater, Stats.n().energy(n.energy()+1));
 			forRemoval.add(n); 
 		}
 	}

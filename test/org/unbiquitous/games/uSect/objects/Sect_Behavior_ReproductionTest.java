@@ -6,6 +6,7 @@ import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
 import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
+import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.games.uSect.objects.behaviour.Carnivore;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.jse.impl.io.Screen;
@@ -29,9 +30,9 @@ public class Sect_Behavior_ReproductionTest {
 	
 	@Test public void ifTwoSectsHaveMoreThanDoubleTheInitialEnergyTheyHaveFifityPercentChanceOfMating(){
 		Sect male = e.addSect(new Sect(new Carnivore()),new Point(20,20));
-		e.addEnergy(male.id(), 2*INITIAL_ENERGY+50);
+		e.changeStats(male, Stats.n().energy(2*INITIAL_ENERGY+50));
 		Sect female = e.addSect(new Sect(new Carnivore()),new Point(60,20));
-		e.addEnergy(female.id(), 2*INITIAL_ENERGY+50);
+		e.changeStats(female, Stats.n().energy(2*INITIAL_ENERGY+50));
 		
 		e.random.setvalue(1);
 		executeThisManyTurns(e, 5);
@@ -52,9 +53,9 @@ public class Sect_Behavior_ReproductionTest {
 	
 	@Test public void whileMatingCantWalk(){
 		Sect male = e.addSect(new Sect(new Carnivore()),new Point(20,20));
-		e.addEnergy(male.id(), 2*INITIAL_ENERGY);
+		e.changeStats(male, Stats.n().energy(2*INITIAL_ENERGY));
 		Sect female = e.addSect(new Sect(new Carnivore()),new Point(60,20));
-		e.addEnergy(female.id(), 2*INITIAL_ENERGY);
+		e.changeStats(female, Stats.n().energy(2*INITIAL_ENERGY));
 		
 		e.random.setvalue(1);
 		executeThisManyTurns(e, 15);

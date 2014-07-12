@@ -3,6 +3,7 @@ package org.unbiquitous.games.uSect.environment;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.games.uSect.objects.Something.Type;
@@ -24,7 +25,7 @@ class SectManager {
 
 	Sect addSect(Sect s, Point position){
 		s.setEnv(env);
-		env.add(s.id, position, (long) INITIAL_ENERGY);
+		env.add(s, new Stats(position, INITIAL_ENERGY));
 		sects.add(s);
 		sectsAddedThisTurn.add(s);
 		return s;
@@ -53,7 +54,7 @@ class SectManager {
 	private void updateSect(Sect s) {
 		checkForNewSects(s);
 		s.update();
-		env.addEnergy(s.id, -1);
+		env.changeStats(s, Stats.n().energy(-1));
 		if(env.stats(s.id).energy <= 0){
 			sectsThatDiedThisTurn.add(s);
 		}

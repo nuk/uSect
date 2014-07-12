@@ -1,6 +1,7 @@
 package org.unbiquitous.games.uSect.environment;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,27 +37,6 @@ public class Environment extends GameObject {
 	private MovementManager mover;
 	private List<Player> players = new ArrayList<Player>();
 
-	static class Stats implements Cloneable{
-		Point position;
-		long energy;
-		int attackCoolDown = 0;
-		int busyCoolDown;
-		public Stats(Point position, long energy) {
-			this(position, energy, 0,0);
-		}
-		
-		private Stats(Point position, long energy, int attackCoolDown, int busyCoolDown) {
-			this.position = position;
-			this.energy = energy;
-			this.attackCoolDown = attackCoolDown;
-			this.busyCoolDown = busyCoolDown;
-		}
-		
-		public Stats clone() {
-			return new Stats(position.clone(), energy, attackCoolDown,busyCoolDown);
-		}
-	}
-	
 	public Environment(InitialProperties props) {
 		this(new DeviceStats(),props);
 	}
@@ -148,7 +128,7 @@ public class Environment extends GameObject {
 				&& stats(attacker.id).attackCoolDown <= 0){
 			dataMap.get(attacker.id).attackCoolDown = 5;
 			busyAttackers.add(attacker);
-			addEnergy(deffendant.id, -30*60);
+			changeStats(deffendant, Stats.n().energy(-30*60));
 		}
 	}
 
@@ -198,10 +178,9 @@ public class Environment extends GameObject {
 		return dataMap.get(objectId).clone();
 	}
 	
-	protected Stats add(UUID objectId, Point position, long energy){
-		Stats stats = new Stats(position,energy);
-		dataMap.put(objectId, stats);
-		return stats;
+	protected Stats add(EnvironmentObject object, Stats initialStats){
+		dataMap.put(object.id(), initialStats);
+		return initialStats;
 	}
 	
 	protected Stats moveTo(UUID objectId, Point position){
@@ -210,10 +189,10 @@ public class Environment extends GameObject {
 		return stats;
 	}
 	
-	//FIXME: I don't like the idea of this to be public
-	public Stats addEnergy(UUID objectId, long increment){
-		Stats stats = dataMap.get(objectId);
-		stats.energy += increment;
+	//TODO: not to be public
+	public Stats changeStats(EnvironmentObject object, Stats diff){
+		Stats stats = dataMap.get(object.id());
+		stats.energy += diff.energy;
 		return stats;
 	}
 	
@@ -253,7 +232,7 @@ public class Environment extends GameObject {
 	
 	public Player addPlayer(Player p, Point position) {
 		p.setEnv(this);
-		this.add(p.id, position, 0);
+		this.add(p, new Stats(position, 0));
 		players.add(p);
 		return p;
 	}
@@ -301,5 +280,39 @@ public class Environment extends GameObject {
 		nutrients.disableCreation();
 	}
 
+	public static class Stats implements Serializable, Cloneable{
+		Point position;
+		long energy;
+		int attackCoolDown = 0;
+		int busyCoolDown;
+		
+		public Stats() {
+			this(new Point(), 0);
+		}
+		
+		public Stats(Point position, long energy) {
+			this(position, energy, 0,0);
+		}
+		
+		private Stats(Point position, long energy, int attackCoolDown, int busyCoolDown) {
+			this.position = position;
+			this.energy = energy;
+			this.attackCoolDown = attackCoolDown;
+			this.busyCoolDown = busyCoolDown;
+		}
+		
+		public Stats clone() {
+			return new Stats(position.clone(), energy, attackCoolDown,busyCoolDown);
+		}
+		
+		public static Stats n(){
+			return new Stats();
+		}
+		
+		public Stats energy(long energy) {
+			this.energy = energy;
+			return this;
+		}
+	}
 }
 

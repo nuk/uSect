@@ -1,5 +1,6 @@
 package org.unbiquitous.games.uSect.environment;
 
+import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.uImpala.util.math.Point;
 
@@ -16,7 +17,7 @@ class MovementManager {
 	public void moveTo(Sect sect, Point dir) {
 		adjustDirection(dir);
 		env.moveTo(sect.id, determineFinalPosition(sect, dir));
-		env.addEnergy(sect.id, -1);
+		env.changeStats(sect, Stats.n().energy(-1));
 	}
 
 	private void adjustDirection(Point dir) {
