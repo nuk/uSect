@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -77,25 +78,34 @@ public class Environment extends GameObject {
 			}
 		}
 		matingDuringThisTurn.clear();
-		Set<Sect> remove = new HashSet<Sect>();
+		
+		Set<Sect> parents = new HashSet<Sect>();
 		for(Sect coller: busyThisTurn){
 			dataMap.get(coller.id).busyCoolDown --;
 			if(stats(coller.id).busyCoolDown <= 0){
 				changeStats(coller, Stats.change().energy(-30*60));
-				remove.add(coller);
+				parents.add(coller);
 			}
 		}
 		
-		if(!remove.isEmpty()){
-			Point position = new Point();
-			for(Sect parent : remove){
-				position.add(parent.position());
+		if(!parents.isEmpty()){
+			Iterator<Sect> it = parents.iterator();
+			while(parents.size() > 1){
+				Sect father = it.next();
+				it.remove();
+				for (Sect mother : parents){
+					if(father.position().distanceTo(mother.position()) <= father.influenceRadius()){
+						Point position = father.position().clone();
+						position.add(mother.position());
+						position.x /= 2;
+						position.y /= 2;
+						add(new Sect(),new Stats(position,0));
+					}
+				}
+				
 			}
-			position.x /= remove.size();
-			position.y /= remove.size();
-			this.addSect(new Sect(), position);
 		}
-		busyThisTurn.removeAll(remove);
+		busyThisTurn.removeAll(parents);
 		
 		
 		//TODO: untested

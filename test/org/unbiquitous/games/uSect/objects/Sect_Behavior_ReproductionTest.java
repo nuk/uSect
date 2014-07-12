@@ -3,6 +3,9 @@ package org.unbiquitous.games.uSect.objects;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
@@ -167,8 +170,26 @@ public class Sect_Behavior_ReproductionTest {
 		Sect son = e.sects().get(2);
 		assertThat(son.position()).isEqualTo(new Point(40, 20));
 	}
+	
+	@Test
+	public void multipleSimultaneousMatingsConsiderOnlyParentsInRangeOfMatingCall() {
+		EnvironmentObject s1 = e.add(new Sect(new Carnivore()), new Stats(new Point(20, 20),
+				3 * INITIAL_ENERGY));
+		EnvironmentObject s2 =e.add(new Sect(new Carnivore()), new Stats(new Point(60, 20),
+				3 * INITIAL_ENERGY));
+		EnvironmentObject s3 =e.add(new Sect(new Carnivore()), new Stats(new Point(20, 60),
+				3 * INITIAL_ENERGY));
 
-	// TODO: what if we have multiple fathers?
+		Random.setvalue(1);
+		executeThisManyTurns(e, 50);
+
+		List<Sect> sons = e.sects();
+		sons.removeAll(Arrays.asList(s1,s2,s3));
+		assertThat(sons).hasSize(2);
+		assertThat(Arrays.asList(sons.get(0).position(),sons.get(1).position()))
+			.containsOnly(new Point(40, 20),new Point(21, 40));
+	}
+
 	// TODO: Can't reproduce alone (somebody else must be part of its mating
 	// process)
 	// TODO: what if we have multiple birtths at the same time?

@@ -1,5 +1,6 @@
 package org.unbiquitous.games.uSect.objects;
 
+import static java.lang.String.*;
 import java.awt.Color;
 import java.awt.Font;
 
@@ -136,5 +137,8 @@ public class Sect extends EnvironmentObject {
 		}
 		return 0;
 	}
-
+	
+	public String toString() {
+		return format("Sect:%s%s",behaviour.feeding(), position());
+	};
 }
