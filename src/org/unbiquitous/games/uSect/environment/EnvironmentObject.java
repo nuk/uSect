@@ -26,11 +26,11 @@ public abstract class EnvironmentObject extends GameObject {
 	}
 	
 	public Point position() {
-		return env.position(id);
+		return env.stats(id).position;
 	}
 	
 	public Long energy() {
-		return env.energy(id);
+		return env.stats(id).energy;
 	}
 	
 	public boolean equals(Object obj) {

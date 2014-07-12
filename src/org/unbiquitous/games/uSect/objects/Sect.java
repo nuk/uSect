@@ -97,14 +97,14 @@ public class Sect extends EnvironmentObject {
 	}
 	
 	public void render(GameRenderers renderers) {
-		if(env.attackCooldown(id) > 0){
-			influence.radius(influenceRadius*env.attackCooldown(id)/5);
+		if(env.stats(id).attackCoolDown > 0){
+			influence.radius(influenceRadius*env.stats(id).attackCoolDown/5);
 			influence.center(position());
 			influence.render();
 		}
 		
-		if(env.busyCooldown(id) > 0){
-			mating.radius(influenceRadius*env.busyCooldown(id)/50+radius);
+		if(env.stats(id).busyCoolDown > 0){
+			mating.radius(influenceRadius*env.stats(id).busyCoolDown/50+radius);
 			mating.center(position());
 			mating.render();
 		}

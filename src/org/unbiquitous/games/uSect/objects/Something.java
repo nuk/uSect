@@ -24,7 +24,7 @@ public class Something {
 	}
 
 	public UUID id() {		return id;}
-	public Point position() {	return env.position(id);}
+	public Point position() {	return env.stats(id).position;}
 	public Type type() {	return type;}
 	public Feeding feeding() {	return feeding;}
 

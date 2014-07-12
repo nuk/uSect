@@ -152,37 +152,9 @@ public class Environment extends GameObject {
 		busyAttackers.removeAll(remove);
 	}
 	
-	public Point position(UUID objectId){
-		if(!dataMap.containsKey(objectId)){
-			return null;
-		}
-		return (Point) dataMap.get(objectId).position.clone();
-	}
-	
-	public Long energy(UUID objectId){
-		if(!dataMap.containsKey(objectId)){
-			return null;
-		}
-		return dataMap.get(objectId).energy;
-	}
-	
-	public Integer attackCooldown(UUID objectId){
-		if(!dataMap.containsKey(objectId)){
-			return null;
-		}
-		return dataMap.get(objectId).attackCoolDown;
-	}
-	
-	public Integer busyCooldown(UUID objectId){
-		if(!dataMap.containsKey(objectId)){
-			return null;
-		}
-		return dataMap.get(objectId).busyCoolDown;
-	}
-	
-	protected Stats stats(UUID objectId){
+	public Stats stats(UUID objectId){
 		if (!dataMap.containsKey(objectId)){
-			return new Stats(new Point(),0);
+			return null;
 		}
 		return dataMap.get(objectId).clone();
 	}
@@ -302,10 +274,10 @@ public class Environment extends GameObject {
 
 	@SuppressWarnings("serial")
 	public static class Stats implements Serializable, Cloneable{
-		Point position;
-		long energy;
-		int attackCoolDown = 0;
-		int busyCoolDown;
+		public Point position;
+		public long energy;
+		public int attackCoolDown = 0;
+		public int busyCoolDown;
 		
 		public Stats() {
 			this(new Point(), 0);

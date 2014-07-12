@@ -43,12 +43,12 @@ public class Sect_Behavior_ReproductionTest {
 		Random.setvalue(1);
 		executeThisManyTurns(e, 5);
 
-		assertThat(e.energy(male.id())).isEqualTo(3 * INITIAL_ENERGY + 44);
-		assertThat(e.energy(female.id())).isEqualTo(3 * INITIAL_ENERGY + 44);
+		assertThat(e.stats(male.id()).energy).isEqualTo(3 * INITIAL_ENERGY + 44);
+		assertThat(e.stats(female.id()).energy).isEqualTo(3 * INITIAL_ENERGY + 44);
 
 		executeThisManyTurns(e, 44);
-		assertThat(e.energy(male.id())).isEqualTo(3 * INITIAL_ENERGY);
-		assertThat(e.energy(female.id())).isEqualTo(3 * INITIAL_ENERGY);
+		assertThat(e.stats(male.id()).energy).isEqualTo(3 * INITIAL_ENERGY);
+		assertThat(e.stats(female.id()).energy).isEqualTo(3 * INITIAL_ENERGY);
 
 		assertThat(e.sects()).hasSize(2);
 		executeThisManyTurns(e, 1);
@@ -79,9 +79,9 @@ public class Sect_Behavior_ReproductionTest {
 		Random.setvalue(1);
 		executeThisManyTurns(e, 50);
 
-		assertThat(e.energy(male.id())).isEqualTo(
+		assertThat(e.stats(male.id()).energy).isEqualTo(
 				3 * INITIAL_ENERGY - ATTACK_ENERGY);
-		assertThat(e.energy(female.id())).isEqualTo(
+		assertThat(e.stats(female.id()).energy).isEqualTo(
 				3 * INITIAL_ENERGY - ATTACK_ENERGY);
 
 		assertThat(e.sects()).hasSize(3);

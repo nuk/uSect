@@ -77,11 +77,11 @@ public class Sect_Behavior_CarnivoreTest {
 		
 		executeThisManyTurns(e, 50);
 		
-		assertThat(e.energy(h.id())).isEqualTo((long)INITIAL_ENERGY-50);
+		assertThat(e.stats(h.id()).energy).isEqualTo((long)INITIAL_ENERGY-50);
 		
 		executeThisManyTurns(e, 1);
 		
-		assertThat(e.energy(h.id())).isEqualTo((long)INITIAL_ENERGY-50-1-ATTACK_ENERGY);
+		assertThat(e.stats(h.id()).energy).isEqualTo((long)INITIAL_ENERGY-50-1-ATTACK_ENERGY);
 	}
 	
 	@Test public void anAttackHasACoolDownOf5turns(){
@@ -91,7 +91,7 @@ public class Sect_Behavior_CarnivoreTest {
 		
 		executeThisManyTurns(e, 50+5);
 		
-		assertThat(e.energy(h.id())).isEqualTo((long)INITIAL_ENERGY-50-5-ATTACK_ENERGY);
+		assertThat(e.stats(h.id()).energy).isEqualTo((long)INITIAL_ENERGY-50-5-ATTACK_ENERGY);
 	}
 	
 	@Test public void afterCoolDowncanattackAgain(){
@@ -100,7 +100,7 @@ public class Sect_Behavior_CarnivoreTest {
 				 e.addSect(new Sect(new Carnivore()),new Point(10,120));
 		
 		executeThisManyTurns(e, 50+5+1);
-		assertThat(e.energy(h.id())).isEqualTo((long)INITIAL_ENERGY-50-5-2*ATTACK_ENERGY-1);
+		assertThat(e.stats(h.id()).energy).isEqualTo((long)INITIAL_ENERGY-50-5-2*ATTACK_ENERGY-1);
 	}
 	
 	//TODO: Check malicious behaviors (multiple attacks, moves, etc) during turns
