@@ -189,7 +189,7 @@ public class Environment extends GameObject {
 		return stats;
 	}
 	
-	//TODO: not to be public
+	//TODO: not to be public, Changes must be queued
 	public Stats changeStats(EnvironmentObject object, Stats diff){
 		Stats stats = dataMap.get(object.id());
 		stats.energy += diff.energy;
@@ -280,6 +280,7 @@ public class Environment extends GameObject {
 		nutrients.disableCreation();
 	}
 
+	@SuppressWarnings("serial")
 	public static class Stats implements Serializable, Cloneable{
 		Point position;
 		long energy;
@@ -302,7 +303,11 @@ public class Environment extends GameObject {
 		}
 		
 		public Stats clone() {
-			return new Stats(position.clone(), energy, attackCoolDown,busyCoolDown);
+			try {
+				return (Stats) super.clone();
+			} catch (CloneNotSupportedException e) {
+				throw new RuntimeException(e);
+			}
 		}
 		
 		public static Stats n(){
