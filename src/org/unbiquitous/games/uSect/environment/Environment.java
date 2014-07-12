@@ -76,7 +76,7 @@ public class Environment extends GameObject {
 		for(Sect coller: busyThisTurn){
 			dataMap.get(coller.id).busyCoolDown --;
 			if(stats(coller.id).busyCoolDown <= 0){
-				changeStats(coller, Stats.n().energy(-30*60));
+				changeStats(coller, Stats.change().energy(-30*60));
 				remove.add(coller);
 			}
 		}
@@ -132,7 +132,7 @@ public class Environment extends GameObject {
 				&& stats(attacker.id).attackCoolDown <= 0){
 			dataMap.get(attacker.id).attackCoolDown = 5;
 			busyAttackers.add(attacker);
-			changeStats(deffendant, Stats.n().energy(-30*60));
+			changeStats(deffendant, Stats.change().energy(-30*60));
 		}
 	}
 
@@ -182,8 +182,8 @@ public class Environment extends GameObject {
 		return dataMap.get(objectId).clone();
 	}
 	
-	protected Stats add(EnvironmentObject object, Stats initialStats){
-		dataMap.put(object.id(), initialStats);
+	public Stats add(EnvironmentObject object, Stats initialStats){
+		dataMap.put(object.id(), initialStats.clone());
 		return initialStats;
 	}
 	
@@ -223,15 +223,25 @@ public class Environment extends GameObject {
 	}
 	
 	public Nutrient addNutrient(Point position) {
-		return nutrients.addNutrient(position);
+		Nutrient n = new Nutrient();
+		n.setEnv(this);
+		add(n, new Stats(position,0)); //TODO:Energy must be set here
+		return nutrients.addNutrient(n);
 	}
 	
 	public Corpse addCorpse(Point position) {
-		return nutrients.addCorpse(position);
+		Corpse c = new Corpse();
+		c.setEnv(this);
+		this.add(c, new Stats(position,0)); //TODO:Energy must be set here
+		return nutrients.addCorpse(c);
 	}
 	
+	private static final int INITIAL_ENERGY = 30*60 * 10;
+	
 	public Sect addSect(Sect s, Point position) {
-		return sects.addSect(s, position);
+		s.setEnv(this);
+		add(s, new Stats(position, INITIAL_ENERGY));
+		return sects.addSect(s);
 	}
 	
 	public Player addPlayer(Player p, Point position) {
@@ -314,7 +324,7 @@ public class Environment extends GameObject {
 			}
 		}
 		
-		public static Stats n(){
+		public static Stats change(){
 			return new Stats();
 		}
 		

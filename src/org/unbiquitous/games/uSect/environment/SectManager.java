@@ -7,10 +7,8 @@ import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.games.uSect.objects.Something.Type;
-import org.unbiquitous.uImpala.util.math.Point;
 
 class SectManager {
-	private static final int INITIAL_ENERGY = 30*60 * 10;
 	private Environment env;
 	private List<Sect> sects;
 	private List<Sect> sectsAddedThisTurn;
@@ -23,9 +21,7 @@ class SectManager {
 		this.sectsThatDiedThisTurn = new ArrayList<Sect>();
 	}
 
-	Sect addSect(Sect s, Point position){
-		s.setEnv(env);
-		env.add(s, new Stats(position, INITIAL_ENERGY));
+	Sect addSect(Sect s){
 		sects.add(s);
 		sectsAddedThisTurn.add(s);
 		return s;
@@ -54,7 +50,7 @@ class SectManager {
 	private void updateSect(Sect s) {
 		checkForNewSects(s);
 		s.update();
-		env.changeStats(s, Stats.n().energy(-1));
+		env.changeStats(s, Stats.change().energy(-1));
 		if(env.stats(s.id).energy <= 0){
 			sectsThatDiedThisTurn.add(s);
 		}

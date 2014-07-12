@@ -10,7 +10,6 @@ import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.games.uSect.objects.Corpse;
 import org.unbiquitous.games.uSect.objects.Nutrient;
 import org.unbiquitous.games.uSect.objects.Sect;
-import org.unbiquitous.uImpala.util.math.Point;
 
 class NutrientManager {
 	private Environment env;
@@ -29,20 +28,14 @@ class NutrientManager {
 		return nutrients;
 	}
 
-	Nutrient addNutrient(Point position) {
-		Nutrient n = new Nutrient();
-		n.setEnv(env);
-		env.add(n, new Stats(position,0));
+	Nutrient addNutrient(Nutrient n) {
 		nutrients.add(n);
 		return n;
 	}
 	
-	Corpse addCorpse(Point position) {
-		Corpse n = new Corpse();
-		n.setEnv(env);
-		env.add(n, new Stats(position,0));
-		corpses.add(n);
-		return n;
+	Corpse addCorpse(Corpse c) {
+		corpses.add(c);
+		return c;
 	}
 	
 	public void update() {
@@ -86,7 +79,7 @@ class NutrientManager {
 	private void checkConsumtion(Set<Nutrient> forRemoval, Nutrient n) {
 		Sect eater = n.hasBeenConsumedBy();
 		if(eater != null){
-			env.changeStats(eater, Stats.n().energy(n.energy()+1));
+			env.changeStats(eater, Stats.change().energy(n.energy()+1));
 			forRemoval.add(n); 
 		}
 	}

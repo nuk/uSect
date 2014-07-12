@@ -32,9 +32,9 @@ public class Sect_Behavior_ReproductionTest {
 	
 	@Test public void matingTakes50turns(){
 		Sect male = e.addSect(new Sect(new Carnivore()),new Point(20,20));
-		e.changeStats(male, Stats.n().energy(2*INITIAL_ENERGY+50));
+		e.changeStats(male, Stats.change().energy(2*INITIAL_ENERGY+50));
 		Sect female = e.addSect(new Sect(new Carnivore()),new Point(60,20));
-		e.changeStats(female, Stats.n().energy(2*INITIAL_ENERGY+50));
+		e.changeStats(female, Stats.change().energy(2*INITIAL_ENERGY+50));
 		
 		Random.setvalue(1);
 		executeThisManyTurns(e, 5);
@@ -55,9 +55,9 @@ public class Sect_Behavior_ReproductionTest {
 	
 	@Test public void herbivoresAlsoMate(){
 		Sect male = e.addSect(new Sect(new Herbivore()),new Point(20,20));
-		e.changeStats(male, Stats.n().energy(2*INITIAL_ENERGY+50));
+		e.changeStats(male, Stats.change().energy(2*INITIAL_ENERGY+50));
 		Sect female = e.addSect(new Sect(new Herbivore()),new Point(60,20));
-		e.changeStats(female, Stats.n().energy(2*INITIAL_ENERGY+50));
+		e.changeStats(female, Stats.change().energy(2*INITIAL_ENERGY+50));
 		
 		Random.setvalue(1);
 		executeThisManyTurns(e, 50);
@@ -67,9 +67,9 @@ public class Sect_Behavior_ReproductionTest {
 	
 	@Test public void matingConsumesTheEquivalentOfAnAttack(){
 		Sect male = e.addSect(new Sect(new Carnivore()),new Point(20,20));
-		e.changeStats(male, Stats.n().energy(2*INITIAL_ENERGY+51));
+		e.changeStats(male, Stats.change().energy(2*INITIAL_ENERGY+51));
 		Sect female = e.addSect(new Sect(new Carnivore()),new Point(60,20));
-		e.changeStats(female, Stats.n().energy(2*INITIAL_ENERGY+51));
+		e.changeStats(female, Stats.change().energy(2*INITIAL_ENERGY+51));
 		
 		Random.setvalue(1);
 		executeThisManyTurns(e, 50);
@@ -82,9 +82,9 @@ public class Sect_Behavior_ReproductionTest {
 	
 	@Test public void whileMatingCantWalk(){
 		Sect male = e.addSect(new Sect(new Carnivore()),new Point(20,20));
-		e.changeStats(male, Stats.n().energy(2*INITIAL_ENERGY));
+		e.changeStats(male, Stats.change().energy(2*INITIAL_ENERGY));
 		Sect female = e.addSect(new Sect(new Carnivore()),new Point(60,20));
-		e.changeStats(female, Stats.n().energy(2*INITIAL_ENERGY));
+		e.changeStats(female, Stats.change().energy(2*INITIAL_ENERGY));
 		
 		Random.setvalue(1);
 		executeThisManyTurns(e, 15);
@@ -95,9 +95,9 @@ public class Sect_Behavior_ReproductionTest {
 	
 	@Test public void matingSameSpeciesHasA50percentChance_positive(){
 		Sect male = e.addSect(new Sect(new Carnivore()),new Point(20,20));
-		e.changeStats(male, Stats.n().energy(2*INITIAL_ENERGY));
+		e.changeStats(male, Stats.change().energy(2*INITIAL_ENERGY));
 		Sect female = e.addSect(new Sect(new Carnivore()),new Point(60,20));
-		e.changeStats(female, Stats.n().energy(2*INITIAL_ENERGY));
+		e.changeStats(female, Stats.change().energy(2*INITIAL_ENERGY));
 		
 		Random.setvalue(0.51);
 		executeThisManyTurns(e, 50);
@@ -107,9 +107,9 @@ public class Sect_Behavior_ReproductionTest {
 	
 	@Test public void matingSameSpeciesHasA50percentChance_negative(){
 		Sect male = e.addSect(new Sect(new Carnivore()),new Point(20,20));
-		e.changeStats(male, Stats.n().energy(2*INITIAL_ENERGY));
+		e.changeStats(male, Stats.change().energy(2*INITIAL_ENERGY));
 		Sect female = e.addSect(new Sect(new Carnivore()),new Point(60,20));
-		e.changeStats(female, Stats.n().energy(2*INITIAL_ENERGY));
+		e.changeStats(female, Stats.change().energy(2*INITIAL_ENERGY));
 		
 		Random.setvalue(0.49);
 		executeThisManyTurns(e, 50);
@@ -119,9 +119,9 @@ public class Sect_Behavior_ReproductionTest {
 	
 	@Test public void matingDifferentSpeciesHasA50percentChance_positive(){
 		Sect male = e.addSect(new Sect(new Herbivore()),new Point(20,20));
-		e.changeStats(male, Stats.n().energy(2*INITIAL_ENERGY));
+		e.changeStats(male, Stats.change().energy(2*INITIAL_ENERGY));
 		Sect female = e.addSect(new Sect(new Carnivore()),new Point(60,20));
-		e.changeStats(female, Stats.n().energy(2*INITIAL_ENERGY));
+		e.changeStats(female, Stats.change().energy(2*INITIAL_ENERGY));
 		
 		Random.setvalue(0.76);
 		executeThisManyTurns(e, 50);
@@ -131,9 +131,9 @@ public class Sect_Behavior_ReproductionTest {
 	
 	@Test public void matingDifferentSpeciesHasA50percentChance_negative(){
 		Sect male = e.addSect(new Sect(new Herbivore()),new Point(20,20));
-		e.changeStats(male, Stats.n().energy(2*INITIAL_ENERGY));
+		e.changeStats(male, Stats.change().energy(2*INITIAL_ENERGY));
 		Sect female = e.addSect(new Sect(new Carnivore()),new Point(60,20));
-		e.changeStats(female, Stats.n().energy(2*INITIAL_ENERGY));
+		e.changeStats(female, Stats.change().energy(2*INITIAL_ENERGY));
 		
 		Random.setvalue(0.74);
 		executeThisManyTurns(e, 50);
@@ -143,9 +143,9 @@ public class Sect_Behavior_ReproductionTest {
 	
 	@Test public void matingMixFatherMotherAndFatherInformation(){
 		Sect male = e.addSect(new Sect(new Carnivore()),new Point(20,20));
-		e.changeStats(male, Stats.n().energy(2*INITIAL_ENERGY));
+		e.changeStats(male, Stats.change().energy(2*INITIAL_ENERGY));
 		Sect female = e.addSect(new Sect(new Carnivore()),new Point(60,20));
-		e.changeStats(female, Stats.n().energy(2*INITIAL_ENERGY));
+		e.changeStats(female, Stats.change().energy(2*INITIAL_ENERGY));
 		
 		Random.setvalue(0.51);
 		executeThisManyTurns(e, 50);
