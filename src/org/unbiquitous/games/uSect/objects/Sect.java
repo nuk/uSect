@@ -27,8 +27,10 @@ public class Sect extends EnvironmentObject {
 	private int radius = 30;
 	private SimetricShape shape;
 	private Circle influence;
+	private SimetricShape mating;
 	private Text text;
 	private int influenceRadius = 50;
+
 	
 	public interface Behaviour {
 		public void init(Sect s);
@@ -53,6 +55,7 @@ public class Sect extends EnvironmentObject {
 			shape = new SimetricShape(new Point(), new Color(41, 128, 185,200), radius,7);
 		}
 		influence = new Circle(new Point(), ATTACK_PAINT, influenceRadius);
+		mating = new SimetricShape(new Point(), ATTACK_PAINT, influenceRadius,13);
 		
 		this.behaviour = behaviour;
 		behaviour.init(this);
@@ -104,10 +107,16 @@ public class Sect extends EnvironmentObject {
 	}
 	
 	public void render(GameRenderers renderers) {
-		if(env.cooldown(id) > 0){
-			influence.radius(influenceRadius*env.cooldown(id)/5);
+		if(env.attackCooldown(id) > 0){
+			influence.radius(influenceRadius*env.attackCooldown(id)/5);
 			influence.center(center());
 			influence.render();
+		}
+		
+		if(env.busyCooldown(id) > 0){
+			mating.radius(influenceRadius*env.busyCooldown(id)/50+radius);
+			mating.center(center());
+			mating.render();
 		}
 		
 		shape.center(center());

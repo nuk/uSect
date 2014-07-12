@@ -36,13 +36,11 @@ public class Environment extends GameObject {
 	private MovementManager mover;
 	private List<Player> players = new ArrayList<Player>();
 
-	private Set<Sect> matingDuringThisTurn = new HashSet<Sect>();
-
 	static class Stats implements Cloneable{
 		Point position;
 		long energy;
 		int attackCoolDown = 0;
-		private int busyCoolDown;
+		int busyCoolDown;
 		public Stats(Point position, long energy) {
 			this(position, energy, 0,0);
 		}
@@ -55,7 +53,7 @@ public class Environment extends GameObject {
 		}
 		
 		public Stats clone() {
-			return new Stats((Point)position.clone(), energy, attackCoolDown,0);
+			return new Stats((Point)position.clone(), energy, attackCoolDown,busyCoolDown);
 		}
 	}
 	
@@ -77,30 +75,38 @@ public class Environment extends GameObject {
 	}
 	
 	
+	private Set<Sect> matingDuringThisTurn = new HashSet<Sect>();
+	private Set<Sect> busyThisTurn = new HashSet<Sect>();
 	
 	public void update() {
 		nutrients.update();
 		sects.update();
 		updateAttack();
 		
-//		Set<Sect> remove = new HashSet<Sect>();
-//		for(Sect male: matingDuringThisTurn){
-//			for(Sect female : sects.sects()){
-//				if (male.id != female.id 
-//						&& distanceOf(male.center(), female.center()) <= male.influenceRadius()
-//						&& stats(male.id).busyCoolDown <= 0){
-//					dataMap.get(male.id).busyCoolDown = 20;
-////					addEnergy(deffendant.id, -30*60);
-//				}
-//			}
-//			dataMap.get(male.id).busyCoolDown --;
-//			if(stats(male.id).busyCoolDown <= 0){
-//				remove.add(male);
-//			}
-//		}
-//		matingDuringThisTurn.removeAll(remove);
-//		matingDuringThisTurn.clear();
+		for(Sect male: matingDuringThisTurn){
+			for(Sect female : sects.sects()){
+				if (male.id != female.id 
+						&& distanceOf(male.center(), female.center()) <= male.influenceRadius()
+						&& stats(male.id).busyCoolDown <= 0){
+					dataMap.get(male.id).busyCoolDown = 50;
+					busyThisTurn.add(male);
+//					addEnergy(deffendant.id, -30*60);
+				}
+			}
+		}
+		matingDuringThisTurn.clear();
+		Set<Sect> remove = new HashSet<Sect>();
+		for(Sect coller: busyThisTurn){
+			dataMap.get(coller.id).busyCoolDown --;
+			if(stats(coller.id).busyCoolDown <= 0){
+				remove.add(coller);
+			}
+		}
 		
+		if(!remove.isEmpty()){
+			this.addSect(new Sect(), new Point());
+		}
+		busyThisTurn.removeAll(remove);
 		
 		
 		//TODO: untested
@@ -143,7 +149,6 @@ public class Environment extends GameObject {
 			dataMap.get(attacker.id).attackCoolDown = 5;
 			busyAttackers.add(attacker);
 			addEnergy(deffendant.id, -30*60);
-			System.out.println("a");
 		}
 	}
 
@@ -177,11 +182,18 @@ public class Environment extends GameObject {
 		return dataMap.get(objectId).energy;
 	}
 	
-	public Integer cooldown(UUID objectId){
+	public Integer attackCooldown(UUID objectId){
 		if(!dataMap.containsKey(objectId)){
 			return null;
 		}
 		return dataMap.get(objectId).attackCoolDown;
+	}
+	
+	public Integer busyCooldown(UUID objectId){
+		if(!dataMap.containsKey(objectId)){
+			return null;
+		}
+		return dataMap.get(objectId).busyCoolDown;
 	}
 	
 	protected Stats stats(UUID objectId){
@@ -216,8 +228,14 @@ public class Environment extends GameObject {
 		return addNutrient(new Point(x, y));
 	}
 
+	public void moveTo(Sect sect, Point dir) {
+		if(!busyThisTurn.contains(sect)){
+			mover.moveTo(sect, dir);
+		}
+	}
+	
 	public void attack(Sect sect) {
-		if(!busyAttackers.contains(sect)){
+		if(!busyAttackers.contains(sect) && !busyThisTurn.contains(sect)){
 			attackersDuringThisTurn.add(sect);
 		}
 	}
@@ -243,10 +261,6 @@ public class Environment extends GameObject {
 		this.add(p.id, position, 0);
 		players.add(p);
 		return p;
-	}
-
-	public void moveTo(Sect sect, Point dir) {
-		mover.moveTo(sect, dir);
 	}
 
 	public List<Sect> sects() {
