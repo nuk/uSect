@@ -4,7 +4,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.Environment.Stats;

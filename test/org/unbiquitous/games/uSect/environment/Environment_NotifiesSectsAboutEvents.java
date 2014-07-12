@@ -47,28 +47,6 @@ public class Environment_NotifiesSectsAboutEvents {
 		assertThat(count[0]).isEqualTo(1);
 	}
 	
-	//TODO This is behavior
-	@Test public void ifASectStaysMoreThan5turnsOnTopOfANutrientItEatsIt(){
-		Nutrient n = e.addNutrient(new Point(10,10));
-		final int[] count = new int[]{0};
-		e.addSect(new Sect(){
-			public void leftSight(Something n) {
-				count[0]++;
-			}
-		},new Point(9,10));
-		
-		executeThisManyTurns(e, 5);
-		assertThat(count[0]).isEqualTo(0);
-		assertThat(e.nutrients()).contains(n);
-		
-		e.update();
-		assertThat(count[0]).isEqualTo(1);
-		assertThat(e.nutrients()).doesNotContain(n);
-		
-		e.update();
-		assertThat(count[0]).isEqualTo(1);
-	}
-	
 	@Test public void notifiesAllSectsInSightAboutTheNutrientThatHasBeenEaten(){
 		Nutrient n = e.addNutrient(new Point(10,10));
 		final int[] count = new int[]{0,0,0};
