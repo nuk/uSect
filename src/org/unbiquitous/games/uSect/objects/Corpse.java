@@ -1,9 +1,9 @@
 package org.unbiquitous.games.uSect.objects;
 
 import java.awt.Color;
-import java.awt.Point;
 
 import org.unbiquitous.uImpala.jse.util.shapes.Circle;
+import org.unbiquitous.uImpala.util.math.Point;
 
 public class Corpse extends Nutrient{
 

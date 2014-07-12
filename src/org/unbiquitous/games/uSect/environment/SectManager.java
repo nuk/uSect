@@ -1,12 +1,12 @@
 package org.unbiquitous.games.uSect.environment;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.games.uSect.objects.Something.Type;
+import org.unbiquitous.uImpala.util.math.Point;
 
 class SectManager {
 	private static final int INITIAL_ENERGY = 30*60 * 10;

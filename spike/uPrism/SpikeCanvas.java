@@ -1,7 +1,6 @@
 package uPrism;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +18,7 @@ import org.unbiquitous.uImpala.jse.impl.core.Game;
 import org.unbiquitous.uImpala.jse.util.shapes.Circle;
 import org.unbiquitous.uImpala.jse.util.shapes.Rectangle;
 import org.unbiquitous.uImpala.jse.util.shapes.SimetricShape;
+import org.unbiquitous.uImpala.util.math.Point;
 
 public class SpikeCanvas extends GameScene {
 

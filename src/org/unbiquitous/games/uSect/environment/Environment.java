@@ -1,7 +1,6 @@
 package org.unbiquitous.games.uSect.environment;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,6 +20,7 @@ import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.jse.util.shapes.Rectangle;
+import org.unbiquitous.uImpala.util.math.Point;
 import org.unbiquitous.uos.core.InitialProperties;
 
 public class Environment extends GameObject {
@@ -53,7 +53,7 @@ public class Environment extends GameObject {
 		}
 		
 		public Stats clone() {
-			return new Stats((Point)position.clone(), energy, attackCoolDown,busyCoolDown);
+			return new Stats(position.clone(), energy, attackCoolDown,busyCoolDown);
 		}
 	}
 	
@@ -86,7 +86,7 @@ public class Environment extends GameObject {
 		for(Sect male: matingDuringThisTurn){
 			for(Sect female : sects.sects()){
 				if (male.id != female.id 
-						&& distanceOf(male.center(), female.center()) <= male.influenceRadius()
+						&& male.center().distanceTo(female.center()) <= male.influenceRadius()
 						&& stats(male.id).busyCoolDown <= 0){
 					dataMap.get(male.id).busyCoolDown = 50;
 					busyThisTurn.add(male);
@@ -144,7 +144,7 @@ public class Environment extends GameObject {
 
 	private void checkAttack(Sect attacker, Sect deffendant) {
 		if (attacker.id != deffendant.id 
-				&& distanceOf(attacker.center(), deffendant.center()) <= attacker.influenceRadius()
+				&& attacker.center().distanceTo(deffendant.center()) <= attacker.influenceRadius()
 				&& stats(attacker.id).attackCoolDown <= 0){
 			dataMap.get(attacker.id).attackCoolDown = 5;
 			busyAttackers.add(attacker);
@@ -161,11 +161,6 @@ public class Environment extends GameObject {
 			}
 		}
 		busyAttackers.removeAll(remove);
-	}
-	
-	//TODO: duplicated
-	private int distanceOf(Point origin, Point desttination) {
-		return Math.abs(origin.x-desttination.x) + Math.abs(origin.y-desttination.y);
 	}
 	
 	public Point position(UUID objectId){

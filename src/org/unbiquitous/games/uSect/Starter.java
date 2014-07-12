@@ -2,7 +2,6 @@ package org.unbiquitous.games.uSect;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.Point;
 import java.util.Arrays;
 
 import org.unbiquitous.games.uSect.environment.Environment;
@@ -20,6 +19,7 @@ import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.engine.io.ScreenManager;
 import org.unbiquitous.uImpala.engine.time.DeltaTime;
 import org.unbiquitous.uImpala.jse.impl.core.Game;
+import org.unbiquitous.uImpala.util.math.Point;
 import org.unbiquitous.uos.core.InitialProperties;
 
 public class Starter extends GameObjectTreeScene {

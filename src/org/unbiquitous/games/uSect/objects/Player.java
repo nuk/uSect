@@ -1,13 +1,13 @@
 package org.unbiquitous.games.uSect.objects;
 
 import java.awt.Color;
-import java.awt.Point;
 
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.jse.util.shapes.Circle;
 import org.unbiquitous.uImpala.jse.util.shapes.Rectangle;
+import org.unbiquitous.uImpala.util.math.Point;
 
 public class Player extends EnvironmentObject{
 	

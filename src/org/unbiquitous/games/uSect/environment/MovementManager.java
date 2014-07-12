@@ -1,8 +1,7 @@
 package org.unbiquitous.games.uSect.environment;
 
-import java.awt.Point;
-
 import org.unbiquitous.games.uSect.objects.Sect;
+import org.unbiquitous.uImpala.util.math.Point;
 
 class MovementManager {
 	private Environment env;
@@ -44,14 +43,10 @@ class MovementManager {
 	private boolean hasColided(Sect sect, Point newPos) {
 		boolean hasColided = false;
 		for(Sect s: env.sects()){
-			if(!sect.equals(s) && distanceOf(s.center(), newPos) < sect.radius()){
+			if(!sect.equals(s) && s.center().distanceTo(newPos) < sect.radius()){
 				hasColided = true;
 			}
 		}
 		return hasColided;
-	}
-
-	private int distanceOf(Point origin, Point desttination) {
-		return Math.abs(origin.x-desttination.x) + Math.abs(origin.y-desttination.y);
 	}
 }

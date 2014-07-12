@@ -1,9 +1,8 @@
 package org.unbiquitous.games.uSect.environment;
 
+
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
-
-import java.awt.Point;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +12,7 @@ import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.games.uSect.objects.behaviour.Carnivore;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.jse.impl.io.Screen;
+import org.unbiquitous.uImpala.util.math.Point;
 import org.unbiquitous.uos.core.InitialProperties;
 
 public class Environment_NotifiesSectsAboutEvents {

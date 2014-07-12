@@ -1,12 +1,12 @@
 package org.unbiquitous.games.uSect.objects.behaviour;
 
-import java.awt.Point;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Something;
+import org.unbiquitous.uImpala.util.math.Point;
 
 //TODO: its Behavior
 public abstract class TargetFocused  implements Sect.Behaviour{
@@ -52,6 +52,10 @@ public abstract class TargetFocused  implements Sect.Behaviour{
 		});
 	}
 
+	protected int distanceTo(Something o1) {
+		return sect.center().distanceTo(o1.center());
+	}
+	
 	protected Something target(){
 		if(targetsInSight.isEmpty()){
 			return null;
@@ -59,10 +63,6 @@ public abstract class TargetFocused  implements Sect.Behaviour{
 		return targetsInSight.getFirst();
 	}
 	
-	protected int distanceTo(Something n) {
-		return Math.abs(n.center().x-sect.center().x) + Math.abs(n.center().y-sect.center().y);
-	}
-
 	public void leftViewRange(Something n) {
 		targetsInSight.remove(n);
 	}

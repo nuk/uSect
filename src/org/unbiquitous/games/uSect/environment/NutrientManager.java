@@ -1,6 +1,5 @@
 package org.unbiquitous.games.uSect.environment;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,6 +9,7 @@ import org.unbiquitous.games.uSect.DeviceStats;
 import org.unbiquitous.games.uSect.objects.Corpse;
 import org.unbiquitous.games.uSect.objects.Nutrient;
 import org.unbiquitous.games.uSect.objects.Sect;
+import org.unbiquitous.uImpala.util.math.Point;
 
 class NutrientManager {
 	private Environment env;

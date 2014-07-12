@@ -1,9 +1,9 @@
 package org.unbiquitous.games.uSect.objects;
 
-import java.awt.Point;
 import java.util.UUID;
 
 import org.unbiquitous.games.uSect.environment.Environment;
+import org.unbiquitous.uImpala.util.math.Point;
 
 public class Something {
 	public enum Type {NUTRIENT,SECT, CORPSE}

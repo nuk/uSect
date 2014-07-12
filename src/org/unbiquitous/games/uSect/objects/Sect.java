@@ -2,7 +2,6 @@ package org.unbiquitous.games.uSect.objects;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Point;
 
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
@@ -16,6 +15,7 @@ import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.jse.util.shapes.Circle;
 import org.unbiquitous.uImpala.jse.util.shapes.SimetricShape;
 import org.unbiquitous.uImpala.util.Corner;
+import org.unbiquitous.uImpala.util.math.Point;
 
 public class Sect extends EnvironmentObject {
 	private static final Color ATTACK_PAINT = new Color(192, 57, 43,128);
