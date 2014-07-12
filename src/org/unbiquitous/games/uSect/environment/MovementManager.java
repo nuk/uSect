@@ -30,21 +30,21 @@ class MovementManager {
 	}
 	
 	private Point determineFinalPosition(Sect sect, Point dir) {
-		Point forwardPosition = new Point(sect.center().x + dir.x, sect.center().y + dir.y);
+		Point forwardPosition = new Point(sect.position().x + dir.x, sect.position().y + dir.y);
 		if(!hasColided(sect, forwardPosition)){
 			return forwardPosition;
 		}else if (random.v() > 0.5){
-			Point backwardsPosition = new Point(sect.center().x - dir.x, sect.center().y - dir.y);
+			Point backwardsPosition = new Point(sect.position().x - dir.x, sect.position().y - dir.y);
 			return backwardsPosition;
 		}
-		return sect.center();
+		return sect.position();
 	}
 
 
 	private boolean hasColided(Sect sect, Point newPos) {
 		boolean hasColided = false;
 		for(Sect s: env.sects()){
-			if(!sect.equals(s) && s.center().distanceTo(newPos) < sect.radius()){
+			if(!sect.equals(s) && s.position().distanceTo(newPos) < sect.radius()){
 				hasColided = true;
 			}
 		}

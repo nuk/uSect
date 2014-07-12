@@ -29,13 +29,13 @@ public abstract class TargetFocused  implements Sect.Behaviour{
 	}
 	
 	private boolean onTopOfTarget() {
-		return sect.center().equals(target().center());
+		return sect.position().equals(target().position());
 	}
 
 	private Point targetDirection() {
 		Point dir = new Point();
-		dir.x = dimensionDirection(sect.center().x,target().center().x);
-		dir.y = dimensionDirection(sect.center().y,target().center().y);
+		dir.x = dimensionDirection(sect.position().x,target().position().x);
+		dir.y = dimensionDirection(sect.position().y,target().position().y);
 		return dir;
 	}
 
@@ -53,7 +53,7 @@ public abstract class TargetFocused  implements Sect.Behaviour{
 	}
 
 	protected int distanceTo(Something o1) {
-		return sect.center().distanceTo(o1.center());
+		return sect.position().distanceTo(o1.position());
 	}
 	
 	protected Something target(){

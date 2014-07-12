@@ -30,8 +30,8 @@ public class Sect_Behavior_CarnivoreTest {
 		
 		e.update();
 		
-		assertThat(h.center()).isEqualTo(new Point(20,20));
-		assertThat(c.center()).isEqualTo(new Point(50,20));
+		assertThat(h.position()).isEqualTo(new Point(20,20));
+		assertThat(c.position()).isEqualTo(new Point(50,20));
 	}
 	
 	@Test public void goesAfterAHerbivoreAfterEachStepEvenWhenHesMoving(){
@@ -41,9 +41,9 @@ public class Sect_Behavior_CarnivoreTest {
 		
 		executeThisManyTurns(e, 90);
 		
-		assertThat(h.center()).isEqualTo(new Point(100,20));
-		assertThat(c.center()).isNotEqualTo(new Point(10,20));
-		assertThat(c.center().x).isGreaterThan(20);
+		assertThat(h.position()).isEqualTo(new Point(100,20));
+		assertThat(c.position()).isNotEqualTo(new Point(10,20));
+		assertThat(c.position().x).isGreaterThan(20);
 	}
 	
 	@Test public void preferCorpsesThanLiveSects(){
@@ -54,7 +54,7 @@ public class Sect_Behavior_CarnivoreTest {
 		
 		executeThisManyTurns(e, 1);
 		
-		assertThat(c.center()).isEqualTo(new Point(51,10));
+		assertThat(c.position()).isEqualTo(new Point(51,10));
 	}
 	
 	@Test public void sectGainsEnergyFromCorpse(){

@@ -66,7 +66,7 @@ public class Environment extends GameObject {
 		for(Sect male: matingDuringThisTurn){
 			for(Sect female : sects.sects()){
 				if (male.id != female.id 
-						&& male.center().distanceTo(female.center()) <= male.influenceRadius()
+						&& male.position().distanceTo(female.position()) <= male.influenceRadius()
 						&& stats(male.id).busyCoolDown <= 0){
 					dataMap.get(male.id).busyCoolDown = 50;
 					busyThisTurn.add(male);
@@ -124,7 +124,7 @@ public class Environment extends GameObject {
 
 	private void checkAttack(Sect attacker, Sect deffendant) {
 		if (attacker.id != deffendant.id 
-				&& attacker.center().distanceTo(deffendant.center()) <= attacker.influenceRadius()
+				&& attacker.position().distanceTo(deffendant.position()) <= attacker.influenceRadius()
 				&& stats(attacker.id).attackCoolDown <= 0){
 			dataMap.get(attacker.id).attackCoolDown = 5;
 			busyAttackers.add(attacker);

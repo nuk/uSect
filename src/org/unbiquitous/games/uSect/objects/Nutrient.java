@@ -34,7 +34,7 @@ public class Nutrient extends EnvironmentObject{
 		this.env = env;
 	}
 	
-	public Point center() {
+	public Point position() {
 		return env.position(id);
 	}
 	
@@ -69,7 +69,7 @@ public class Nutrient extends EnvironmentObject{
 	}
 
 	public void render(GameRenderers renderers) {
-		shape.center(center());
+		shape.center(position());
 		shape.render();
 	}
 }

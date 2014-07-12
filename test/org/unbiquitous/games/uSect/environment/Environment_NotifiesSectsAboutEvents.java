@@ -31,7 +31,7 @@ public class Environment_NotifiesSectsAboutEvents {
 		
 		e.update();
 		
-		assertThat(s.center()).isNotEqualTo(new Point(10,10));
+		assertThat(s.position()).isNotEqualTo(new Point(10,10));
 	}
 	
 	@Test public void notifiesSectOfNutrientPresenceOnlyOnce(){
@@ -145,7 +145,7 @@ public class Environment_NotifiesSectsAboutEvents {
 		
 		e.update();
 		
-		assertThat(s2.center()).isEqualTo(new Point(10+s1.radius(),10));
+		assertThat(s2.position()).isEqualTo(new Point(10+s1.radius(),10));
 	}
 	
 	@Test public void whenTwoSectsHasHalfChanceOfBackingOf(){
@@ -156,6 +156,6 @@ public class Environment_NotifiesSectsAboutEvents {
 		
 		e.update();
 		
-		assertThat(s2.center()).isEqualTo(new Point(10+s1.radius()+1,10));
+		assertThat(s2.position()).isEqualTo(new Point(10+s1.radius()+1,10));
 	}
 }

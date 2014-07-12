@@ -75,8 +75,8 @@ public class Sect_Behavior_ReproductionTest {
 		e.random.setvalue(1);
 		executeThisManyTurns(e, 15);
 		
-		assertThat(male.center()).isEqualTo(new Point(21,20));
-		assertThat(female.center()).isEqualTo(new Point(59,20));
+		assertThat(male.position()).isEqualTo(new Point(21,20));
+		assertThat(female.position()).isEqualTo(new Point(59,20));
 	}
 	
 	//TODO: Mating must be an agreement of both parties (50% * 50% for same species) 

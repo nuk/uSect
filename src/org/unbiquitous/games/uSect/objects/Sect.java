@@ -61,7 +61,7 @@ public class Sect extends EnvironmentObject {
 		behaviour.init(this);
 	}
 	
-	public Point center() {
+	public Point position() {
 		return env.position(id);
 	}
 	
@@ -109,23 +109,23 @@ public class Sect extends EnvironmentObject {
 	public void render(GameRenderers renderers) {
 		if(env.attackCooldown(id) > 0){
 			influence.radius(influenceRadius*env.attackCooldown(id)/5);
-			influence.center(center());
+			influence.center(position());
 			influence.render();
 		}
 		
 		if(env.busyCooldown(id) > 0){
 			mating.radius(influenceRadius*env.busyCooldown(id)/50+radius);
-			mating.center(center());
+			mating.center(position());
 			mating.render();
 		}
 		
-		shape.center(center());
+		shape.center(position());
 		shape.rotate(rotationAngle());
 		shape.render();
 		
 		Screen screen = GameComponents.get(Screen.class);
 		text.setText(energy().toString());
-		text.render(screen, (float)center().x, (float)center().y, Corner.TOP_LEFT, 1f, 0f, 1f, 1f, new org.unbiquitous.uImpala.util.Color(0, 0, 0));
+		text.render(screen, (float)position().x, (float)position().y, Corner.TOP_LEFT, 1f, 0f, 1f, 1f, new org.unbiquitous.uImpala.util.Color(0, 0, 0));
 	}
 
 	private float rotationAngle() {

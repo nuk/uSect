@@ -42,7 +42,7 @@ class SectManager {
 		//TODO: clear stats
 		sects.removeAll(sectsThatDiedThisTurn);
 		for(Sect dead: sectsThatDiedThisTurn){
-			env.addCorpse(dead.center());
+			env.addCorpse(dead.position());
 			for(Sect s : sects()){
 				s.leftSight(new Something(dead.id, env, Type.SECT));
 			}

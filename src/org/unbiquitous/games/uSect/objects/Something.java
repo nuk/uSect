@@ -20,7 +20,7 @@ public class Something {
 	}
 
 	public UUID id() {		return id;}
-	public Point center() {	return env.position(id);}
+	public Point position() {	return env.position(id);}
 	public Type type() {	return type;}
 
 	@Override

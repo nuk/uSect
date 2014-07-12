@@ -81,7 +81,7 @@ class NutrientManager {
 	}
 	
 	private void checkEating(Sect s, Nutrient n) {
-		if(n.center().equals(s.center())){
+		if(n.position().equals(s.position())){
 			n.inContactWith(s);
 		}
 	}

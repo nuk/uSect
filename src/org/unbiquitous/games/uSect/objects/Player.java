@@ -33,7 +33,7 @@ public class Player extends EnvironmentObject{
 	
 	@Override
 	public void render(GameRenderers renderers) {
-		inlfuence.center(center());
+		inlfuence.center(position());
 		if(influenceRadius != 0){
 			influenceRadius+=5;
 			int praticalRadius = (int) (influenceRadius*Math.sin(Math.toRadians(influenceRadius)));
@@ -48,7 +48,7 @@ public class Player extends EnvironmentObject{
 		if(influenceRadius > 720){
 			influenceRadius = 0;
 		}
-		square.center(center());
+		square.center(position());
 		square.render();
 	}
 
@@ -66,7 +66,7 @@ public class Player extends EnvironmentObject{
 		}
 	}
 	
-	private Point center() {
+	private Point position() {
 		return env.position(id);
 	}
 
