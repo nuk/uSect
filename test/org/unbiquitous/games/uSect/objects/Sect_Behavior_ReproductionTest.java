@@ -36,19 +36,19 @@ public class Sect_Behavior_ReproductionTest {
 	@Test
 	public void matingTakes50turns() {
 		EnvironmentObject male = e.add(new Sect(new Carnivore()), new Stats(
-				new Point(20, 20), 3 * INITIAL_ENERGY + 50));
+				new Point(20, 20), 2 * INITIAL_ENERGY+1 ));
 		EnvironmentObject female = e.add(new Sect(new Carnivore()), new Stats(
-				new Point(60, 20), 3 * INITIAL_ENERGY + 50));
+				new Point(60, 20), 2 * INITIAL_ENERGY+1 ));
 
 		Random.setvalue(1);
 		executeThisManyTurns(e, 5);
 
-		assertThat(e.stats(male.id()).energy).isEqualTo(3 * INITIAL_ENERGY + 44);
-		assertThat(e.stats(female.id()).energy).isEqualTo(3 * INITIAL_ENERGY + 44);
+		assertThat(e.stats(male.id()).energy).isEqualTo(2 * INITIAL_ENERGY - 5);
+		assertThat(e.stats(female.id()).energy).isEqualTo(2 * INITIAL_ENERGY - 5);
 
 		executeThisManyTurns(e, 44);
-		assertThat(e.stats(male.id()).energy).isEqualTo(3 * INITIAL_ENERGY);
-		assertThat(e.stats(female.id()).energy).isEqualTo(3 * INITIAL_ENERGY);
+		assertThat(e.stats(male.id()).energy).isEqualTo(2 * INITIAL_ENERGY - 49);
+		assertThat(e.stats(female.id()).energy).isEqualTo(2 * INITIAL_ENERGY - 49);
 
 		assertThat(e.sects()).hasSize(2);
 		executeThisManyTurns(e, 1);
@@ -59,9 +59,9 @@ public class Sect_Behavior_ReproductionTest {
 	@Test
 	public void herbivoresAlsoMate() {
 		e.add(new Sect(new Herbivore()), new Stats(new Point(20, 20),
-				3 * INITIAL_ENERGY + 50));
+				2 * INITIAL_ENERGY + 50));
 		e.add(new Sect(new Herbivore()), new Stats(new Point(60, 20),
-				3 * INITIAL_ENERGY + 50));
+				2 * INITIAL_ENERGY + 50));
 
 		Random.setvalue(1);
 		executeThisManyTurns(e, 50);
@@ -72,17 +72,17 @@ public class Sect_Behavior_ReproductionTest {
 	@Test
 	public void matingConsumesTheEquivalentOfAnAttack() {
 		EnvironmentObject male = e.add(new Sect(new Carnivore()), new Stats(
-				new Point(20, 20), 3 * INITIAL_ENERGY + 51));
+				new Point(20, 20), 2 * INITIAL_ENERGY + 51));
 		EnvironmentObject female = e.add(new Sect(new Carnivore()), new Stats(
-				new Point(60, 20), 3 * INITIAL_ENERGY + 51));
+				new Point(60, 20), 2 * INITIAL_ENERGY + 51));
 
 		Random.setvalue(1);
 		executeThisManyTurns(e, 50);
 
 		assertThat(e.stats(male.id()).energy).isEqualTo(
-				3 * INITIAL_ENERGY - ATTACK_ENERGY);
+				2 * INITIAL_ENERGY - ATTACK_ENERGY);
 		assertThat(e.stats(female.id()).energy).isEqualTo(
-				3 * INITIAL_ENERGY - ATTACK_ENERGY);
+				2 * INITIAL_ENERGY - ATTACK_ENERGY);
 
 		assertThat(e.sects()).hasSize(3);
 	}
