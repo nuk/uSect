@@ -182,11 +182,6 @@ public class Environment extends GameObject {
 		return dataMap.get(objectId).clone();
 	}
 	
-	public Stats add(EnvironmentObject object, Stats initialStats){
-		dataMap.put(object.id(), initialStats.clone());
-		return initialStats;
-	}
-	
 	protected Stats moveTo(UUID objectId, Point position){
 		Stats stats = dataMap.get(objectId);
 		stats.position = position;
@@ -200,12 +195,6 @@ public class Environment extends GameObject {
 		return stats;
 	}
 	
-	public Nutrient addNutrient() {
-		int x = (int) (Math.random()*screen.getWidth());
-		int y = (int) (Math.random()*screen.getHeight());
-		return addNutrient(new Point(x, y));
-	}
-
 	public void moveTo(Sect sect, Point dir) {
 		if(!busyThisTurn.contains(sect)){
 			mover.moveTo(sect, dir);
@@ -222,21 +211,33 @@ public class Environment extends GameObject {
 		matingDuringThisTurn.add(sect);
 	}
 	
+	public Stats add(EnvironmentObject object, Stats initialStats){
+		dataMap.put(object.id(), initialStats.clone());
+		return initialStats;
+	}
+	
+	public Nutrient addNutrient() {
+		int x = (int) (Math.random()*screen.getWidth());
+		int y = (int) (Math.random()*screen.getHeight());
+		return addNutrient(new Point(x, y));
+	}
+	
 	public Nutrient addNutrient(Point position) {
 		Nutrient n = new Nutrient();
 		n.setEnv(this);
-		add(n, new Stats(position,0)); //TODO:Energy must be set here
+		add(n, new Stats(position,ATTACK_ENERGY)); 
 		return nutrients.addNutrient(n);
 	}
 	
 	public Corpse addCorpse(Point position) {
 		Corpse c = new Corpse();
 		c.setEnv(this);
-		this.add(c, new Stats(position,0)); //TODO:Energy must be set here
+		this.add(c, new Stats(position,5*ATTACK_ENERGY)); 
 		return nutrients.addCorpse(c);
 	}
 	
-	private static final int INITIAL_ENERGY = 30*60 * 10;
+	private static final int ATTACK_ENERGY = 30*60;
+	private static final int INITIAL_ENERGY = (int) (ATTACK_ENERGY * 10);
 	
 	public Sect addSect(Sect s, Point position) {
 		s.setEnv(this);

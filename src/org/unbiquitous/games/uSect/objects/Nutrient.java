@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
 import org.unbiquitous.games.uSect.objects.Something.Feeding;
 import org.unbiquitous.games.uSect.objects.Something.Type;
@@ -20,10 +19,8 @@ public class Nutrient extends EnvironmentObject{
 	protected Map<Sect, Integer> absortionTable = new HashMap();
 	
 	protected int radius = 10;
-	protected Environment env;
 	protected Circle shape = new Circle(new Point(), Color.GREEN.darker(), radius);
 	protected Something.Type type = Type.NUTRIENT;
-	protected long energy = 30*60;
 	
 	private Sect hasBeenConsumedBy;
 
@@ -31,20 +28,8 @@ public class Nutrient extends EnvironmentObject{
 		targetOf = new HashSet<Sect>();
 	}
 
-	public void setEnv(Environment env) {
-		this.env = env;
-	}
-	
-	public Point position() {
-		return env.position(id);
-	}
-	
 	public Sect hasBeenConsumedBy() {
 		return hasBeenConsumedBy;
-	}
-	
-	public long energy() {
-		return energy;
 	}
 	
 	public void inContactWith(Sect s) {

@@ -3,7 +3,6 @@ package org.unbiquitous.games.uSect.objects;
 import java.awt.Color;
 import java.awt.Font;
 
-import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
 import org.unbiquitous.games.uSect.objects.behaviour.Carnivore;
 import org.unbiquitous.games.uSect.objects.behaviour.Herbivore;
@@ -22,8 +21,6 @@ public class Sect extends EnvironmentObject {
 	
 	private Behaviour behaviour;
 	private Point currentDir;
-	private Environment env;
-	
 	
 	private int radius = 30;
 	private SimetricShape shape;
@@ -32,7 +29,6 @@ public class Sect extends EnvironmentObject {
 	private Text text;
 	private int influenceRadius = 50;
 
-	
 	public interface Behaviour {
 		public Something.Feeding feeding();
 		public void init(Sect s);
@@ -61,18 +57,6 @@ public class Sect extends EnvironmentObject {
 		
 		this.behaviour = behaviour;
 		behaviour.init(this);
-	}
-	
-	public Point position() {
-		return env.position(id);
-	}
-	
-	public Long energy() {
-		return env.energy(id);
-	}
-
-	public void setEnv(Environment env) {
-		this.env = env;
 	}
 	
 	public int radius() {

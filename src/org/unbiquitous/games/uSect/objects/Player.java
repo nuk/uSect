@@ -20,7 +20,6 @@ public class Player extends EnvironmentObject{
 	private Circle inlfuence ;
 	private int influenceRadius = 0;
 	private Influence currentAction = Influence.ATTACK;
-	private Environment env;
 	
 	public Player() {
 		square = new Rectangle(new Point(0,0), PLAYER_PAINT, 40, 40);
@@ -66,8 +65,4 @@ public class Player extends EnvironmentObject{
 		}
 	}
 	
-	private Point position() {
-		return env.position(id);
-	}
-
 }
