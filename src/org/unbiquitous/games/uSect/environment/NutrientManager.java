@@ -11,7 +11,7 @@ import org.unbiquitous.games.uSect.objects.Corpse;
 import org.unbiquitous.games.uSect.objects.Nutrient;
 import org.unbiquitous.games.uSect.objects.Sect;
 
-class NutrientManager {
+class NutrientManager implements EnvironemtObjectManager{
 	private Environment env;
 	private DeviceStats deviceStats;
 	private boolean createNutrients = true; 
@@ -28,12 +28,22 @@ class NutrientManager {
 		return nutrients;
 	}
 
-	Nutrient addNutrient(Nutrient n) {
+	@Override
+	public EnvironmentObject add(EnvironmentObject o) {
+		if(o instanceof Corpse){
+			return add((Corpse) o);
+		}else if (o instanceof Nutrient){
+			return  add((Nutrient) o);
+		}
+		return null;
+	}
+	
+	Nutrient add(Nutrient n) {
 		nutrients.add(n);
 		return n;
 	}
 	
-	Corpse addCorpse(Corpse c) {
+	Corpse add(Corpse c) {
 		corpses.add(c);
 		return c;
 	}

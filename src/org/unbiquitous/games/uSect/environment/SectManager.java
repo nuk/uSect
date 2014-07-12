@@ -8,7 +8,7 @@ import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.games.uSect.objects.Something.Type;
 
-class SectManager {
+class SectManager implements EnvironemtObjectManager{
 	private Environment env;
 	private List<Sect> sects;
 	private List<Sect> sectsAddedThisTurn;
@@ -21,7 +21,14 @@ class SectManager {
 		this.sectsThatDiedThisTurn = new ArrayList<Sect>();
 	}
 
-	Sect addSect(Sect s){
+	public EnvironmentObject add(EnvironmentObject o) {
+		if(o instanceof Sect){
+			return add((Sect) o);
+		}
+		return null;
+	}
+	
+	Sect add(Sect s){
 		sects.add(s);
 		sectsAddedThisTurn.add(s);
 		return s;
@@ -31,7 +38,7 @@ class SectManager {
 		return sects;
 	}
 	
-	void update() {
+	public void update() {
 		for(Sect s : sects){
 			updateSect(s);
 		}

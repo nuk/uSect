@@ -3,6 +3,7 @@ package org.unbiquitous.games.uSect.environment;
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -32,6 +33,8 @@ public class Environment extends GameObject {
 	private Map<UUID,Stats> dataMap = new HashMap<UUID,Stats>();
 	private NutrientManager nutrients;
 	private SectManager sects;
+	private List<EnvironemtObjectManager> managers;
+	
 	private MovementManager mover;
 	private List<Player> players = new ArrayList<Player>();
 
@@ -43,6 +46,7 @@ public class Environment extends GameObject {
 		nutrients = new NutrientManager(this, deviceStats);
 		sects = new SectManager(this);
 		mover = new MovementManager(this);
+		managers = Arrays.asList(nutrients, sects);
 		createBackground();
 	}
 
@@ -57,8 +61,9 @@ public class Environment extends GameObject {
 	private Set<Sect> busyThisTurn = new HashSet<Sect>();
 	
 	public void update() {
-		nutrients.update();
-		sects.update();
+		for(EnvironemtObjectManager mng : managers){
+			mng.update();
+		}
 		updateAttack();
 		
 		for(Sect male: matingDuringThisTurn){
@@ -188,8 +193,7 @@ public class Environment extends GameObject {
 		return stats;
 	}
 	
-	//TODO: not to be public, Changes must be queued
-	public Stats changeStats(EnvironmentObject object, Stats diff){
+	protected Stats changeStats(EnvironmentObject object, Stats diff){
 		Stats stats = dataMap.get(object.id());
 		stats.energy += diff.energy;
 		return stats;
@@ -211,9 +215,13 @@ public class Environment extends GameObject {
 		matingDuringThisTurn.add(sect);
 	}
 	
-	public Stats add(EnvironmentObject object, Stats initialStats){
+	public EnvironmentObject add(EnvironmentObject object, Stats initialStats){
+		object.setEnv(this);
 		dataMap.put(object.id(), initialStats.clone());
-		return initialStats;
+		for(EnvironemtObjectManager mng: managers){
+			mng.add(object);
+		}
+		return object;
 	}
 	
 	public Nutrient addNutrient() {
@@ -224,25 +232,22 @@ public class Environment extends GameObject {
 	
 	public Nutrient addNutrient(Point position) {
 		Nutrient n = new Nutrient();
-		n.setEnv(this);
 		add(n, new Stats(position,ATTACK_ENERGY)); 
-		return nutrients.addNutrient(n);
+		return n;
 	}
 	
 	public Corpse addCorpse(Point position) {
 		Corpse c = new Corpse();
-		c.setEnv(this);
 		this.add(c, new Stats(position,5*ATTACK_ENERGY)); 
-		return nutrients.addCorpse(c);
+		return c;
 	}
 	
 	private static final int ATTACK_ENERGY = 30*60;
 	private static final int INITIAL_ENERGY = (int) (ATTACK_ENERGY * 10);
 	
 	public Sect addSect(Sect s, Point position) {
-		s.setEnv(this);
 		add(s, new Stats(position, INITIAL_ENERGY));
-		return sects.addSect(s);
+		return s;
 	}
 	
 	public Player addPlayer(Player p, Point position) {
@@ -334,5 +339,10 @@ public class Environment extends GameObject {
 			return this;
 		}
 	}
+}
+
+interface EnvironemtObjectManager{
+	public EnvironmentObject add(EnvironmentObject o);
+	public void update();
 }
 

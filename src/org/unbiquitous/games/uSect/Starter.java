@@ -43,8 +43,7 @@ public class Starter extends GameObjectTreeScene {
 		InitialProperties props = new InitialProperties();
 //		props.put("debug", false);
 		Environment e = new Environment(new DeviceStats(),props);
-		Sect h = e.addSect(new Sect(new Herbivore()),new Point());
-		e.changeStats(h, Stats.change().energy(100*1000));
+		e.add(new Sect(new Herbivore()), new Stats(new Point(),100*1000));
 		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth(),0));
 		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth()/2,0));
 		e.addSect(new Sect(new Herbivore()),new Point(0,screen.getHeight()));
@@ -53,8 +52,7 @@ public class Starter extends GameObjectTreeScene {
 		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth()/2,screen.getHeight()));
 		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth(),screen.getHeight()/2));
 		
-		Sect c = e.addSect(new Sect(new Carnivore()),new Point(screen.getWidth()/4,screen.getHeight()/4));
-		e.changeStats(c, Stats.change().energy(100*1000));
+		e.add(new Sect(new Carnivore()),new Stats(new Point(screen.getWidth()/4,screen.getHeight()/4),100*1000));
 		e.addSect(new Sect(new Carnivore()),new Point(3*screen.getWidth()/4,3*screen.getHeight()/4));
 		
 		e.addPlayer(new Player(), new Point(screen.getWidth()/2,screen.getHeight()));
