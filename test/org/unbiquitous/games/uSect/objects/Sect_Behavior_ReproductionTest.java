@@ -141,8 +141,29 @@ public class Sect_Behavior_ReproductionTest {
 		assertThat(e.sects()).hasSize(2);
 	}
 	
+	@Test public void matingMixFatherMotherAndFatherInformation(){
+		Sect male = e.addSect(new Sect(new Carnivore()),new Point(20,20));
+		e.changeStats(male, Stats.n().energy(2*INITIAL_ENERGY));
+		Sect female = e.addSect(new Sect(new Carnivore()),new Point(60,20));
+		e.changeStats(female, Stats.n().energy(2*INITIAL_ENERGY));
+		
+		Random.setvalue(0.51);
+		executeThisManyTurns(e, 50);
+		
+		assertThat(e.sects()).hasSize(3);
+		Sect son = e.sects().get(2);
+		assertThat(son.position()).isEqualTo(new Point(40,20));
+	}
+	
+	//TODO: what if we have multiple fathers?
+	//TODO: Can't reproduce alone (somebody else must be part of its mating process)
+	//TODO: what if we have multiple birtths at the same time?
 	//TODO: After one successful mating needs to wait some time to mate again
+	//TODO: Should avoid attacking the son for a while.
 	//TODO: son must appear near father and mother and carry their characteristics
 	//TODO: probabilities are too high (since they are sorted every turn, maybe run once for each "partner")
+	//TODO: variables must parametrized (chances, energy, etc)
+	//TODO: CHanges must be queued
+	
 }
 

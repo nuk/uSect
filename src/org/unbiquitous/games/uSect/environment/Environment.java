@@ -82,7 +82,13 @@ public class Environment extends GameObject {
 		}
 		
 		if(!remove.isEmpty()){
-			this.addSect(new Sect(), new Point());
+			Point position = new Point();
+			for(Sect parent : remove){
+				position.add(parent.position());
+			}
+			position.x /= remove.size();
+			position.y /= remove.size();
+			this.addSect(new Sect(), position);
 		}
 		busyThisTurn.removeAll(remove);
 		
