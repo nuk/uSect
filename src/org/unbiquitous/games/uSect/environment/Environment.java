@@ -70,7 +70,6 @@ public class Environment extends GameObject {
 						&& stats(male.id).busyCoolDown <= 0){
 					dataMap.get(male.id).busyCoolDown = 50;
 					busyThisTurn.add(male);
-//					addEnergy(deffendant.id, -30*60);
 				}
 			}
 		}
@@ -79,6 +78,7 @@ public class Environment extends GameObject {
 		for(Sect coller: busyThisTurn){
 			dataMap.get(coller.id).busyCoolDown --;
 			if(stats(coller.id).busyCoolDown <= 0){
+				changeStats(coller, Stats.n().energy(-30*60));
 				remove.add(coller);
 			}
 		}

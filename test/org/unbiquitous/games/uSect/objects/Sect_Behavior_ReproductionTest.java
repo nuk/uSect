@@ -28,7 +28,7 @@ public class Sect_Behavior_ReproductionTest {
 		e.disableNutrientsCreation();
 	}
 	
-	@Test public void ifTwoSectsHaveMoreThanDoubleTheInitialEnergyTheyHaveFifityPercentChanceOfMating(){
+	@Test public void matingTakes50turns(){
 		Sect male = e.addSect(new Sect(new Carnivore()),new Point(20,20));
 		e.changeStats(male, Stats.n().energy(2*INITIAL_ENERGY+50));
 		Sect female = e.addSect(new Sect(new Carnivore()),new Point(60,20));
@@ -41,12 +41,27 @@ public class Sect_Behavior_ReproductionTest {
 		assertThat(e.energy(female.id())).isEqualTo(3*INITIAL_ENERGY+44);
 		
 		executeThisManyTurns(e, 44);
-		//TODO: this energy is wrong
-		//TODO: this position is wrong
 		assertThat(e.energy(male.id())).isEqualTo(3*INITIAL_ENERGY);
 		assertThat(e.energy(female.id())).isEqualTo(3*INITIAL_ENERGY);
 		
+		
+		assertThat(e.sects()).hasSize(2);
 		executeThisManyTurns(e, 1);
+		
+		assertThat(e.sects()).hasSize(3);
+	}
+	
+	@Test public void matingConsumesTheEquivalentOfAnAttack(){
+		Sect male = e.addSect(new Sect(new Carnivore()),new Point(20,20));
+		e.changeStats(male, Stats.n().energy(2*INITIAL_ENERGY+51));
+		Sect female = e.addSect(new Sect(new Carnivore()),new Point(60,20));
+		e.changeStats(female, Stats.n().energy(2*INITIAL_ENERGY+51));
+		
+		e.random.setvalue(1);
+		executeThisManyTurns(e, 50);
+		
+		assertThat(e.energy(male.id())).isEqualTo(3*INITIAL_ENERGY-ATTACK_ENERGY);
+		assertThat(e.energy(female.id())).isEqualTo(3*INITIAL_ENERGY-ATTACK_ENERGY);
 		
 		assertThat(e.sects()).hasSize(3);
 	}
@@ -64,8 +79,7 @@ public class Sect_Behavior_ReproductionTest {
 		assertThat(female.center()).isEqualTo(new Point(59,20));
 	}
 	
-	//TODO: Mating consumes the equivalent of an attack
-	//TODO: Mating must be an agreement of both parties
+	//TODO: Mating must be an agreement of both parties (50% * 50% for same species) 
 	//TODO: After one successful mating needs to wait some time to mate again
 	//TODO: son must appear near father and mother and carry their characteristics
 }
