@@ -52,7 +52,8 @@ public class Starter extends GameObjectTreeScene {
 		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth()/2,screen.getHeight()));
 		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth(),screen.getHeight()/2));
 		
-		e.add(new Sect(new Carnivore()),new Stats(new Point(screen.getWidth()/4,screen.getHeight()/4),100*1000));
+		e.add(new Sect(new Carnivore()),new Stats(new Point(screen.getWidth()/4,screen.getHeight()/4),200*1000));
+		e.add(new Sect(new Carnivore()),new Stats(new Point(screen.getWidth()/4-100,screen.getHeight()/4-200),100*1000));
 		e.addSect(new Sect(new Carnivore()),new Point(3*screen.getWidth()/4,3*screen.getHeight()/4));
 		
 		e.addPlayer(new Player(), new Point(screen.getWidth()/2,screen.getHeight()));

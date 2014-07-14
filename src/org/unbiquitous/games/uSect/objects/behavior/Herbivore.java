@@ -10,6 +10,7 @@ import org.unbiquitous.games.uSect.objects.Something.Type;
 public class Herbivore extends TargetFocused{
 	
 	protected Set<Something> otherSects = new HashSet<Something>();
+	protected long waitToMateAgain;
 	
 	public Feeding feeding() {
 		return Feeding.HERBIVORE;
@@ -27,8 +28,11 @@ public class Herbivore extends TargetFocused{
 	
 	@Override
 	public void update() {
-		if(goingToMate()){
+		if(goingToMate() && waitToMateAgain <= 0){
+			waitToMateAgain = 20*50;
 			sect.mate();
+		}else{
+			waitToMateAgain --;
 		}
 		super.update();
 	}

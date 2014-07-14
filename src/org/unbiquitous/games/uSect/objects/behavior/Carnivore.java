@@ -5,6 +5,8 @@ import org.unbiquitous.games.uSect.objects.Something.Feeding;
 
 public class Carnivore extends TargetFocused{
 
+	protected long waitToMateAgain; 
+	
 	@Override
 	public Feeding feeding() {
 		return Feeding.CARNIVORE;
@@ -30,12 +32,16 @@ public class Carnivore extends TargetFocused{
 		super.update();
 		Something target = target();
 		if (target != null && insideInfluenceRadius(target)){
-			if(wantToMate(target) && hasMatingEnergy()){
+			if(wantToMate(target) && hasMatingEnergy() &&
+					waitToMateAgain <= 0){
+				System.out.println("mate");
 				sect.mate();
+				waitToMateAgain = 10*50;
 			}else{
 				sect.attack();
 			}
 		}
+		waitToMateAgain --;
 	}
 	
 	@Override

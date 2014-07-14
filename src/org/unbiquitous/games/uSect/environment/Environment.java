@@ -68,7 +68,8 @@ public class Environment extends GameObject {
 		updateAttack();
 		
 		for(Sect male: matingDuringThisTurn){
-			for(Sect female : sects.sects()){
+			for(Sect female : matingDuringThisTurn){
+				System.out.println(matingDuringThisTurn);
 				if (male.id != female.id 
 						&& male.position().distanceTo(female.position()) <= male.influenceRadius()
 						&& stats(male.id).busyCoolDown <= 0){
@@ -99,7 +100,7 @@ public class Environment extends GameObject {
 						position.add(mother.position());
 						position.x /= 2;
 						position.y /= 2;
-						add(new Sect(),new Stats(position,0));
+						add(new Sect(),new Stats(position,INITIAL_ENERGY));
 					}
 				}
 				

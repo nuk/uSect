@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.Environment.Stats;
@@ -74,9 +73,13 @@ public class Sect_Behavior_ReproductionTest {
 		assertThat(e.sects()).hasSize(3);
 	}
 
-	private Sect addMatingSect(Behavior behavior, Point position) {
-		Stats initialStats = new Stats(position, 3 * INITIAL_ENERGY);
+	private Sect addMatingSect(Behavior behavior, Point position, Long energy) {
+		Stats initialStats = new Stats(position, energy);
 		return (Sect) e.add(new Sect(behavior), initialStats);
+	}
+	
+	private Sect addMatingSect(Behavior behavior, Point position) {
+		return addMatingSect(behavior, position, 3l * INITIAL_ENERGY);
 	}
 	
 	@Test
@@ -199,35 +202,58 @@ public class Sect_Behavior_ReproductionTest {
 			.containsOnly(new Point(40, 20),new Point(200, 245));
 	}
 	
-	@Ignore
 	@Test
 	public void matingProcessDontStartIfTheresNoMatch() {
-		Sect s1 = addMatingSect(new Carnivore(), new Point(20, 20));
-		Sect s2 = addMatingSect(new Carnivore(){
+		Sect male = addMatingSect(new Carnivore(), new Point(20, 20));
+		Sect female = addMatingSect(new Carnivore(){
 			public void update() {
 				//Do nothing
 			}
-		}, new Point(60, 20));
+		}, new Point(70, 20));
 
 		Random.setvalue(1);
 		executeThisManyTurns(e, 50);
 
-		assertThat(s1.position().distanceTo(new Point(20,20))).isGreaterThan(10);
+		assertThat(male.position().distanceTo(new Point(20,20))).isGreaterThan(10);
 		
 		List<Sect> sons = e.sects();
-		sons.removeAll(Arrays.asList(s1,s2));
+		sons.removeAll(Arrays.asList(female,male));
 		assertThat(sons).isEmpty();
 	}
+	
+	@Test
+	public void carnivoresAfterMatingWaits10TimesTheMatingTimeToMateAgain() {
+		Sect male = addMatingSect(new Carnivore(), new Point(20, 20),Long.MAX_VALUE);
+		Sect female = addMatingSect(new Carnivore(), new Point(60, 20),Long.MAX_VALUE);
+		
+		Random.setvalue(1);
+		executeThisManyTurns(e, 10*50);
+		
+		assertThat(male.position()).isNotEqualTo(new Point(20,20));
+		assertThat(female.position()).isNotEqualTo(new Point(60,20));
+		assertThat(e.sects()).hasSize(2);
+	}
+	
+	@Test
+	public void herbivoresAfterMatingWaits20TimesTheMatingTimeToMateAgain() {
+		e.addNutrient(new Point(400,400));
+		Sect male = addMatingSect(new Herbivore(), new Point(20, 20),Long.MAX_VALUE);
+		Sect female = addMatingSect(new Herbivore(), new Point(60, 20),Long.MAX_VALUE);
+		
+		Random.setvalue(1);
+		executeThisManyTurns(e, 20*50);
+		
+		assertThat(male.position()).isNotEqualTo(new Point(20,20));
+		assertThat(female.position()).isNotEqualTo(new Point(60,20));
+		assertThat(e.sects()).hasSize(3);
+	}
 
-	// TODO: Can't reproduce alone (somebody else must be part of its mating
-	// process)
-	// TODO: After one successful mating needs to wait some time to mate again
 	// TODO: Should avoid attacking the son for a while.
 	// TODO: son must appear near father and mother and carry their
 	// characteristics
 	// TODO: probabilities are too high (since they are sorted every turn, maybe
 	// run once for each "partner")
 	// TODO: variables must parametrized (chances, energy, etc)
-	// TODO: CHanges must be queued
+	// TODO: CHanges must be queued as events
 
 }
