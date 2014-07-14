@@ -1,4 +1,4 @@
-package org.unbiquitous.games.uSect.objects.behaviour;
+package org.unbiquitous.games.uSect.objects.behavior;
 
 import java.util.HashSet;
 import java.util.Set;

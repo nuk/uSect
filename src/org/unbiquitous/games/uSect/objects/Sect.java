@@ -1,12 +1,13 @@
 package org.unbiquitous.games.uSect.objects;
 
 import static java.lang.String.*;
+
 import java.awt.Color;
 import java.awt.Font;
 
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
-import org.unbiquitous.games.uSect.objects.behaviour.Carnivore;
-import org.unbiquitous.games.uSect.objects.behaviour.Herbivore;
+import org.unbiquitous.games.uSect.objects.behavior.Carnivore;
+import org.unbiquitous.games.uSect.objects.behavior.Herbivore;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.asset.Text;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
@@ -20,7 +21,7 @@ import org.unbiquitous.uImpala.util.math.Point;
 public class Sect extends EnvironmentObject {
 	private static final Color ATTACK_PAINT = new Color(192, 57, 43,128);
 	
-	private Behaviour behaviour;
+	private Behavior behavior;
 	private Point currentDir;
 	
 	private int radius = 30;
@@ -30,7 +31,7 @@ public class Sect extends EnvironmentObject {
 	private Text text;
 	private int influenceRadius = 50;
 
-	public interface Behaviour {
+	public interface Behavior {
 		public Something.Feeding feeding();
 		public void init(Sect s);
 		public void update();
@@ -42,13 +43,13 @@ public class Sect extends EnvironmentObject {
 		this(new Herbivore());
 	}
 	
-	public Sect(Behaviour behaviour) {
+	public Sect(Behavior behavior) {
 		Font font = new Font("Verdana", Font.BOLD, 12);
 		AssetManager assets = GameComponents.get(AssetManager.class);
 		if(assets != null){
 			text = assets.newText(font, "");
 		}
-		if(behaviour instanceof Carnivore){
+		if(behavior instanceof Carnivore){
 			shape = new SimetricShape(new Point(), new Color(211, 84, 0,200), radius,5);
 		}else{
 			shape = new SimetricShape(new Point(), new Color(41, 128, 185,200), radius,7);
@@ -56,8 +57,8 @@ public class Sect extends EnvironmentObject {
 		influence = new Circle(new Point(), ATTACK_PAINT, influenceRadius);
 		mating = new SimetricShape(new Point(), ATTACK_PAINT, influenceRadius,13);
 		
-		this.behaviour = behaviour;
-		behaviour.init(this);
+		this.behavior = behavior;
+		behavior.init(this);
 	}
 	
 	public int radius() {
@@ -68,20 +69,20 @@ public class Sect extends EnvironmentObject {
 		return influenceRadius;
 	}
 	
-	public Behaviour behaviour() {
-		return behaviour;
+	public Behavior behavior() {
+		return behavior;
 	}
 	
 	public void update() {
-		behaviour.update();
+		behavior.update();
 	}
 	
 	public void enteredSight(Something o){
-		behaviour.enteredViewRange(o);
+		behavior.enteredViewRange(o);
 	}
 	
 	public void leftSight(Something o) {
-		behaviour.leftViewRange(o);
+		behavior.leftViewRange(o);
 	}
 
 	public void moveTo(Point dir) {
@@ -139,6 +140,6 @@ public class Sect extends EnvironmentObject {
 	}
 	
 	public String toString() {
-		return format("Sect:%s%s",behaviour.feeding(), position());
+		return format("Sect:%s%s",behavior.feeding(), position());
 	};
 }

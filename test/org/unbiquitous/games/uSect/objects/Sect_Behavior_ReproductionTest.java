@@ -7,13 +7,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
 import org.unbiquitous.games.uSect.environment.Random;
-import org.unbiquitous.games.uSect.objects.behaviour.Carnivore;
-import org.unbiquitous.games.uSect.objects.behaviour.Herbivore;
+import org.unbiquitous.games.uSect.objects.Sect.Behavior;
+import org.unbiquitous.games.uSect.objects.behavior.Carnivore;
+import org.unbiquitous.games.uSect.objects.behavior.Herbivore;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.jse.impl.io.Screen;
 import org.unbiquitous.uImpala.util.math.Point;
@@ -72,6 +74,11 @@ public class Sect_Behavior_ReproductionTest {
 		assertThat(e.sects()).hasSize(3);
 	}
 
+	private Sect addMatingSect(Behavior behavior, Point position) {
+		Stats initialStats = new Stats(position, 3 * INITIAL_ENERGY);
+		return (Sect) e.add(new Sect(behavior), initialStats);
+	}
+	
 	@Test
 	public void matingConsumesTheEquivalentOfAnAttack() {
 		EnvironmentObject male = e.add(new Sect(new Carnivore()), new Stats(
@@ -92,10 +99,8 @@ public class Sect_Behavior_ReproductionTest {
 
 	@Test
 	public void whileMatingCantWalk() {
-		EnvironmentObject male = e.add(new Sect(new Carnivore()), new Stats(
-				new Point(20, 20), 3 * INITIAL_ENERGY));
-		EnvironmentObject female = e.add(new Sect(new Carnivore()), new Stats(
-				new Point(60, 20), 3 * INITIAL_ENERGY));
+		Sect male = addMatingSect(new Carnivore(), new Point(20, 20));
+		Sect female = addMatingSect(new Carnivore(), new Point(60, 20));
 
 		Random.setvalue(1);
 		executeThisManyTurns(e, 15);
@@ -106,10 +111,8 @@ public class Sect_Behavior_ReproductionTest {
 
 	@Test
 	public void matingSameSpeciesHasA50percentChance_positive() {
-		e.add(new Sect(new Carnivore()), new Stats(new Point(20, 20),
-				3 * INITIAL_ENERGY));
-		e.add(new Sect(new Carnivore()), new Stats(new Point(60, 20),
-				3 * INITIAL_ENERGY));
+		addMatingSect(new Carnivore(), new Point(20, 20));
+		addMatingSect(new Carnivore(), new Point(60, 20));
 
 		Random.setvalue(0.51);
 		executeThisManyTurns(e, 50);
@@ -119,10 +122,8 @@ public class Sect_Behavior_ReproductionTest {
 
 	@Test
 	public void matingSameSpeciesHasA50percentChance_negative() {
-		e.add(new Sect(new Carnivore()), new Stats(new Point(20, 20),
-				3 * INITIAL_ENERGY));
-		e.add(new Sect(new Carnivore()), new Stats(new Point(60, 20),
-				3 * INITIAL_ENERGY));
+		addMatingSect(new Carnivore(), new Point(20, 20));
+		addMatingSect(new Carnivore(), new Point(60, 20));
 
 		Random.setvalue(0.49);
 		executeThisManyTurns(e, 50);
@@ -132,10 +133,8 @@ public class Sect_Behavior_ReproductionTest {
 
 	@Test
 	public void matingDifferentSpeciesHasA50percentChance_positive() {
-		e.add(new Sect(new Herbivore()), new Stats(new Point(20, 20),
-				3 * INITIAL_ENERGY));
-		e.add(new Sect(new Carnivore()), new Stats(new Point(60, 20),
-				3 * INITIAL_ENERGY));
+		addMatingSect(new Carnivore(), new Point(20, 20));
+		addMatingSect(new Carnivore(), new Point(60, 20));
 
 		Random.setvalue(0.76);
 		executeThisManyTurns(e, 50);
@@ -145,10 +144,8 @@ public class Sect_Behavior_ReproductionTest {
 
 	@Test
 	public void matingDifferentSpeciesHasA50percentChance_negative() {
-		e.add(new Sect(new Herbivore()), new Stats(new Point(20, 20),
-				3 * INITIAL_ENERGY));
-		e.add(new Sect(new Carnivore()), new Stats(new Point(60, 20),
-				3 * INITIAL_ENERGY));
+		addMatingSect(new Herbivore(), new Point(20, 20));
+		addMatingSect(new Carnivore(), new Point(60, 20));
 
 		Random.setvalue(0.74);
 		executeThisManyTurns(e, 50);
@@ -158,10 +155,8 @@ public class Sect_Behavior_ReproductionTest {
 
 	@Test
 	public void matingMixFatherMotherAndFatherInformation() {
-		e.add(new Sect(new Carnivore()), new Stats(new Point(20, 20),
-				3 * INITIAL_ENERGY));
-		e.add(new Sect(new Carnivore()), new Stats(new Point(60, 20),
-				3 * INITIAL_ENERGY));
+		addMatingSect(new Carnivore(), new Point(20, 20));
+		addMatingSect(new Carnivore(), new Point(60, 20));
 
 		Random.setvalue(0.51);
 		executeThisManyTurns(e, 50);
@@ -173,12 +168,9 @@ public class Sect_Behavior_ReproductionTest {
 	
 	@Test
 	public void multipleSimultaneousMatingsConsiderOnlyParentsInRangeOfMatingCall() {
-		EnvironmentObject s1 = e.add(new Sect(new Carnivore()), new Stats(new Point(20, 20),
-				3 * INITIAL_ENERGY));
-		EnvironmentObject s2 =e.add(new Sect(new Carnivore()), new Stats(new Point(60, 20),
-				3 * INITIAL_ENERGY));
-		EnvironmentObject s3 =e.add(new Sect(new Carnivore()), new Stats(new Point(20, 60),
-				3 * INITIAL_ENERGY));
+		Sect s1 = addMatingSect(new Carnivore(), new Point(20, 20));
+		Sect s2 = addMatingSect(new Carnivore(), new Point(60, 20));
+		Sect s3 = addMatingSect(new Carnivore(), new Point(20, 60));
 
 		Random.setvalue(1);
 		executeThisManyTurns(e, 50);
@@ -189,10 +181,46 @@ public class Sect_Behavior_ReproductionTest {
 		assertThat(Arrays.asList(sons.get(0).position(),sons.get(1).position()))
 			.containsOnly(new Point(40, 20),new Point(21, 40));
 	}
+	
+	@Test
+	public void multipleSimultaneousMatingsConsiderOnlyParentsInRangeOrEachOther() {
+		Sect s1 = addMatingSect(new Carnivore(), new Point(20, 20));
+		Sect s2 = addMatingSect(new Carnivore(), new Point(60, 20));
+		Sect s3 = addMatingSect(new Carnivore(), new Point(200, 220));
+		Sect s4 = addMatingSect(new Carnivore(), new Point(200, 270));
+
+		Random.setvalue(1);
+		executeThisManyTurns(e, 50);
+
+		List<Sect> sons = e.sects();
+		sons.removeAll(Arrays.asList(s1,s2,s3,s4));
+		assertThat(sons).hasSize(2);
+		assertThat(Arrays.asList(sons.get(0).position(),sons.get(1).position()))
+			.containsOnly(new Point(40, 20),new Point(200, 245));
+	}
+	
+	@Ignore
+	@Test
+	public void matingProcessDontStartIfTheresNoMatch() {
+		Sect s1 = addMatingSect(new Carnivore(), new Point(20, 20));
+		Sect s2 = addMatingSect(new Carnivore(){
+			public void update() {
+				//Do nothing
+			}
+		}, new Point(60, 20));
+
+		Random.setvalue(1);
+		executeThisManyTurns(e, 50);
+
+		assertThat(s1.position().distanceTo(new Point(20,20))).isGreaterThan(10);
+		
+		List<Sect> sons = e.sects();
+		sons.removeAll(Arrays.asList(s1,s2));
+		assertThat(sons).isEmpty();
+	}
 
 	// TODO: Can't reproduce alone (somebody else must be part of its mating
 	// process)
-	// TODO: what if we have multiple birtths at the same time?
 	// TODO: After one successful mating needs to wait some time to mate again
 	// TODO: Should avoid attacking the son for a while.
 	// TODO: son must appear near father and mother and carry their

@@ -1,4 +1,4 @@
-package org.unbiquitous.games.uSect.objects.behaviour;
+package org.unbiquitous.games.uSect.objects.behavior;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,8 +9,7 @@ import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.uImpala.util.math.Point;
 
-//TODO: its Behavior
-public abstract class TargetFocused  implements Sect.Behaviour{
+public abstract class TargetFocused  implements Sect.Behavior{
 	//REMOVE this
 	protected static final int ATTACK_ENERGY = 30*60;
 	protected static final int INITIAL_ENERGY = (int) (ATTACK_ENERGY * 10);

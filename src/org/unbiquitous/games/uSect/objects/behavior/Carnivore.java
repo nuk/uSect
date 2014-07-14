@@ -1,4 +1,4 @@
-package org.unbiquitous.games.uSect.objects.behaviour;
+package org.unbiquitous.games.uSect.objects.behavior;
 
 import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.games.uSect.objects.Something.Feeding;

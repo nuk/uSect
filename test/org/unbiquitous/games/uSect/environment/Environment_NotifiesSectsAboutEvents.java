@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.unbiquitous.games.uSect.objects.Nutrient;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Something;
-import org.unbiquitous.games.uSect.objects.behaviour.Carnivore;
+import org.unbiquitous.games.uSect.objects.behavior.Carnivore;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.jse.impl.io.Screen;
 import org.unbiquitous.uImpala.util.math.Point;
