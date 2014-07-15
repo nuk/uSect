@@ -1,0 +1,6 @@
+# Defines the configuration for nutrient growth ratio based on the device memory
+sect.maxMemory=16*1024
+sect.minMemory=512
+sect.nutrient.chance.max=0.05
+sect.nutrient.chance.min=0.01
+

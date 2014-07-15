@@ -66,6 +66,26 @@ public class Environment extends GameObject {
 		}
 		updateAttack();
 		
+		updateMating();
+		
+		
+		//TODO: untested
+		if (screen.getKeyboard() != null){
+			if(screen.getKeyboard().getKey(Keyboard.KEY_A)){
+				System.out.println("Attack");
+				for(Player p: players){
+					p.attack();
+				}
+			}else if(screen.getKeyboard().getKey(Keyboard.KEY_C)){
+				System.out.println("Call");
+				for(Player p: players){
+					p.call();
+				}
+			} 
+		}
+	}
+
+	private void updateMating() {
 		for(Sect male: matingDuringThisTurn){
 			for(Sect female : matingDuringThisTurn){
 				if (male.id != female.id 
@@ -105,22 +125,6 @@ public class Environment extends GameObject {
 			}
 		}
 		busyThisTurn.removeAll(parents);
-		
-		
-		//TODO: untested
-		if (screen.getKeyboard() != null){
-			if(screen.getKeyboard().getKey(Keyboard.KEY_A)){
-				System.out.println("Attack");
-				for(Player p: players){
-					p.attack();
-				}
-			}else if(screen.getKeyboard().getKey(Keyboard.KEY_C)){
-				System.out.println("Call");
-				for(Player p: players){
-					p.call();
-				}
-			} 
-		}
 	}
 
 	private Set<Sect> attackersDuringThisTurn = new HashSet<Sect>();

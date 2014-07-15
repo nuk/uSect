@@ -20,15 +20,19 @@ class NutrientManager implements EnvironemtObjectManager{
 	private List<Nutrient> nutrients = new ArrayList<Nutrient>();
 	private List<Corpse> corpses = new ArrayList<Corpse>();
 	
-	int maxMemory = 16*1024;
-	int minMemory = 512;
+	private int maxMemory, minMemory;
+	private double maxChance, minChance;
 	
 	public NutrientManager(Environment env, DeviceStats deviceStats) {
 		super();
 		this.env = env;
 		this.deviceStats = deviceStats;
 		
-		GameComponents.get(GameSettings.class); // TODO:Use it
+		GameSettings settings = GameComponents.get(GameSettings.class);
+		maxMemory = settings.getInt("sect.maxMemory",16*1024);
+		minMemory = settings.getInt("sect.minMemory",512);
+		maxChance = settings.getDouble("sect.nutrient.chance.max",0.05);
+		minChance = settings.getDouble("sect.nutrient.chance.min",0.01);
 	}
 
 	List<Nutrient> nutrients(){
@@ -103,15 +107,16 @@ class NutrientManager implements EnvironemtObjectManager{
 	
 	private double chancesOfNutrients() {
 		long totalMemory = deviceStats.totalMemory();
+		double diff = maxChance - minChance;
 		if(totalMemory >= maxMemory ){
-			return 1-0.05;
+			return 1-maxChance;
 		} else {
 			if(totalMemory > minMemory ){
 				double memoryRatio = ((double)totalMemory)/maxMemory;
-				return 1-(0.01+0.04*memoryRatio);
+				return 1-(minChance+diff*memoryRatio);
 			}
 		}
-		return 1-0.01;
+		return 1-minChance;
 	}
 
 	public List<Corpse> corpses() {

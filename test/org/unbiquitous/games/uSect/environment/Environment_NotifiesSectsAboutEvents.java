@@ -3,6 +3,7 @@ package org.unbiquitous.games.uSect.environment;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
+import static org.unbiquitous.games.uSect.TestUtils.setUpEnvironment;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,8 +11,6 @@ import org.unbiquitous.games.uSect.objects.Nutrient;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.games.uSect.objects.behavior.Carnivore;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
-import org.unbiquitous.uImpala.jse.impl.io.Screen;
 import org.unbiquitous.uImpala.util.math.Point;
 
 public class Environment_NotifiesSectsAboutEvents {
@@ -19,9 +18,7 @@ public class Environment_NotifiesSectsAboutEvents {
 	private Environment e;
 
 	@Before public void setUp(){
-		GameComponents.put(org.unbiquitous.uImpala.engine.io.Screen.class, new Screen());
-		e = new Environment();
-		Random.setvalue(0);
+		e = setUpEnvironment();
 	}
 	
 	@Test public void notifiesSectOfNutrientPresence(){

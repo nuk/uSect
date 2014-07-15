@@ -1,20 +1,19 @@
 package org.unbiquitous.games.uSect.environment;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.unbiquitous.games.uSect.TestUtils.setUpEnvironment;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.DeviceStats;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObject;
-import org.unbiquitous.uImpala.jse.impl.io.Screen;
 
 public class Environment_StatsTest {
 
 	Environment e;
 	
 	@Before public void setUp(){
-		GameComponents.put(org.unbiquitous.uImpala.engine.io.Screen.class, new Screen());
+		e = setUpEnvironment();
 	}
 	
 	@Test public void environmentIsAGameObject(){
