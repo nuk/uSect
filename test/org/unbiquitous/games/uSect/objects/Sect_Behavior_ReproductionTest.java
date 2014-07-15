@@ -210,14 +210,11 @@ public class Sect_Behavior_ReproductionTest {
 	
 	@Test
 	public void carnivoresAfterMatingWaits10TimesTheMatingTimeToMateAgain() {
-		Sect male = addSect(e, new Carnivore(),new Point(20, 20), Long.MAX_VALUE/2);
-		Sect female = addSect(e, new Carnivore(),new Point(60, 20), Long.MAX_VALUE/2);
+		addSect(e, new Carnivore(),new Point(20, 20), Long.MAX_VALUE/2);
+		addSect(e, new Carnivore(),new Point(60, 20), Long.MAX_VALUE/2);
 		
 		Random.setvalue(1);
 		executeThisManyTurns(e, 10*50);
-		
-//		assertThat(male.position()).isNotEqualTo(new Point(20,20));
-//		assertThat(female.position()).isNotEqualTo(new Point(60,20));
 		
 		assertThat(e.sects()).hasSize(3);
 		
