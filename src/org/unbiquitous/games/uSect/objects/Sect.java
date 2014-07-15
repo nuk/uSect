@@ -140,6 +140,6 @@ public class Sect extends EnvironmentObject {
 	}
 	
 	public String toString() {
-		return format("Sect:%s%s",behavior.feeding(), position());
+		return format("Sect:%s%s[%s]",behavior.feeding(), position(),energy());
 	};
 }

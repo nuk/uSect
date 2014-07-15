@@ -14,7 +14,7 @@ import org.unbiquitous.uImpala.util.math.Point;
 public abstract class TargetFocused  implements Sect.Behavior{
 	protected LinkedList<Something> targetsInSight;
 	protected Sect sect;
-	private int initialEnergy;
+	protected int initialEnergy;
 	double sameSpeciesChance, differentSpeciesChance;
 	
 	public TargetFocused() {
@@ -79,7 +79,7 @@ public abstract class TargetFocused  implements Sect.Behavior{
 	}
 	
 	protected boolean insideInfluenceRadius(Something target) {
-		return distanceTo(target) < sect.influenceRadius();
+		return distanceTo(target) <= sect.influenceRadius();
 	}
 	
 	protected boolean wantToMate(Something mate) {

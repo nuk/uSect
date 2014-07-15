@@ -29,18 +29,29 @@ public class Carnivore extends TargetFocused{
 	
 	@Override
 	public void update() {
-		super.update();
+		if(sect.energy() < 10*initialEnergy){
+			super.update();
+		}
 		Something target = target();
 		if (target != null && insideInfluenceRadius(target)){
-			if(wantToMate(target) && hasMatingEnergy() &&
-					waitToMateAgain <= 0){
+			if(itsMatingTime(target)){
 				sect.mate();
 				waitToMateAgain = 10*50;
 			}else{
-				sect.attack();
+				if(sect.energy() < 10*initialEnergy){
+					sect.attack();
+				}
 			}
 		}
 		waitToMateAgain --;
+	}
+
+	private boolean itsMatingTime(Something target) {
+		return wantToMate(target) && hasMatingEnergy() && inTheMood();
+	}
+
+	private boolean inTheMood() {
+		return waitToMateAgain <= 0;
 	}
 	
 	@Override
