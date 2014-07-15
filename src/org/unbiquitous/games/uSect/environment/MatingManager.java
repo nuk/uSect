@@ -5,17 +5,23 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.unbiquitous.games.uSect.objects.Sect;
+import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.util.math.Point;
 
 public class MatingManager {
-	private static final int ATTACK_ENERGY = 30*60;
-	private static final int INITIAL_ENERGY = (int) (ATTACK_ENERGY * 10);
-	
 	private Set<Sect> matingDuringThisTurn = new HashSet<Sect>();
 	private Environment env;
+	private int matingEnergy;
+	private int initialEnergy;
+	private Integer matingCooldown;
 	
 	public MatingManager(Environment env) {
 		this.env = env;
+		GameSettings settings = GameComponents.get(GameSettings.class);
+		matingEnergy = settings.getInt("usect.mating.energy",30*60);
+		initialEnergy = settings.getInt("usect.initial.energy",30*60*10);
+		matingCooldown = settings.getInt("usect.mating.cooldown",50);
 	}
 
 	public void add(Sect s){
@@ -28,8 +34,7 @@ public class MatingManager {
 				if (male.id != female.id 
 						&& male.position().distanceTo(female.position()) <= male.influenceRadius()
 						&& env.stats(male.id).busyCoolDown <= 0){
-//					dataMap.get(male.id).busyCoolDown = 50;
-					env.changeStats(male, Environment.Stats.change().busyCoolDown(50));
+					env.changeStats(male, Environment.Stats.change().busyCoolDown(matingCooldown));
 					env.markAsBusy(male);
 				}
 			}
@@ -43,7 +48,7 @@ public class MatingManager {
 				env.changeStats(coller, Environment.Stats.change().busyCoolDown(-1));
 			}
 			if(env.stats(coller.id).busyCoolDown <= 0){
-				env.changeStats(coller, Environment.Stats.change().energy(-30*60));
+				env.changeStats(coller, Environment.Stats.change().energy(-matingEnergy));
 				parents.add(coller);
 			}
 		}
@@ -59,7 +64,7 @@ public class MatingManager {
 						position.add(mother.position());
 						position.x /= 2;
 						position.y /= 2;
-						env.add(new Sect(),new Environment.Stats(position,INITIAL_ENERGY));					}
+						env.add(new Sect(),new Environment.Stats(position,initialEnergy));					}
 				}
 				
 			}

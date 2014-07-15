@@ -20,6 +20,7 @@ import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
+import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.jse.util.shapes.Rectangle;
 import org.unbiquitous.uImpala.util.math.Point;
@@ -40,8 +41,7 @@ public class Environment extends GameObject {
 	private List<Player> players = new ArrayList<Player>();
 	private Set<Sect> busyThisTurn = new HashSet<Sect>();
 
-	private static final int ATTACK_ENERGY = 30*60;
-	private static final int INITIAL_ENERGY = (int) (ATTACK_ENERGY * 10);
+	private int initialEnergy, nutrientEnergy, corpseEnergy;
 	
 	public Environment() {
 		this(new DeviceStats());
@@ -55,6 +55,11 @@ public class Environment extends GameObject {
 		attack = new AttackManager(this);
 		mate = new MatingManager(this);
 		createBackground();
+		
+		GameSettings settings = GameComponents.get(GameSettings.class);
+		initialEnergy = settings.getInt("usect.initial.energy",30*60*10);
+		nutrientEnergy = settings.getInt("usect.nutrient.energy",30*60);
+		corpseEnergy = settings.getInt("usect.corpse.energy",5*30*60);
 	}
 
 	private void createBackground() {
@@ -151,18 +156,18 @@ public class Environment extends GameObject {
 	
 	public Nutrient addNutrient(Point position) {
 		Nutrient n = new Nutrient();
-		add(n, new Stats(position,ATTACK_ENERGY)); 
+		add(n, new Stats(position,nutrientEnergy)); 
 		return n;
 	}
 	
 	public Corpse addCorpse(Point position) {
 		Corpse c = new Corpse();
-		this.add(c, new Stats(position,5*ATTACK_ENERGY)); 
+		this.add(c, new Stats(position,corpseEnergy)); 
 		return c;
 	}
 	
 	public Sect addSect(Sect s, Point position) {
-		add(s, new Stats(position, INITIAL_ENERGY));
+		add(s, new Stats(position, initialEnergy));
 		return s;
 	}
 	

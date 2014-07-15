@@ -7,15 +7,22 @@ import java.util.LinkedList;
 import org.unbiquitous.games.uSect.environment.Random;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Something;
+import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.util.math.Point;
 
 public abstract class TargetFocused  implements Sect.Behavior{
-	//REMOVE this
-	protected static final int ATTACK_ENERGY = 30*60;
-	protected static final int INITIAL_ENERGY = (int) (ATTACK_ENERGY * 10);
-	
 	protected LinkedList<Something> targetsInSight;
 	protected Sect sect;
+	private int initialEnergy;
+	double sameSpeciesChance, differentSpeciesChance;
+	
+	public TargetFocused() {
+		GameSettings settings = GameComponents.get(GameSettings.class);
+		initialEnergy = settings.getInt("usect.initial.energy",30*60*10);
+		sameSpeciesChance = settings.getDouble("usect.mating.sameSpeciesChance",0.5);
+		differentSpeciesChance = settings.getDouble("usect.mating.differentSpeciesChance",0.25);
+	}
 	
 	public void init(Sect sect) {
 		this.sect = sect;
@@ -80,13 +87,13 @@ public abstract class TargetFocused  implements Sect.Behavior{
 	}
 
 	protected double matingChance(Something mate) {
-		double chance = 0.50;
+		double chance = sameSpeciesChance;
 			if(mate.feeding() != this.feeding()){
-				chance = 0.25;
+				chance = differentSpeciesChance;
 			}
 		return chance;
 	}
 	protected boolean hasMatingEnergy() {
-		return sect.energy() >= 2*INITIAL_ENERGY;
+		return sect.energy() >= 2*initialEnergy;
 	}
 }

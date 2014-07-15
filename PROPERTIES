@@ -4,3 +4,17 @@ sect.minMemory=512
 sect.nutrient.chance.max=0.05
 sect.nutrient.chance.min=0.01
 
+#Default energy (live turns) of nutrients, sects and its attacks
+usect.attack.energy=1800
+usect.mating.energy=1800
+usect.nutrient.energy=1800
+usect.corpse.energy=9000
+usect.initial.energy=18000
+
+#Number of turns that last 
+usect.mating.cooldown=50
+usect.attack.cooldown=5
+
+#chances
+usect.mating.sameSpeciesChance=0.5
+usect.mating.differentSpeciesChance=0.25

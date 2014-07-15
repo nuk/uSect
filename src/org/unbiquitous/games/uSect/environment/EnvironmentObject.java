@@ -8,7 +8,6 @@ import org.unbiquitous.uImpala.util.math.Point;
 public abstract class EnvironmentObject extends GameObject {
 	protected UUID id = UUID.randomUUID();
 	protected Environment env;
-//	protected long energy = 30*60;
 
 	protected void update() {
 	}

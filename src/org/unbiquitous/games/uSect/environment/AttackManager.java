@@ -4,14 +4,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.unbiquitous.games.uSect.objects.Sect;
+import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSettings;
 
 public class AttackManager {
 	private Set<Sect> attackersDuringThisTurn = new HashSet<Sect>();
 	private Set<Sect> busyAttackers = new HashSet<Sect>();
 	private Environment env;
+	private int attackEnergy,attackCooldown;
 	
 	public AttackManager(Environment env) {
 		this.env = env;
+		GameSettings settings = GameComponents.get(GameSettings.class);
+		attackEnergy = settings.getInt("usect.attack.energy",30*60);
+		attackCooldown = settings.getInt("usect.attack.cooldown",5);
 	}
 
 	public void add(Sect attacker){
@@ -39,8 +45,8 @@ public class AttackManager {
 				&& attacker.position().distanceTo(deffendant.position()) <= attacker.influenceRadius()
 				&& env.stats(attacker.id).attackCoolDown <= 0){
 			busyAttackers.add(attacker);
-			env.changeStats(deffendant, Environment.Stats.change().energy(-30*60));
-			env.changeStats(attacker, Environment.Stats.change().attackCoolDown(5));
+			env.changeStats(deffendant, Environment.Stats.change().energy(-attackEnergy));
+			env.changeStats(attacker, Environment.Stats.change().attackCoolDown(attackCooldown));
 		}
 	}
 
