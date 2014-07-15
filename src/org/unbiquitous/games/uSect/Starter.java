@@ -21,7 +21,6 @@ import org.unbiquitous.uImpala.engine.io.ScreenManager;
 import org.unbiquitous.uImpala.engine.time.DeltaTime;
 import org.unbiquitous.uImpala.jse.impl.core.Game;
 import org.unbiquitous.uImpala.util.math.Point;
-import org.unbiquitous.uos.core.InitialProperties;
 
 public class Starter extends GameObjectTreeScene {
 
@@ -40,9 +39,8 @@ public class Starter extends GameObjectTreeScene {
 		GameComponents.put(Screen.class, screen);
 		GameComponents.put(AssetManager.class,assets);
 		//TODO: How to get Props from uImpala?
-		InitialProperties props = new InitialProperties();
 //		props.put("debug", false);
-		Environment e = new Environment(new DeviceStats(),props);
+		Environment e = new Environment(new DeviceStats());
 		e.add(new Sect(new Herbivore()), new Stats(new Point(),100*1000));
 		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth(),0));
 		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth()/2,0));

@@ -10,7 +10,6 @@ import org.unbiquitous.games.uSect.environment.Random;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.util.math.Point;
-import org.unbiquitous.uos.core.InitialProperties;
 
 public class Sect_Behavior_HerbivoreTest {
 
@@ -19,7 +18,7 @@ public class Sect_Behavior_HerbivoreTest {
 
 	@Before public void setUp(){
 		GameComponents.put(Screen.class, new org.unbiquitous.uImpala.jse.impl.io.Screen());
-		e = new Environment(new InitialProperties());
+		e = new Environment();
 		Random.setvalue(0);
 	}
 	

@@ -1,6 +1,6 @@
 package org.unbiquitous.games.uSect.objects;
 
-import static java.lang.String.*;
+import static java.lang.String.format;
 
 import java.awt.Color;
 import java.awt.Font;

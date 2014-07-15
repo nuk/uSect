@@ -10,6 +10,8 @@ import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.games.uSect.objects.Corpse;
 import org.unbiquitous.games.uSect.objects.Nutrient;
 import org.unbiquitous.games.uSect.objects.Sect;
+import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSettings;
 
 class NutrientManager implements EnvironemtObjectManager{
 	private Environment env;
@@ -18,10 +20,15 @@ class NutrientManager implements EnvironemtObjectManager{
 	private List<Nutrient> nutrients = new ArrayList<Nutrient>();
 	private List<Corpse> corpses = new ArrayList<Corpse>();
 	
+	int maxMemory = 16*1024;
+	int minMemory = 512;
+	
 	public NutrientManager(Environment env, DeviceStats deviceStats) {
 		super();
 		this.env = env;
 		this.deviceStats = deviceStats;
+		
+		GameComponents.get(GameSettings.class); // TODO:Use it
 	}
 
 	List<Nutrient> nutrients(){
@@ -96,12 +103,13 @@ class NutrientManager implements EnvironemtObjectManager{
 	
 	private double chancesOfNutrients() {
 		long totalMemory = deviceStats.totalMemory();
-		int maxMemory = 16*1024;
 		if(totalMemory >= maxMemory ){
 			return 1-0.05;
-		}else if(totalMemory > 512 ){
-			double memoryRatio = ((double)totalMemory)/maxMemory;
-			return 1-(0.01+0.04*memoryRatio);
+		} else {
+			if(totalMemory > minMemory ){
+				double memoryRatio = ((double)totalMemory)/maxMemory;
+				return 1-(0.01+0.04*memoryRatio);
+			}
 		}
 		return 1-0.01;
 	}

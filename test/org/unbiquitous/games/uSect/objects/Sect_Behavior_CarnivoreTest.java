@@ -12,7 +12,6 @@ import org.unbiquitous.games.uSect.objects.behavior.Herbivore;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.jse.impl.io.Screen;
 import org.unbiquitous.uImpala.util.math.Point;
-import org.unbiquitous.uos.core.InitialProperties;
 
 public class Sect_Behavior_CarnivoreTest {
 	private static final int ATTACK_ENERGY = 30*60;
@@ -21,7 +20,7 @@ public class Sect_Behavior_CarnivoreTest {
 
 	@Before public void setUp(){
 		GameComponents.put(org.unbiquitous.uImpala.engine.io.Screen.class, new Screen());
-		e = new Environment(new InitialProperties());
+		e = new Environment();
 		Random.setvalue(0);
 	}
 	

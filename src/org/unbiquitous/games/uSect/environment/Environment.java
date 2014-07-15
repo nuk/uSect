@@ -24,7 +24,6 @@ import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.jse.util.shapes.Rectangle;
 import org.unbiquitous.uImpala.util.math.Point;
-import org.unbiquitous.uos.core.InitialProperties;
 
 public class Environment extends GameObject {
 
@@ -39,11 +38,11 @@ public class Environment extends GameObject {
 	private MovementManager mover;
 	private List<Player> players = new ArrayList<Player>();
 
-	public Environment(InitialProperties props) {
-		this(new DeviceStats(),props);
+	public Environment() {
+		this(new DeviceStats());
 	}
 	
-	public Environment(DeviceStats deviceStats,InitialProperties props) {
+	public Environment(DeviceStats deviceStats) {
 		nutrients = new NutrientManager(this, deviceStats);
 		sects = new SectManager(this);
 		mover = new MovementManager(this);
@@ -69,7 +68,6 @@ public class Environment extends GameObject {
 		
 		for(Sect male: matingDuringThisTurn){
 			for(Sect female : matingDuringThisTurn){
-				System.out.println(matingDuringThisTurn);
 				if (male.id != female.id 
 						&& male.position().distanceTo(female.position()) <= male.influenceRadius()
 						&& stats(male.id).busyCoolDown <= 0){

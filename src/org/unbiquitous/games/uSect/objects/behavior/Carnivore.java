@@ -34,7 +34,6 @@ public class Carnivore extends TargetFocused{
 		if (target != null && insideInfluenceRadius(target)){
 			if(wantToMate(target) && hasMatingEnergy() &&
 					waitToMateAgain <= 0){
-				System.out.println("mate");
 				sect.mate();
 				waitToMateAgain = 10*50;
 			}else{
