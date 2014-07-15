@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,8 +35,14 @@ public class Environment extends GameObject {
 	private List<EnvironemtObjectManager> managers;
 	
 	private MovementManager mover;
+	private AttackManager attack;
+	private MatingManager mate;
 	private List<Player> players = new ArrayList<Player>();
+	private Set<Sect> busyThisTurn = new HashSet<Sect>();
 
+	private static final int ATTACK_ENERGY = 30*60;
+	private static final int INITIAL_ENERGY = (int) (ATTACK_ENERGY * 10);
+	
 	public Environment() {
 		this(new DeviceStats());
 	}
@@ -45,8 +50,10 @@ public class Environment extends GameObject {
 	public Environment(DeviceStats deviceStats) {
 		nutrients = new NutrientManager(this, deviceStats);
 		sects = new SectManager(this);
-		mover = new MovementManager(this);
 		managers = Arrays.asList(nutrients, sects);
+		mover = new MovementManager(this);
+		attack = new AttackManager(this);
+		mate = new MatingManager(this);
 		createBackground();
 	}
 
@@ -56,17 +63,12 @@ public class Environment extends GameObject {
 		background = new Rectangle(center, Color.WHITE, screen.getWidth(), screen.getHeight());
 	}
 	
-	
-	private Set<Sect> matingDuringThisTurn = new HashSet<Sect>();
-	private Set<Sect> busyThisTurn = new HashSet<Sect>();
-	
 	public void update() {
 		for(EnvironemtObjectManager mng : managers){
 			mng.update();
 		}
-		updateAttack();
-		
-		updateMating();
+		attack.update();
+		mate.update();
 		
 		
 		//TODO: untested
@@ -85,91 +87,15 @@ public class Environment extends GameObject {
 		}
 	}
 
-	private void updateMating() {
-		for(Sect male: matingDuringThisTurn){
-			for(Sect female : matingDuringThisTurn){
-				if (male.id != female.id 
-						&& male.position().distanceTo(female.position()) <= male.influenceRadius()
-						&& stats(male.id).busyCoolDown <= 0){
-					dataMap.get(male.id).busyCoolDown = 50;
-					busyThisTurn.add(male);
-				}
-			}
-		}
-		matingDuringThisTurn.clear();
-		
-		Set<Sect> parents = new HashSet<Sect>();
-		for(Sect coller: busyThisTurn){
-			dataMap.get(coller.id).busyCoolDown --;
-			if(stats(coller.id).busyCoolDown <= 0){
-				changeStats(coller, Stats.change().energy(-30*60));
-				parents.add(coller);
-			}
-		}
-		
-		if(!parents.isEmpty()){
-			Iterator<Sect> it = parents.iterator();
-			while(parents.size() > 1){
-				Sect father = it.next();
-				it.remove();
-				for (Sect mother : parents){
-					if(father.position().distanceTo(mother.position()) <= father.influenceRadius()){
-						Point position = father.position().clone();
-						position.add(mother.position());
-						position.x /= 2;
-						position.y /= 2;
-						add(new Sect(),new Stats(position,INITIAL_ENERGY));
-					}
-				}
-				
-			}
-		}
-		busyThisTurn.removeAll(parents);
-	}
-
-	private Set<Sect> attackersDuringThisTurn = new HashSet<Sect>();
-	private Set<Sect> busyAttackers = new HashSet<Sect>();
-	
-	private void updateAttack() {
-		processAttacks();
-		updateAttackCoolDown();
-	}
-
-	private void processAttacks() {
-		for(Sect attacker: attackersDuringThisTurn){
-			for(Sect deffendant : sects.sects()){
-				checkAttack(attacker, deffendant);
-			}
-		}
-		attackersDuringThisTurn.clear();
-	}
-
-	private void checkAttack(Sect attacker, Sect deffendant) {
-		if (attacker.id != deffendant.id 
-				&& attacker.position().distanceTo(deffendant.position()) <= attacker.influenceRadius()
-				&& stats(attacker.id).attackCoolDown <= 0){
-			dataMap.get(attacker.id).attackCoolDown = 5;
-			busyAttackers.add(attacker);
-			changeStats(deffendant, Stats.change().energy(-30*60));
-		}
-	}
-
-	private void updateAttackCoolDown() {
-		Set<Sect> remove = new HashSet<Sect>();
-		for(Sect coller: busyAttackers){
-			dataMap.get(coller.id).attackCoolDown --;
-			if(stats(coller.id).attackCoolDown <= 0){
-				remove.add(coller);
-			}
-		}
-		busyAttackers.removeAll(remove);
-	}
-	
 	public Stats stats(UUID objectId){
 		if (!dataMap.containsKey(objectId)){
 			return null;
 		}
 		return dataMap.get(objectId).clone();
+	}
+	
+	public boolean isBusyThisTurn(Sect s){
+		return busyThisTurn.contains(s);
 	}
 	
 	protected Stats moveTo(UUID objectId, Point position){
@@ -181,6 +107,8 @@ public class Environment extends GameObject {
 	protected Stats changeStats(EnvironmentObject object, Stats diff){
 		Stats stats = dataMap.get(object.id());
 		stats.energy += diff.energy;
+		stats.attackCoolDown += diff.attackCoolDown;
+		stats.busyCoolDown += diff.busyCoolDown;
 		return stats;
 	}
 	
@@ -191,13 +119,19 @@ public class Environment extends GameObject {
 	}
 	
 	public void attack(Sect sect) {
-		if(!busyAttackers.contains(sect) && !busyThisTurn.contains(sect)){
-			attackersDuringThisTurn.add(sect);
-		}
+		attack.add(sect);
 	}
 	
 	public void mate(Sect sect) {
-		matingDuringThisTurn.add(sect);
+		mate.add(sect);
+	}
+	
+	public void markAsBusy(Sect s){
+		busyThisTurn.add(s);
+	}
+	
+	protected Set<Sect> busy(){
+		return busyThisTurn;
 	}
 	
 	public EnvironmentObject add(EnvironmentObject object, Stats initialStats){
@@ -226,9 +160,6 @@ public class Environment extends GameObject {
 		this.add(c, new Stats(position,5*ATTACK_ENERGY)); 
 		return c;
 	}
-	
-	private static final int ATTACK_ENERGY = 30*60;
-	private static final int INITIAL_ENERGY = (int) (ATTACK_ENERGY * 10);
 	
 	public Sect addSect(Sect s, Point position) {
 		add(s, new Stats(position, INITIAL_ENERGY));
@@ -323,6 +254,16 @@ public class Environment extends GameObject {
 			this.energy = energy;
 			return this;
 		}
+		
+		public Stats attackCoolDown(int attackCoolDown) {
+			this.attackCoolDown = attackCoolDown;
+			return this;
+		}
+		
+		public Stats busyCoolDown(int busyCoolDown) {
+			this.busyCoolDown = busyCoolDown;
+			return this;
+		}
 	}
 }
 
@@ -330,4 +271,3 @@ interface EnvironemtObjectManager{
 	public EnvironmentObject add(EnvironmentObject o);
 	public void update();
 }
-
