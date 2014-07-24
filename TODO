@@ -1,6 +1,9 @@
+- Sects must be able to attach personalized behavior to them 
 - Players must be able to interact (interact, steal objects, deliver objects)
-- Sects must be able to attach personalized behaviorto them 
 - Sects should have more characteristics
 - Sects have parts
 - Reproduction must mix characteristics (with mutation)
 - Environment affects Sect speed
+- Different environments must interact among them
+- Better handle configuration of java.library.path for lwjgl and sigar
+	Ex: java -Djava.library.path=target/natives/:include/:lib/ -jar target/uSect-1.0-DEV-jar-with-dependencies.jar s

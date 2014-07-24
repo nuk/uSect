@@ -3,6 +3,7 @@ package org.unbiquitous.games.uSect;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.Arrays;
+import java.util.logging.Level;
 
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.Environment.Stats;
@@ -21,6 +22,7 @@ import org.unbiquitous.uImpala.engine.io.ScreenManager;
 import org.unbiquitous.uImpala.engine.time.DeltaTime;
 import org.unbiquitous.uImpala.jse.impl.core.Game;
 import org.unbiquitous.uImpala.util.math.Point;
+import org.unbiquitous.uos.core.UOSLogging;
 
 public class Starter extends GameObjectTreeScene {
 
@@ -69,6 +71,9 @@ public class Starter extends GameObjectTreeScene {
 	
 	@SuppressWarnings({ "unchecked", "serial" })
 	public static void main(String[] args) {
+		if(args.length > 0 && "--debug".equalsIgnoreCase(args[0])){
+			UOSLogging.setLevel(Level.ALL);
+		}
 		Game.run(new GameSettings() {
 			{ 
 				put("first_scene", Starter.class);
