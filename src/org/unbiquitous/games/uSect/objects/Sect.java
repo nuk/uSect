@@ -4,6 +4,7 @@ import static java.lang.String.format;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.UUID;
 
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
 import org.unbiquitous.games.uSect.objects.behavior.Carnivore;
@@ -96,6 +97,10 @@ public class Sect extends EnvironmentObject {
 	
 	public void mate() {
 		env.mate(this);
+	}
+	
+	public Point positionOf(UUID id){
+		return env.stats(id).position;
 	}
 	
 	public void render(GameRenderers renderers) {
