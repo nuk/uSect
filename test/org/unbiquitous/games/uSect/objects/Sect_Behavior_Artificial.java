@@ -216,8 +216,4 @@ public class Sect_Behavior_Artificial {
 		executeThisManyTurns(e, 1);
 		assertThat(s.position()).isEqualTo(new Point(21,19));
 	}
-	
-	//TODO: must have a way to query stats
-	//Must have a feeding type
-	
 }

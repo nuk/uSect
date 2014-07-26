@@ -12,9 +12,11 @@ import org.unbiquitous.uImpala.util.math.Point;
 
 public class Artificial extends TargetFocused {
 	private ExecutionUnity unity;
+	private Feeding feeding;
 
 	public Artificial(ExecutionUnity unity, Feeding feeding) {
 		this.unity = unity;
+		this.feeding = feeding;
 		unity.addHelper(new MoveHelper());
 		unity.addHelper(new AttackHelper());
 		unity.addHelper(new MateHelper());
@@ -23,8 +25,7 @@ public class Artificial extends TargetFocused {
 
 	@Override
 	public Feeding feeding() {
-		// TODO Auto-generated method stub
-		return null;
+		return feeding;
 	}
 	
 	@Override
@@ -75,7 +76,7 @@ public class Artificial extends TargetFocused {
 	private final class MateHelper implements ExecutionUnity.ExecutionHelper {
 		public String name() {	return "mate";	}
 
-		public String invoke(String... args) {
+		public Object invoke(String... args) {
 			sect.mate();
 			return null;
 		}
@@ -84,7 +85,7 @@ public class Artificial extends TargetFocused {
 	private final class AttackHelper implements ExecutionUnity.ExecutionHelper {
 		public String name() {	return "attack";	}
 
-		public String invoke(String... args) {
+		public Object invoke(String... args) {
 			sect.attack();
 			return null;
 		}
@@ -93,7 +94,7 @@ public class Artificial extends TargetFocused {
 	private final class MoveHelper implements ExecutionUnity.ExecutionHelper {
 		public String name() {	return "move";	}
 
-		public String invoke(String... args) {
+		public Object invoke(String... args) {
 			sect.moveTo(toPoint(args));
 			return null;
 		}
@@ -101,14 +102,14 @@ public class Artificial extends TargetFocused {
 		private Point toPoint(String... args) {
 			int x = Integer.parseInt(args[0]);
 			int y = Integer.parseInt(args[1]);
-			Point poi9nt = new Point(x,y);
-			return poi9nt;
+			return new Point(x,y);
 		}
 	}
 	
 	private final class PositionHelper implements ExecutionUnity.ExecutionHelper {
 		public String name() {	return "positionOf";	}
 		
+		@SuppressWarnings("serial")
 		public Object invoke(final String... args) {
 			Map<String, Object> something = new HashMap<String, Object>(){{
 				Point current = sect.positionOf(UUID.fromString(args[0]));
@@ -116,12 +117,6 @@ public class Artificial extends TargetFocused {
 				put("y",current.y);
 			}};
 			return something;
-//			System.out.println(args[0]);
-//			Point current = sect.positionOf(UUID.fromString(args[0]));
-//			System.out.println(current);
-//			return "{'x' = "+current.x+", 'y' = "+current.y+"}";
-////			System.out.println(args);
-////			return "100";
 		}
 	}
 }
