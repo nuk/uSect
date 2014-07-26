@@ -25,6 +25,10 @@ class MovementManager {
 		}else if (lottery <= 0.5 && dir.y != 0){
 			dir.x = 0;
 		}
+		//TODO: parametrize speed (and use CPU info for this)
+		int speed = 1;
+		dir.x = (int) (speed * Math.signum(dir.x));
+		dir.y = (int) (speed * Math.signum(dir.y));
 	}
 	
 	private Point determineFinalPosition(Sect sect, Point dir) {

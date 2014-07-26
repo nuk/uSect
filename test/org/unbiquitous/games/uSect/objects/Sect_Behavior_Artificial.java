@@ -125,8 +125,6 @@ public class Sect_Behavior_Artificial {
 		.append("end\n")
 		.append("function onEntered(data)\n")
 		.append("	if "
-//					+ "data['x'] == 100 and "
-//					+ "data['y'] == 20 and "
 					+ "data['id'] == '"+h.id()+"' and "
 					+ "data['type'] == 'SECT' and "
 					+ "data['feeding'] == 'HERBIVORE' "
