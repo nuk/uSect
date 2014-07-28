@@ -8,10 +8,12 @@ import org.unbiquitous.uImpala.util.math.Point;
 
 class MovementManager {
 	private Environment env;
+	private int speed;
 	
 	public MovementManager(Environment env) {
-		super();
 		this.env = env;
+		GameSettings settings = GameComponents.get(GameSettings.class);
+		speed = settings.getInt("usect.speed.value",1);
 	}
 
 	public void moveTo(Sect sect, Point dir) {
@@ -21,8 +23,6 @@ class MovementManager {
 
 	private Point adjustDirection(Point dir) {
 		//TODO: parametrize speed (and use CPU info for this)
-		GameSettings settings = GameComponents.get(GameSettings.class);
-		int speed = settings.getInt("usect.speed.value",1);
 		int base = Math.min(speed, dir.module());
 		Point newDir = applySpeedProportionToVectorDirection(dir, base);
 		addRandomRemainderToDirectionVector(dir, base, newDir);

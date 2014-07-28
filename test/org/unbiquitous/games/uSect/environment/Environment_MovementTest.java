@@ -61,7 +61,6 @@ public class Environment_MovementTest {
 		assertThat(sect.position()).isEqualTo(new Point(12,13));
 	}
 	
-	
 	@Test public void dontGoesFurtherThanRequestedBySect(){
 		setUp(6);
 		direction = new Point(1,1);

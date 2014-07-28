@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.util.UUID;
 
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
+import org.unbiquitous.games.uSect.environment.Random;
 import org.unbiquitous.games.uSect.objects.behavior.Carnivore;
 import org.unbiquitous.games.uSect.objects.behavior.Herbivore;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
@@ -24,6 +25,7 @@ public class Sect extends EnvironmentObject {
 	
 	private Behavior behavior;
 	private Point currentDir;
+	private long angle = 0;
 	
 	private int radius = 30;
 	private SimetricShape shape;
@@ -120,28 +122,14 @@ public class Sect extends EnvironmentObject {
 		shape.rotate(rotationAngle());
 		shape.render();
 		
-		Screen screen = GameComponents.get(Screen.class);
-		text.setText(energy().toString());
-		text.render(screen, (float)position().x, (float)position().y, Corner.TOP_LEFT, 1f, 0f, 1f, 1f, new org.unbiquitous.uImpala.util.Color(0, 0, 0));
+//		Screen screen = GameComponents.get(Screen.class);
+//		text.setText(energy().toString());
+//		text.render(screen, (float)position().x, (float)position().y, Corner.TOP_LEFT, 1f, 0f, 1f, 1f, new org.unbiquitous.uImpala.util.Color(0, 0, 0));
 	}
 
 	private float rotationAngle() {
-		if(      new Point(+1, 0).equals(currentDir)){
-			return -45;
-		}else if(new Point(+1,-1).equals(currentDir)){
-			return -90;
-		}else if(new Point( 0,-1).equals(currentDir)){
-			return -135;
-		}else if(new Point(-1,-1).equals(currentDir)){
-			return -180;
-		}else if(new Point(-1, 0).equals(currentDir)){
-			return +135;
-		}else if(new Point(-1,+1).equals(currentDir)){
-			return +90;
-		}else if(new Point( 0,+1).equals(currentDir)){
-			return +45;
-		}
-		return 0;
+		angle += ((Random.v()*3)-2)*45;
+		return angle %= 360;
 	}
 	
 	public String toString() {

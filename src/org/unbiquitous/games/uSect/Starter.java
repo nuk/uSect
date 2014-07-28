@@ -44,8 +44,6 @@ public class Starter extends GameObjectTreeScene {
 
 		GameComponents.put(Screen.class, screen);
 		GameComponents.put(AssetManager.class,assets);
-		//TODO: How to get Props from uImpala?
-//		props.put("debug", false);
 		Environment e = new Environment(new DeviceStats());
 		populateEnvironment(e);
 		
