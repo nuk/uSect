@@ -18,3 +18,6 @@ usect.attack.cooldown=5
 #chances
 usect.mating.sameSpeciesChance=0.5
 usect.mating.differentSpeciesChance=0.25
+
+#number of pixels that can be walked at each turn
+usect.speed.value=1

@@ -2,6 +2,8 @@ package org.unbiquitous.games.uSect.environment;
 
 import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.games.uSect.objects.Sect;
+import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.util.math.Point;
 
 class MovementManager {
@@ -13,22 +15,36 @@ class MovementManager {
 	}
 
 	public void moveTo(Sect sect, Point dir) {
-		adjustDirection(dir);
-		env.moveTo(sect.id, determineFinalPosition(sect, dir));
+		env.moveTo(sect.id, determineFinalPosition(sect, adjustDirection(dir)));
 		env.changeStats(sect, Stats.change().energy(-1));
 	}
 
-	private void adjustDirection(Point dir) {
-		double lottery = Random.v();
-		if(lottery > 0.5 && dir.x != 0){
-			dir.y = 0;
-		}else if (lottery <= 0.5 && dir.y != 0){
-			dir.x = 0;
-		}
+	private Point adjustDirection(Point dir) {
 		//TODO: parametrize speed (and use CPU info for this)
-		int speed = 1;
-		dir.x = (int) (speed * Math.signum(dir.x));
-		dir.y = (int) (speed * Math.signum(dir.y));
+		GameSettings settings = GameComponents.get(GameSettings.class);
+		int speed = settings.getInt("usect.speed.value",1);
+		int base = Math.min(speed, dir.module());
+		Point newDir = applySpeedProportionToVectorDirection(dir, base);
+		addRandomRemainderToDirectionVector(dir, base, newDir);
+		return newDir;
+	}
+
+	private Point applySpeedProportionToVectorDirection(Point dir, int speed) {
+		Point newDir = new Point();
+		newDir.x = (int) (speed * ((float)dir.x)/dir.module());
+		newDir.y = (int) (speed * ((float)dir.y)/dir.module());
+		return newDir;
+	}
+	
+	private void addRandomRemainderToDirectionVector(Point dir, int speed,
+			Point newDir) {
+		if(newDir.module() < speed){
+			if(Random.v() > 0.5 ){
+				newDir.x += (int) (1 * Math.signum(dir.x));
+			}else {
+				newDir.y += (int) (1 * Math.signum(dir.y));
+			}
+		}
 	}
 	
 	private Point determineFinalPosition(Sect sect, Point dir) {

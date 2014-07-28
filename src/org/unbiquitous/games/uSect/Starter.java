@@ -139,6 +139,7 @@ public class Starter extends GameObjectTreeScene {
 				put("first_scene", Starter.class);
 				put("input_managers", Arrays.asList(MouseManager.class, KeyboardManager.class));
 				put("output_managers", Arrays.asList(ScreenManager.class));
+				put("usect.speed.value", 5);
 			}
 		});
 	}

@@ -11,9 +11,10 @@ import org.unbiquitous.games.uSect.objects.Nutrient;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.games.uSect.objects.behavior.Carnivore;
+import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.util.math.Point;
 
-public class Environment_EventsControl {
+public class Environment_EventsControlTest {
 
 	private Environment e;
 
@@ -121,21 +122,6 @@ public class Environment_EventsControl {
 		e.update();
 		
 		assertThat(s2.position()).isEqualTo(new Point(10+s1.radius(),10));
-	}
-	
-	@Test public void sectMustNotMoveFasterThanTheSpeedLimit(){
-		e.addNutrient(new Point(10,10));
-		Random.setvalue(0.49);
-		Sect s1 = e.addSect(new Sect(){
-			@Override
-			public void update() {
-				env.moveTo(this, new Point(10,10));
-			}
-		},new Point(10,10));
-		
-		e.update();
-		
-		assertThat(s1.position()).isEqualTo(new Point(10,11));
 	}
 	
 	@Test public void whenTwoSectsHasHalfChanceOfBackingOf(){
