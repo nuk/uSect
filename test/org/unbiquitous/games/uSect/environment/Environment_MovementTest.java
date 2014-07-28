@@ -12,19 +12,23 @@ public class Environment_MovementTest {
 	
 	private Environment e;
 	private Sect sect ;
-	private Point direction;
+	private Point direction, startPosition = new Point(10,10);
 	
 	private void setUp(int speed){
+		setUp(speed, 1000, 1000);
+	}
+	
+	private void setUp(int speed, int width, int height){
 		GameSettings settings = new GameSettings();
 		settings.put("usect.speed.value", speed);
-		e = setUpEnvironment(settings);
+		e = setUpEnvironment(settings,width,height);
 		sect = new Sect(){
 			@Override
 			public void update() {
 				env.moveTo(this, direction);
 			}
 		};
-		e.addSect(sect,new Point(10,10));
+		e.addSect(sect,startPosition);
 	}
 	
 	@Test public void sectMustNotMoveFasterThanTheSpeedLimit(){
@@ -68,4 +72,22 @@ public class Environment_MovementTest {
 		e.update();
 		assertThat(sect.position()).isEqualTo(new Point(11,11));
 	}
+	
+	@Test public void sectMustNotMoveBeyondUpperBorder(){
+		startPosition = new Point(0,0);
+		setUp(2);
+		direction = new Point(-1,-1);
+		e.update();
+		assertThat(sect.position()).isEqualTo(new Point(0,0));
+	}
+	
+	@Test public void sectMustNotMoveBeyondBottomBorder(){
+		startPosition = new Point(100,100);
+		setUp(2,100,100);
+		direction = new Point(+1,+1);
+		e.update();
+		assertThat(sect.position()).isEqualTo(new Point(100,100));
+	}
+	
+	//TODO: shouldn't be allowed to move beyond the border.
 }

@@ -199,7 +199,4 @@ public class Sect_Behavior_HerbivoreTest {
 		assertThat(e.corpses()).hasSize(1);
 		assertThat(e.corpses().get(0).position()).isEqualTo(new Point(50,50));
 	}
-	
-	//TODO: shouldn't be allowed to move beyond the border.
-	//TODO: shouldn't be allowed to move more than the environment allows.
 }

@@ -14,24 +14,22 @@ import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.asset.Text;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
-import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.jse.util.shapes.Circle;
 import org.unbiquitous.uImpala.jse.util.shapes.SimetricShape;
-import org.unbiquitous.uImpala.util.Corner;
 import org.unbiquitous.uImpala.util.math.Point;
 
 public class Sect extends EnvironmentObject {
 	private static final Color ATTACK_PAINT = new Color(192, 57, 43,128);
 	
 	private Behavior behavior;
-	private Point currentDir;
+	protected Point currentDir;
 	private long angle = 0;
 	
 	private int radius = 30;
 	private SimetricShape shape;
 	private Circle influence;
 	private SimetricShape mating;
-	private Text text;
+	protected Text text;
 	private int influenceRadius = 50;
 
 	public interface Behavior {
@@ -119,6 +117,7 @@ public class Sect extends EnvironmentObject {
 		}
 		
 		shape.center(position());
+		shape.radius(radius+(int)((Random.v()*6)-3));
 		shape.rotate(rotationAngle());
 		shape.render();
 		

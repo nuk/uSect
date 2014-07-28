@@ -4,15 +4,18 @@ import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
+import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.util.math.Point;
 
 class MovementManager {
 	private Environment env;
 	private int speed;
+	private Screen screen;
 	
 	public MovementManager(Environment env) {
 		this.env = env;
 		GameSettings settings = GameComponents.get(GameSettings.class);
+		screen = GameComponents.get(Screen.class);
 		speed = settings.getInt("usect.speed.value",1);
 	}
 
@@ -49,6 +52,18 @@ class MovementManager {
 	
 	private Point determineFinalPosition(Sect sect, Point dir) {
 		Point forwardPosition = new Point(sect.position().x + dir.x, sect.position().y + dir.y);
+		checkBorders(forwardPosition);
+		return checkColision(sect, dir, forwardPosition);
+	}
+
+	private void checkBorders(Point forwardPosition) {
+		forwardPosition.x = Math.max(forwardPosition.x, 0);
+		forwardPosition.x = Math.min(forwardPosition.x, screen.getWidth());
+		forwardPosition.y = Math.max(forwardPosition.y, 0);
+		forwardPosition.y = Math.min(forwardPosition.y, screen.getHeight());
+	}
+
+	private Point checkColision(Sect sect, Point dir, Point forwardPosition) {
 		if(!hasColided(sect, forwardPosition)){
 			return forwardPosition;
 		}else if (Random.v() > 0.5){
@@ -57,7 +72,6 @@ class MovementManager {
 		}
 		return sect.position();
 	}
-
 
 	private boolean hasColided(Sect sect, Point newPos) {
 		boolean hasColided = false;

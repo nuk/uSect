@@ -23,8 +23,16 @@ public class TestUtils {
 	}
 	
 	public static Environment setUpEnvironment(GameSettings settings){
+		return setUpEnvironment(settings, Integer.MAX_VALUE, Integer.MAX_VALUE);
+	}
+	
+	public static Environment setUpEnvironment(GameSettings settings, 
+								final int width, final int height){
 		GameComponents.put(GameSettings.class, settings);
-		GameComponents.put(org.unbiquitous.uImpala.engine.io.Screen.class, new Screen());
+		GameComponents.put(org.unbiquitous.uImpala.engine.io.Screen.class, new Screen(){
+			public int getWidth() {		return width;	}
+			public int getHeight() {	return height;	}
+		});
 		Random.setvalue(0);
 		return new Environment();
 	}
