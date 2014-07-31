@@ -1,10 +1,12 @@
 package uPrism;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.unbiquitous.uImpala.engine.asset.AssetManager;
+import org.unbiquitous.uImpala.engine.asset.Rectangle;
+import org.unbiquitous.uImpala.engine.asset.SimetricShape;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
@@ -15,9 +17,7 @@ import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.engine.io.ScreenManager;
 import org.unbiquitous.uImpala.engine.time.DeltaTime;
 import org.unbiquitous.uImpala.jse.impl.core.Game;
-import org.unbiquitous.uImpala.jse.util.shapes.Circle;
-import org.unbiquitous.uImpala.jse.util.shapes.Rectangle;
-import org.unbiquitous.uImpala.jse.util.shapes.SimetricShape;
+import org.unbiquitous.uImpala.util.Color;
 import org.unbiquitous.uImpala.util.math.Point;
 
 public class SpikeCanvas extends GameScene {
@@ -36,9 +36,10 @@ public class SpikeCanvas extends GameScene {
 		screen.open("uSect", 800, 600, false, null);
 
 		GameComponents.put(Screen.class, screen);
+		AssetManager assets = GameComponents.get(AssetManager.class);
 		
-		control = new Rectangle(new Point(50,50),Color.WHITE, 100, 100);
-		control2 = new SimetricShape(new Point(50,50), Color.DARK_GRAY, 100, 4);
+		control = assets.newRectangle(new Point(50,50),Color.WHITE, 100, 100);
+		control2 = assets.newSimetricShape(new Point(50,50), Color.DARK_GRAY, 100, 4);
 		
 		sects.add(new SpikeSect(new Point(100,100), screen));
 		sects.add(new SpikeSect(new Point(200,200), screen));
@@ -110,9 +111,10 @@ class SpikeSect extends GameObject {
 		this.screen = screen;
 		triangleRadius = (int) Math.ceil(Math.sqrt((4*componentSize*componentSize)/3));
 		updatePositions();
-		head = new SimetricShape(headPosition , Color.WHITE, triangleRadius,3);
-		body = new Rectangle(center, Color.RED, componentSize, componentSize);
-		tail = new Circle(tailPosition, Color.BLUE, componentSize);
+		AssetManager assets = GameComponents.get(AssetManager.class);
+		head = assets.newSimetricShape(headPosition , Color.WHITE, triangleRadius,3);
+		body = assets.newRectangle(center, Color.RED, componentSize, componentSize);
+		tail = assets.newCircle(tailPosition, Color.BLUE, componentSize);
 		tail.rotate(45);
 	}
 

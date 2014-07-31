@@ -21,9 +21,14 @@ public class Herbivore extends TargetFocused{
 			targetsInSight.add(o);
 		}else if(o.type() == Type.SECT){
 			otherSects.add(o);
-			//TODO:remove later 
 		}
 		sortTargets();
+	}
+	
+	@Override
+	public void leftViewRange(Something n) {
+		super.leftViewRange(n);
+		otherSects.remove(n);
 	}
 	
 	@Override

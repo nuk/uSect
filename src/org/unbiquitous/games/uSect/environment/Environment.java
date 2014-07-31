@@ -1,6 +1,5 @@
 package org.unbiquitous.games.uSect.environment;
 
-import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,12 +16,14 @@ import org.unbiquitous.games.uSect.objects.Corpse;
 import org.unbiquitous.games.uSect.objects.Nutrient;
 import org.unbiquitous.games.uSect.objects.Player;
 import org.unbiquitous.games.uSect.objects.Sect;
+import org.unbiquitous.uImpala.engine.asset.AssetManager;
+import org.unbiquitous.uImpala.engine.asset.Rectangle;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.engine.io.Screen;
-import org.unbiquitous.uImpala.jse.util.shapes.Rectangle;
+import org.unbiquitous.uImpala.util.Color;
 import org.unbiquitous.uImpala.util.math.Point;
 
 public class Environment extends GameObject {
@@ -64,8 +65,9 @@ public class Environment extends GameObject {
 
 	private void createBackground() {
 		screen = GameComponents.get(Screen.class);
+		AssetManager assets = GameComponents.get(AssetManager.class);
 		Point center = new Point(screen.getWidth()/2, screen.getHeight()/2);
-		background = new Rectangle(center, Color.WHITE, screen.getWidth(), screen.getHeight());
+		background = assets.newRectangle(center, Color.WHITE, screen.getWidth(), screen.getHeight());
 	}
 	
 	public void update() {

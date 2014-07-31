@@ -1,12 +1,13 @@
 package org.unbiquitous.games.uSect.objects;
 
-import java.awt.Color;
-
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
+import org.unbiquitous.uImpala.engine.asset.AssetManager;
+import org.unbiquitous.uImpala.engine.asset.Rectangle;
+import org.unbiquitous.uImpala.engine.asset.SimetricShape;
+import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
-import org.unbiquitous.uImpala.jse.util.shapes.Circle;
-import org.unbiquitous.uImpala.jse.util.shapes.Rectangle;
+import org.unbiquitous.uImpala.util.Color;
 import org.unbiquitous.uImpala.util.math.Point;
 
 public class Player extends EnvironmentObject{
@@ -17,13 +18,14 @@ public class Player extends EnvironmentObject{
 
 	enum Influence {ATTACK,CALL}
 	private Rectangle square ;
-	private Circle inlfuence ;
+	private SimetricShape inlfuence ;
 	private int influenceRadius = 0;
 	private Influence currentAction = Influence.ATTACK;
 	
 	public Player() {
-		square = new Rectangle(new Point(0,0), PLAYER_PAINT, 40, 40);
-		inlfuence = new Circle(new Point(0,0), ATTACK_PAINT, 40);
+		AssetManager assets = GameComponents.get(AssetManager.class);
+		square = assets.newRectangle(new Point(0,0), PLAYER_PAINT, 40, 40);
+		inlfuence = assets.newCircle(new Point(0,0), ATTACK_PAINT, 40);
 	}
 	
 	public void setEnv(Environment env) {

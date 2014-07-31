@@ -1,6 +1,5 @@
 package org.unbiquitous.games.uSect.objects;
 
-import java.awt.Color;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -9,8 +8,11 @@ import java.util.Set;
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
 import org.unbiquitous.games.uSect.objects.Something.Feeding;
 import org.unbiquitous.games.uSect.objects.Something.Type;
+import org.unbiquitous.uImpala.engine.asset.AssetManager;
+import org.unbiquitous.uImpala.engine.asset.SimetricShape;
+import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
-import org.unbiquitous.uImpala.jse.util.shapes.Circle;
+import org.unbiquitous.uImpala.util.Color;
 import org.unbiquitous.uImpala.util.math.Point;
 
 public class Nutrient extends EnvironmentObject{
@@ -19,12 +21,14 @@ public class Nutrient extends EnvironmentObject{
 	protected Map<Sect, Integer> absortionTable = new HashMap();
 	
 	protected int radius = 10;
-	protected Circle shape = new Circle(new Point(), Color.GREEN.darker(), radius);
+	protected SimetricShape shape;
 	protected Something.Type type = Type.NUTRIENT;
 	
 	private Sect hasBeenConsumedBy;
 
 	public Nutrient() {
+		AssetManager assets = GameComponents.get(AssetManager.class);
+		shape = assets.newCircle(new Point(), Color.GREEN.darker(), radius);
 		targetOf = new HashSet<Sect>();
 	}
 

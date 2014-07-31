@@ -237,9 +237,7 @@ public class Sect_Behavior_ReproductionTest {
 		assertThat(e.sects()).hasSize(3);
 	}
 	
-	// TODO: son must appear near father and mother and carry their
-	// characteristics
-	// TODO: variables must parametrized (chances, energy, etc)
+	// TODO: son must appear near father and mother and carry their characteristics
 	// TODO: CHanges must be queued as events
 
 }
