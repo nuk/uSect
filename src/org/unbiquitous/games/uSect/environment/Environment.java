@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import org.lwjgl.input.Keyboard;
 import org.unbiquitous.games.uSect.DeviceStats;
 import org.unbiquitous.games.uSect.objects.Corpse;
 import org.unbiquitous.games.uSect.objects.Nutrient;
@@ -79,7 +78,7 @@ public class Environment extends GameObject {
 		
 		
 		//TODO: untested
-		if (screen.getKeyboard() != null){
+		/*if (screen.getKeyboard() != null){
 			if(screen.getKeyboard().getKey(Keyboard.KEY_A)){
 				System.out.println("Attack");
 				for(Player p: players){
@@ -91,7 +90,7 @@ public class Environment extends GameObject {
 					p.call();
 				}
 			} 
-		}
+		}*/
 	}
 
 	public Stats stats(UUID objectId){

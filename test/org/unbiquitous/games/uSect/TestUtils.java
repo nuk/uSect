@@ -15,7 +15,9 @@ import org.unbiquitous.uImpala.engine.asset.Sprite;
 import org.unbiquitous.uImpala.engine.asset.Text;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
-import org.unbiquitous.uImpala.jse.impl.io.Screen;
+import org.unbiquitous.uImpala.engine.io.KeyboardSource;
+import org.unbiquitous.uImpala.engine.io.MouseSource;
+import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.util.Color;
 import org.unbiquitous.uImpala.util.math.Point;
 
@@ -41,6 +43,24 @@ public class TestUtils {
 		GameComponents.put(org.unbiquitous.uImpala.engine.io.Screen.class, new Screen(){
 			public int getWidth() {		return width;	}
 			public int getHeight() {	return height;	}
+			public void open() {}
+			public void open(String t, int w, int h, boolean f, String i,
+					boolean gl) {}
+			public String getTitle() { return null;}
+			public void setTitle(String title) {}
+			public void setSize(int width, int height) {}
+			public boolean isFullscreen() {return false;}
+			public void setFullscreen(boolean fullscreen) {}
+			public String getIcon() { return null;}
+			public void setIcon(String icon) {}
+			public boolean isCloseRequested() {return false;}
+			public MouseSource getMouse() { return null;}
+			public KeyboardSource getKeyboard() { return null;}
+			public void start() { }
+			public void stop() {}
+			protected void update() {}
+			public void close() {}
+			public boolean isUpdating() {return false;}
 		});
 		Random.setvalue(0);
 		return new Environment();
@@ -78,17 +98,26 @@ class DummyAssetManager extends AssetManager {
 	@Override
 	public SimetricShape newSimetricShape(Point center, Color paint, float radius,
 			int numberOfSides) {
-		return new org.unbiquitous.uImpala.jse.util.shapes.SimetricShape(center, paint, radius, numberOfSides);
+		return new SimetricShape(center, paint, radius, numberOfSides){
+			public void render() {}
+			public void rotate(float angleInDegrees) {}
+			};
 	}
 	
 	@Override
 	public SimetricShape newCircle(Point center, Color paint, float radius) {
-		return new org.unbiquitous.uImpala.jse.util.shapes.SimetricShape(center, paint, radius, 360);
+		return new SimetricShape(center, paint, radius, 360){
+			public void render() {}
+			public void rotate(float angleInDegrees) {}
+		};
 	}
 	
 	@Override
 	public Rectangle newRectangle(Point center, Color paint, float width, float height) {
-		return new org.unbiquitous.uImpala.jse.util.shapes.Rectangle(center, paint, width, height);
+		return new Rectangle(center, paint, width, height){
+			public void render() {}
+			public void rotate(float angleInDegrees) {}
+		};
 	}
 	
 	@Override

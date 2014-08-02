@@ -1,7 +1,6 @@
 package uPrism;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
@@ -11,12 +10,9 @@ import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.engine.core.GameScene;
-import org.unbiquitous.uImpala.engine.core.GameSettings;
-import org.unbiquitous.uImpala.engine.io.MouseManager;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.engine.io.ScreenManager;
 import org.unbiquitous.uImpala.engine.time.DeltaTime;
-import org.unbiquitous.uImpala.jse.impl.core.Game;
 import org.unbiquitous.uImpala.util.Color;
 import org.unbiquitous.uImpala.util.math.Point;
 
@@ -80,13 +76,13 @@ public class SpikeCanvas extends GameScene {
 
 	@SuppressWarnings({ "unchecked", "serial" })
 	public static void main(String[] args) {
-		Game.run(new GameSettings() {
+		/*Game.run(new GameSettings() {
 			{ 
 				put("first_scene", SpikeCanvas.class);
 				put("input_managers", Arrays.asList(MouseManager.class));
 				put("output_managers", Arrays.asList(ScreenManager.class));
 			}
-		});
+		});*/
 	}
 }
 

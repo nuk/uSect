@@ -2,7 +2,6 @@ package org.unbiquitous.games.uSect.objects;
 
 import static java.lang.String.format;
 
-import java.awt.Font;
 import java.util.UUID;
 
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
@@ -44,10 +43,10 @@ public class Sect extends EnvironmentObject {
 	}
 	
 	public Sect(Behavior behavior) {
-		Font font = new Font("Verdana", Font.BOLD, 12);
+//		Font font = new Font("Verdana", Font.BOLD, 12);
 		AssetManager assets = GameComponents.get(AssetManager.class);
 		if(assets != null){
-			text = assets.newText(font, "");
+//			text = assets.newText(font, "");
 		}
 		if(behavior instanceof Carnivore){
 			shape = assets.newSimetricShape(new Point(), new Color(211, 84, 0,200), radius,5);

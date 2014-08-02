@@ -2,7 +2,6 @@ package org.unbiquitous.games.uSect;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.util.Arrays;
 import java.util.logging.Level;
 
 import org.unbiquitous.driver.execution.executionUnity.ExecutionUnity;
@@ -17,13 +16,9 @@ import org.unbiquitous.games.uSect.objects.behavior.Herbivore;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObjectTreeScene;
-import org.unbiquitous.uImpala.engine.core.GameSettings;
-import org.unbiquitous.uImpala.engine.io.KeyboardManager;
-import org.unbiquitous.uImpala.engine.io.MouseManager;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.engine.io.ScreenManager;
 import org.unbiquitous.uImpala.engine.time.DeltaTime;
-import org.unbiquitous.uImpala.jse.impl.core.Game;
 import org.unbiquitous.uImpala.util.math.Point;
 import org.unbiquitous.uos.core.UOSLogging;
 
@@ -37,11 +32,13 @@ public class Starter extends GameObjectTreeScene {
 		deltaTime.setUPS(30);
 		
 		screen = GameComponents.get(ScreenManager.class).create();
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		int width = gd.getDisplayMode().getWidth();
-		int height = gd.getDisplayMode().getHeight();
-		screen.open("uSect", width, height-60, false, null);
-
+		//TODO: fix this
+//		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+//		int width = gd.getDisplayMode().getWidth();
+//		int height = gd.getDisplayMode().getHeight();
+//		screen.open("uSect", width, height-60, false, null);
+		screen.open();
+		
 		GameComponents.put(Screen.class, screen);
 		GameComponents.put(AssetManager.class,assets);
 		Environment e = new Environment(new DeviceStats());
@@ -132,13 +129,13 @@ public class Starter extends GameObjectTreeScene {
 		if(args.length > 0 && "--debug".equalsIgnoreCase(args[0])){
 			UOSLogging.setLevel(Level.ALL);
 		}
-		Game.run(new GameSettings() {
+		/*Game.run(new GameSettings() {
 			{ 
 				put("first_scene", Starter.class);
 				put("input_managers", Arrays.asList(MouseManager.class, KeyboardManager.class));
 				put("output_managers", Arrays.asList(ScreenManager.class));
 				put("usect.speed.value", 5);
 			}
-		});
+		});*/
 	}
 }
