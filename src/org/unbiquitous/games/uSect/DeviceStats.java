@@ -10,24 +10,24 @@ public class DeviceStats {
 	private Runtime runtime;
 
 	public DeviceStats() {
-		try {
+		/*try {
 			Sigar s = new Sigar();
 			cpuInfo = s.getCpuInfoList()[0];
 			runtime = Runtime.getRuntime();
 		} catch (SigarException e) {
 			throw new RuntimeException(e);
-		}
+		}*/
 		//TODO:fix this
 	}
 	
 	public long cpuSpeed() {
-		return cpuInfo.getMhz();
-//		return 1000;
+//		return cpuInfo.getMhz();
+		return 1000;
 	}
 
 	public long totalMemory() {
-		return runtime.maxMemory()/1024/1024;
-//		return 2000;
+//		return runtime.maxMemory()/1024/1024;
+		return 2000;
 	}
 
 }

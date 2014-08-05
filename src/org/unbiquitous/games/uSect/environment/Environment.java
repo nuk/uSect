@@ -33,15 +33,17 @@ public class Environment extends GameObject {
 	private Map<UUID,Stats> dataMap = new HashMap<UUID,Stats>();
 	private NutrientManager nutrients;
 	private SectManager sects;
+	private PlayerManager players;
 	private List<EnvironemtObjectManager> managers;
 	
 	private MovementManager mover;
 	private AttackManager attack;
 	private MatingManager mate;
-	private List<Player> players = new ArrayList<Player>();
 	private Set<Sect> busyThisTurn = new HashSet<Sect>();
+	private Set<Sect> frozenThisTurn = new HashSet<Sect>();
 
 	private int initialEnergy, nutrientEnergy, corpseEnergy;
+	private long turnNumber;
 	
 	public Environment() {
 		this(new DeviceStats());
@@ -50,7 +52,8 @@ public class Environment extends GameObject {
 	public Environment(DeviceStats deviceStats) {
 		nutrients = new NutrientManager(this, deviceStats);
 		sects = new SectManager(this);
-		managers = Arrays.asList(nutrients, sects);
+		players = new PlayerManager(this);
+		managers = Arrays.asList(players, nutrients, sects);
 		mover = new MovementManager(this);
 		attack = new AttackManager(this);
 		mate = new MatingManager(this);
@@ -70,6 +73,7 @@ public class Environment extends GameObject {
 	}
 	
 	public void update() {
+		turnNumber ++;
 		for(EnvironemtObjectManager mng : managers){
 			mng.update();
 		}
@@ -91,6 +95,19 @@ public class Environment extends GameObject {
 				}
 			} 
 		}*/
+		if (screen.getKeyboard() != null){
+		if(screen.getKeyboard().getKey(0x1E)){
+			System.out.println("Attack");
+			for(Player p: players.players()){
+				p.attack();
+			}
+//		}else if(screen.getKeyboard().getKey(Keyboard.KEY_C)){
+//			System.out.println("Call");
+//			for(Player p: players){
+//				p.call();
+//			}
+		} 
+	}
 	}
 
 	public Stats stats(UUID objectId){
@@ -101,7 +118,7 @@ public class Environment extends GameObject {
 	}
 	
 	public boolean isBusyThisTurn(Sect s){
-		return busyThisTurn.contains(s);
+		return busyThisTurn.contains(s) || frozenThisTurn.contains(s);
 	}
 	
 	protected Stats moveTo(UUID objectId, Point position){
@@ -119,7 +136,7 @@ public class Environment extends GameObject {
 	}
 	
 	public void moveTo(Sect sect, Point dir) {
-		if(!busyThisTurn.contains(sect)){
+		if(!isBusyThisTurn(sect)){
 			mover.moveTo(sect, dir);
 		}
 	}
@@ -138,6 +155,18 @@ public class Environment extends GameObject {
 	
 	protected Set<Sect> busy(){
 		return busyThisTurn;
+	}
+	
+	protected Set<Sect> frozen(){
+		return frozenThisTurn;
+	}
+	
+	protected void freeze(Sect sect) {
+		frozenThisTurn.add(sect);
+	}
+	
+	protected void unfreeze(Sect sect) {
+		frozenThisTurn.remove(sect);
 	}
 	
 	public EnvironmentObject add(EnvironmentObject object, Stats initialStats){
@@ -175,7 +204,6 @@ public class Environment extends GameObject {
 	public Player addPlayer(Player p, Point position) {
 		p.setEnv(this);
 		this.add(p, new Stats(position, 0));
-		players.add(p);
 		return p;
 	}
 
@@ -195,7 +223,7 @@ public class Environment extends GameObject {
 		background.render();
 		renderNutrients();
 		renderSects();
-		for(Player p :players){
+		for(Player p :players.players()){
 			p.render(null);
 		}
 	}

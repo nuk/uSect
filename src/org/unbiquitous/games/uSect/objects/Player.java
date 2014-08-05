@@ -14,13 +14,12 @@ public class Player extends EnvironmentObject{
 	
 	private static final Color PLAYER_PAINT = new Color(142, 68, 173);
 	private static final Color ATTACK_PAINT = new Color(192, 57, 43,128);
-	private static final Color CALL_PAINT = new Color(26, 188, 156,128);
 
-	enum Influence {ATTACK,CALL}
 	private Rectangle square ;
 	private SimetricShape inlfuence ;
 	private int influenceRadius = 0;
-	private Influence currentAction = Influence.ATTACK;
+	private BaseAction currentAction = new BaseAction();
+	private boolean growingInfluence;
 	
 	public Player() {
 		AssetManager assets = GameComponents.get(AssetManager.class);
@@ -35,36 +34,51 @@ public class Player extends EnvironmentObject{
 	@Override
 	public void render(GameRenderers renderers) {
 		inlfuence.center(position());
-		if(influenceRadius != 0){
-			influenceRadius+=5;
-			int praticalRadius = (int) (influenceRadius*Math.sin(Math.toRadians(influenceRadius)));
-			inlfuence.radius(praticalRadius);
-			inlfuence.render();
-		}
-		if(currentAction.equals(Influence.CALL)){
-			inlfuence.color(CALL_PAINT);
-		}else{
-			inlfuence.color(ATTACK_PAINT);
-		}
-		if(influenceRadius > 720){
-			influenceRadius = 0;
-		}
+		inlfuence.radius(influenceRadius);
+		inlfuence.color(ATTACK_PAINT);
+		inlfuence.render();
+		
 		square.center(position());
 		square.render();
 	}
+	
+	@Override
+	public  void update() {
+		currentAction.update();
+	}
 
 	public void attack(){
-		if (influenceRadius == 0){
-			influenceRadius = 40;
-			currentAction = Influence.ATTACK;
-		}
+		currentAction = new AttackAction();
 	}
 	
-	public void call(){
-		if (influenceRadius == 0){
-			influenceRadius = 40;
-			currentAction = Influence.CALL;
-		}
+	public int influenceRadius(){
+		return influenceRadius;
+	}
+
+	public boolean growingInfluence() {
+		return growingInfluence;
 	}
 	
+	
+	class BaseAction{
+		void update(){}
+	}
+	
+	class AttackAction extends BaseAction{
+		public AttackAction() {
+			growingInfluence = true;
+		}
+		
+		@Override
+		void update() {
+			if(growingInfluence && influenceRadius <300){
+				influenceRadius += 5;
+			}else if (influenceRadius >= 0){
+				growingInfluence = false;
+				influenceRadius -= 5;
+			}else{
+				currentAction  =new BaseAction();
+			}
+		}
+	}
 }

@@ -33,11 +33,11 @@ public class Starter extends GameObjectTreeScene {
 		
 		screen = GameComponents.get(ScreenManager.class).create();
 		//TODO: fix this
-//		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-//		int width = gd.getDisplayMode().getWidth();
-//		int height = gd.getDisplayMode().getHeight();
-//		screen.open("uSect", width, height-60, false, null);
-		screen.open();
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		int width = gd.getDisplayMode().getWidth();
+		int height = gd.getDisplayMode().getHeight();
+		screen.open("uSect", width, height-60, false, null);
+//		screen.open();
 		
 		GameComponents.put(Screen.class, screen);
 		GameComponents.put(AssetManager.class,assets);
