@@ -7,6 +7,7 @@ import org.unbiquitous.uImpala.engine.asset.Rectangle;
 import org.unbiquitous.uImpala.engine.asset.SimetricShape;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
+import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.util.Color;
 import org.unbiquitous.uImpala.util.math.Point;
 
@@ -21,10 +22,16 @@ public class Player extends EnvironmentObject{
 	private BaseAction currentAction = new BaseAction();
 	private boolean growingInfluence;
 	
+	private int maxInfluenceRadius ;
+	private int influenceGrowthSpeed;
+	
 	public Player() {
 		AssetManager assets = GameComponents.get(AssetManager.class);
 		square = assets.newRectangle(new Point(0,0), PLAYER_PAINT, 40, 40);
 		inlfuence = assets.newCircle(new Point(0,0), ATTACK_PAINT, 40);
+		GameSettings settings = GameComponents.get(GameSettings.class);
+		maxInfluenceRadius = settings.getInt("usect.player.influence.radius",300);
+		influenceGrowthSpeed = settings.getInt("usect.player.influence.speed",5);
 	}
 	
 	public void setEnv(Environment env) {
@@ -71,14 +78,19 @@ public class Player extends EnvironmentObject{
 		
 		@Override
 		void update() {
-			if(growingInfluence && influenceRadius <300){
-				influenceRadius += 5;
+			if(growingInfluence && influenceRadius < maxInfluenceRadius){
+				influenceRadius += influenceGrowthSpeed;
 			}else if (influenceRadius >= 0){
 				growingInfluence = false;
-				influenceRadius -= 5;
+				influenceRadius -= influenceGrowthSpeed;
 			}else{
 				currentAction  =new BaseAction();
 			}
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("Player[%s@%s]", id.getLeastSignificantBits(),position());
 	}
 }

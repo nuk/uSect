@@ -14,6 +14,7 @@ import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
 import org.unbiquitous.games.uSect.environment.Random;
+import org.unbiquitous.games.uSect.objects.Something.Feeding;
 import org.unbiquitous.games.uSect.objects.behavior.Carnivore;
 import org.unbiquitous.games.uSect.objects.behavior.Herbivore;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
@@ -101,6 +102,31 @@ public class Sect_Behavior_ReproductionTest {
 		assertThat(female.position()).isEqualTo(new Point(60, 20));
 	}
 
+	
+	@Test
+	public void matingSameSpeciesGivesBirthToSameSpecies_Herbivore() {
+		addSect(e, new Herbivore(), new Point(20, 20));
+		addSect(e, new Herbivore(), new Point(60, 20));
+
+		Random.setvalue(1);
+		executeThisManyTurns(e, 50);
+
+		Sect son = e.sects().get(2);
+		assertThat(son.behavior().feeding()).isEqualTo(Feeding.HERBIVORE);
+	}
+	
+	@Test
+	public void matingSameSpeciesGivesBirthToSameSpecies_Carnivore() {
+		addSect(e, new Carnivore(), new Point(20, 20));
+		addSect(e, new Carnivore(), new Point(60, 20));
+
+		Random.setvalue(1);
+		executeThisManyTurns(e, 50);
+
+		Sect son = e.sects().get(2);
+		assertThat(son.behavior().feeding()).isEqualTo(Feeding.CARNIVORE);
+	}
+	
 	@Test
 	public void matingSameSpeciesHasA50percentChance_positive() {
 		addSect(e, new Carnivore(), new Point(20, 20));

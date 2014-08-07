@@ -21,3 +21,7 @@ usect.mating.differentSpeciesChance=0.25
 
 #number of pixels that can be walked at each turn
 usect.speed.value=1
+
+#Player max influence radius (and speed) on the environment
+usect.player.influence.radius=300
+usect.player.influence.speed=5

@@ -42,7 +42,7 @@ public class Starter extends GameObjectTreeScene {
 		}
 		
 		GameComponents.put(Screen.class, screen);
-		GameComponents.put(AssetManager.class,assets);
+		GameComponents.put(AssetManager.class,assets());
 		Environment e = new Environment(new DeviceStats());
 		populateEnvironment(e);
 		
@@ -125,20 +125,5 @@ public class Starter extends GameObjectTreeScene {
 		if (screen.isCloseRequested()) {
 			GameComponents.get(org.unbiquitous.uImpala.engine.core.Game.class).quit();
 		}
-	}
-	
-	@SuppressWarnings({ "unchecked", "serial" })
-	public static void main(String[] args) {
-		if(args.length > 0 && "--debug".equalsIgnoreCase(args[0])){
-			UOSLogging.setLevel(Level.ALL);
-		}
-		/*Game.run(new GameSettings() {
-			{ 
-				put("first_scene", Starter.class);
-				put("input_managers", Arrays.asList(MouseManager.class, KeyboardManager.class));
-				put("output_managers", Arrays.asList(ScreenManager.class));
-				put("usect.speed.value", 5);
-			}
-		});*/
 	}
 }
