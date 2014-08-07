@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.unbiquitous.games.uSect.objects.Sect;
+import org.unbiquitous.games.uSect.objects.Sect.Behavior;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.util.math.Point;
@@ -64,7 +65,8 @@ public class MatingManager {
 						position.add(mother.position());
 						position.x /= 2;
 						position.y /= 2;
-						env.add(new Sect(),new Environment.Stats(position,initialEnergy));					}
+						Behavior b = father.behavior().clone();
+						env.add(new Sect(b),new Environment.Stats(position,initialEnergy));					}
 				}
 				
 			}

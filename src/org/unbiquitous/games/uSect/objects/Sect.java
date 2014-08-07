@@ -30,12 +30,13 @@ public class Sect extends EnvironmentObject {
 	protected Text text;
 	private int influenceRadius = 50;
 
-	public interface Behavior {
+	public interface Behavior  extends Cloneable{
 		public Something.Feeding feeding();
 		public void init(Sect s);
 		public void update();
 		public void enteredViewRange(Something o);
 		public void leftViewRange(Something o);
+		public Behavior clone(); 
 	}
 	
 	public Sect() {

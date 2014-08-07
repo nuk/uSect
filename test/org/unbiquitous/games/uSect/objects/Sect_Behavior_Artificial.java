@@ -214,4 +214,21 @@ public class Sect_Behavior_Artificial {
 		executeThisManyTurns(e, 1);
 		assertThat(s.position()).isEqualTo(new Point(21,19));
 	}
+	
+	
+	@Test public void behaviorIsClonable(){
+		StringBuilder script = new StringBuilder()
+			.append("function update()\n")
+			.append("	move(1,0)\n")
+			.append("end\n")
+			;
+		ExecutionUnity unity = new ExecutionUnity(script.toString());
+		Artificial movingBehavior = new Artificial(unity, Feeding.CARNIVORE);
+		Sect s1 = e.addSect(new Sect(movingBehavior),new Point(20,20));
+		Sect s2 = e.addSect(new Sect(movingBehavior.clone()),new Point(120,20));
+		
+		e.update();
+		assertThat(s1.position()).isEqualTo(new Point(21,20));
+		assertThat(s2.position()).isEqualTo(new Point(121,20));
+	}
 }

@@ -39,19 +39,22 @@ public class Sect_Behavior_ReproductionTest {
 	@Test
 	public void matingTakes50turns() {
 		EnvironmentObject male = e.add(new Sect(new Carnivore()), new Stats(
-				new Point(20, 20), 2 * INITIAL_ENERGY+1 ));
+				new Point(20, 20), 2 * INITIAL_ENERGY + 1));
 		EnvironmentObject female = e.add(new Sect(new Carnivore()), new Stats(
-				new Point(60, 20), 2 * INITIAL_ENERGY+1 ));
+				new Point(60, 20), 2 * INITIAL_ENERGY + 1));
 
 		Random.setvalue(1);
 		executeThisManyTurns(e, 5);
 
 		assertThat(e.stats(male.id()).energy).isEqualTo(2 * INITIAL_ENERGY - 5);
-		assertThat(e.stats(female.id()).energy).isEqualTo(2 * INITIAL_ENERGY - 5);
+		assertThat(e.stats(female.id()).energy).isEqualTo(
+				2 * INITIAL_ENERGY - 5);
 
 		executeThisManyTurns(e, 44);
-		assertThat(e.stats(male.id()).energy).isEqualTo(2 * INITIAL_ENERGY - 49);
-		assertThat(e.stats(female.id()).energy).isEqualTo(2 * INITIAL_ENERGY - 49);
+		assertThat(e.stats(male.id()).energy)
+				.isEqualTo(2 * INITIAL_ENERGY - 49);
+		assertThat(e.stats(female.id()).energy).isEqualTo(
+				2 * INITIAL_ENERGY - 49);
 
 		assertThat(e.sects()).hasSize(2);
 		executeThisManyTurns(e, 1);
@@ -75,9 +78,9 @@ public class Sect_Behavior_ReproductionTest {
 	@Test
 	public void matingConsumesTheEquivalentOfAnAttack() {
 		EnvironmentObject male = e.add(new Sect(new Carnivore()), new Stats(
-				new Point(20, 20), 2 * INITIAL_ENERGY + 50+1));
+				new Point(20, 20), 2 * INITIAL_ENERGY + 50 + 1));
 		EnvironmentObject female = e.add(new Sect(new Carnivore()), new Stats(
-				new Point(60, 20), 2 * INITIAL_ENERGY + 50+1));
+				new Point(60, 20), 2 * INITIAL_ENERGY + 50 + 1));
 
 		Random.setvalue(1);
 		executeThisManyTurns(e, 50);
@@ -102,31 +105,32 @@ public class Sect_Behavior_ReproductionTest {
 		assertThat(female.position()).isEqualTo(new Point(60, 20));
 	}
 
-	
 	@Test
 	public void matingSameSpeciesGivesBirthToSameSpecies_Herbivore() {
-		addSect(e, new Herbivore(), new Point(20, 20));
-		addSect(e, new Herbivore(), new Point(60, 20));
+		Sect father = addSect(e, matingHerbivore(), new Point(20, 20));
+		Sect mother = addSect(e, matingHerbivore(), new Point(60, 20));
 
-		Random.setvalue(1);
 		executeThisManyTurns(e, 50);
 
-		Sect son = e.sects().get(2);
+		e.sects().remove(father);
+		e.sects().remove(mother);
+		Sect son = e.sects().get(0);
 		assertThat(son.behavior().feeding()).isEqualTo(Feeding.HERBIVORE);
 	}
-	
+
 	@Test
 	public void matingSameSpeciesGivesBirthToSameSpecies_Carnivore() {
-		addSect(e, new Carnivore(), new Point(20, 20));
-		addSect(e, new Carnivore(), new Point(60, 20));
+		Sect father = addSect(e, matingCarnivore(), new Point(20, 20));
+		Sect mother = addSect(e, matingCarnivore(), new Point(60, 20));
 
-		Random.setvalue(1);
 		executeThisManyTurns(e, 50);
 
-		Sect son = e.sects().get(2);
+		e.sects().remove(father);
+		e.sects().remove(mother);
+		Sect son = e.sects().get(0);
 		assertThat(son.behavior().feeding()).isEqualTo(Feeding.CARNIVORE);
 	}
-	
+
 	@Test
 	public void matingSameSpeciesHasA50percentChance_positive() {
 		addSect(e, new Carnivore(), new Point(20, 20));
@@ -183,7 +187,7 @@ public class Sect_Behavior_ReproductionTest {
 		Sect son = e.sects().get(2);
 		assertThat(son.position()).isEqualTo(new Point(40, 20));
 	}
-	
+
 	@Test
 	public void multipleSimultaneousMatingsConsiderOnlyParentsInRangeOfMatingCall() {
 		Sect s1 = addSect(e, new Carnivore(), new Point(20, 20));
@@ -194,12 +198,13 @@ public class Sect_Behavior_ReproductionTest {
 		executeThisManyTurns(e, 50);
 
 		List<Sect> sons = e.sects();
-		sons.removeAll(Arrays.asList(s1,s2,s3));
+		sons.removeAll(Arrays.asList(s1, s2, s3));
 		assertThat(sons).hasSize(2);
-		assertThat(Arrays.asList(sons.get(0).position(),sons.get(1).position()))
-			.containsOnly(new Point(40, 20),new Point(20, 40));
+		assertThat(
+				Arrays.asList(sons.get(0).position(), sons.get(1).position()))
+				.containsOnly(new Point(40, 20), new Point(20, 40));
 	}
-	
+
 	@Test
 	public void multipleSimultaneousMatingsConsiderOnlyParentsInRangeOrEachOther() {
 		Sect s1 = addSect(e, new Carnivore(), new Point(20, 20));
@@ -211,18 +216,19 @@ public class Sect_Behavior_ReproductionTest {
 		executeThisManyTurns(e, 50);
 
 		List<Sect> sons = e.sects();
-		sons.removeAll(Arrays.asList(s1,s2,s3,s4));
+		sons.removeAll(Arrays.asList(s1, s2, s3, s4));
 		assertThat(sons).hasSize(2);
-		assertThat(Arrays.asList(sons.get(0).position(),sons.get(1).position()))
-			.containsOnly(new Point(40, 20),new Point(200, 245));
+		assertThat(
+				Arrays.asList(sons.get(0).position(), sons.get(1).position()))
+				.containsOnly(new Point(40, 20), new Point(200, 245));
 	}
-	
+
 	@Test
 	public void matingProcessDontStartIfTheresNoMatch() {
 		Sect male = addSect(e, new Carnivore(), new Point(20, 20));
-		Sect female = addSect(e, new Carnivore(){
+		Sect female = addSect(e, new Carnivore() {
 			public void update() {
-				//Do nothing
+				// Do nothing
 			}
 		}, new Point(70, 20));
 
@@ -230,40 +236,59 @@ public class Sect_Behavior_ReproductionTest {
 		executeThisManyTurns(e, 50);
 
 		List<Sect> sons = e.sects();
-		sons.removeAll(Arrays.asList(female,male));
+		sons.removeAll(Arrays.asList(female, male));
 		assertThat(sons).isEmpty();
 	}
-	
+
 	@Test
 	public void carnivoresAfterMatingWaits10TimesTheMatingTimeToMateAgain() {
-		addSect(e, new Carnivore(),new Point(20, 20), Long.MAX_VALUE/2);
-		addSect(e, new Carnivore(),new Point(60, 20), Long.MAX_VALUE/2);
-		
+		addSect(e, new Carnivore(), new Point(20, 20), Long.MAX_VALUE / 2);
+		addSect(e, new Carnivore(), new Point(60, 20), Long.MAX_VALUE / 2);
+
 		Random.setvalue(1);
-		executeThisManyTurns(e, 10*50);
-		
+		executeThisManyTurns(e, 10 * 50);
+
 		assertThat(e.sects()).hasSize(3);
-		
+
 		executeThisManyTurns(e, 50);
-		
+
 		assertThat(e.sects()).hasSize(4);
 	}
-	
+
 	@Test
 	public void herbivoresAfterMatingWaits20TimesTheMatingTimeToMateAgain() {
-		e.addNutrient(new Point(400,400));
-		Sect male = addSect(e, new Herbivore(),new Point(20, 20), Long.MAX_VALUE/2);
-		Sect female = addSect(e, new Herbivore(),new Point(60, 20), Long.MAX_VALUE/2);
-		
+		e.addNutrient(new Point(400, 400));
+		Sect male = addSect(e, new Herbivore(), new Point(20, 20),
+				Long.MAX_VALUE / 2);
+		Sect female = addSect(e, new Herbivore(), new Point(60, 20),
+				Long.MAX_VALUE / 2);
+
 		Random.setvalue(1);
-		executeThisManyTurns(e, 20*50);
-		
-		assertThat(male.position()).isNotEqualTo(new Point(20,20));
-		assertThat(female.position()).isNotEqualTo(new Point(60,20));
+		executeThisManyTurns(e, 20 * 50);
+
+		assertThat(male.position()).isNotEqualTo(new Point(20, 20));
+		assertThat(female.position()).isNotEqualTo(new Point(60, 20));
 		assertThat(e.sects()).hasSize(3);
 	}
+
+	private Herbivore matingHerbivore() {
+		return new Herbivore(){
+			public void update() {
+				e.mate(sect);
+			}
+		};
+	}
 	
-	// TODO: son must appear near father and mother and carry their characteristics
+	private Carnivore  matingCarnivore() {
+		return new Carnivore(){
+			public void update() {
+				e.mate(sect);
+			}
+		};
+	}
+	
+	// TODO: son must appear near father and mother and carry their
+	// characteristics
 	// TODO: CHanges must be queued as events
 
 }
