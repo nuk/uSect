@@ -1,12 +1,12 @@
 package org.unbiquitous.games.uSect.objects;
 
-import static org.unbiquitous.games.uSect.TestUtils.*;
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
+import static org.unbiquitous.games.uSect.TestUtils.setUpEnvironment;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
-import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.uImpala.util.math.Point;
 
 public class PlayerTest {
@@ -42,7 +42,7 @@ public class PlayerTest {
 			}
 		}, new Point(600, 100));
 
-		p.attack();
+		p.call();
 
 		executeThisManyTurns(e, 60);
 		// 20 turns to reach 100 + 4 turns to reach the other 20
@@ -58,7 +58,7 @@ public class PlayerTest {
 			}
 		}, new Point(600, 100));
 
-		p.attack();
+		p.call();
 
 		executeThisManyTurns(e, 2 * 60);
 		assertThat(s.position()).isEqualTo(new Point(600, 98));
@@ -73,7 +73,7 @@ public class PlayerTest {
 			}
 		}, new Point(600, 100));
 
-		p.attack();
+		p.call();
 
 		executeThisManyTurns(e, 2 * 60 + 10);
 		assertThat(s.position()).isEqualTo(new Point(600, 108));

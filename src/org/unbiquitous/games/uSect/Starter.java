@@ -1,7 +1,5 @@
 package org.unbiquitous.games.uSect;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.util.logging.Level;
 
 import org.unbiquitous.driver.execution.executionUnity.ExecutionUnity;
@@ -16,6 +14,7 @@ import org.unbiquitous.games.uSect.objects.behavior.Herbivore;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObjectTreeScene;
+import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.engine.io.ScreenManager;
 import org.unbiquitous.uImpala.engine.time.DeltaTime;
@@ -32,12 +31,15 @@ public class Starter extends GameObjectTreeScene {
 		deltaTime.setUPS(30);
 		
 		screen = GameComponents.get(ScreenManager.class).create();
-		//TODO: fix this
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		int width = gd.getDisplayMode().getWidth();
-		int height = gd.getDisplayMode().getHeight();
-		screen.open("uSect", width, height-60, false, null);
-//		screen.open();
+		GameSettings settings = GameComponents.get(GameSettings.class);
+		
+		if(settings.containsKey("usect.width") && settings.containsKey("usect.height")){
+			screen.open("uSect", 
+								settings.getInt("usect.width"), settings.getInt("usect.height"), 
+								false, null);
+		}else{
+			screen.open();
+		}
 		
 		GameComponents.put(Screen.class, screen);
 		GameComponents.put(AssetManager.class,assets);
@@ -45,6 +47,7 @@ public class Starter extends GameObjectTreeScene {
 		populateEnvironment(e);
 		
 		e.addPlayer(new Player(), new Point(screen.getWidth()/2,screen.getHeight()));
+		e.addPlayer(new Player(), new Point(screen.getWidth()/2,0));
 		
 		add(e);
 	}

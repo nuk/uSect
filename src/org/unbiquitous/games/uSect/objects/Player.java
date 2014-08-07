@@ -47,7 +47,7 @@ public class Player extends EnvironmentObject{
 		currentAction.update();
 	}
 
-	public void attack(){
+	public void call(){
 		currentAction = new AttackAction();
 	}
 	
