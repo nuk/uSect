@@ -44,10 +44,6 @@ public class Environment extends GameObject {
 	private int initialEnergy, nutrientEnergy, corpseEnergy;
 	private long turnNumber;
 
-	public Environment() {
-		this(new DeviceStats());
-	}
-
 	public Environment(DeviceStats deviceStats) {
 		nutrients = new NutrientManager(this, deviceStats);
 		sects = new SectManager(this);

@@ -17,29 +17,12 @@
 			<artifactId>uImpala</artifactId>
 			<version>1.1-SNAPSHOT</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.unbiquitous.driver</groupId>
 			<artifactId>uos-execution</artifactId>
 			<version>1.0-ALPHA</version>
 		</dependency>
-		<!--dependency>
-			<groupId>org.hyperic</groupId>
-			<artifactId>sigar</artifactId>
-			<scope>system</scope>
-			<version>1.6.4</version>
-			<systemPath>${basedir}/lib/sigar-1.6.4.jar</systemPath>
-		</dependency-->
-		<!--dependency>
-			<groupId>org.fusesource</groupId>
-			<artifactId>sigar</artifactId>
-			<version>1.6.4</version>
-		</dependency-->
-		<dependency>
-		  <groupId>org.hyperic</groupId>
-		  <artifactId>sigar</artifactId>
-		  <version>1.6.4</version>
-		</dependency>
+		
 		
 		<dependency>
 			<groupId>junit</groupId>
@@ -73,43 +56,6 @@
 					<source>1.6</source>
 					<target>1.6</target>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>com.googlecode.mavennatives</groupId>
-				<artifactId>maven-nativedependencies-plugin</artifactId>
-				<version>0.0.7</version>
-
-				<executions>
-					<execution>
-						<id>unpacknatives</id>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-					</execution>
-				</executions>
-
-			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
-							<mainClass>org.unbiquitous.games.uSect.Starter</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

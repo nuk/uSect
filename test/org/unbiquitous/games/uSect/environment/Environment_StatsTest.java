@@ -70,6 +70,9 @@ public class Environment_StatsTest {
 			public long totalMemory(){
 				return memoryInMB;
 			}
+			public long cpuSpeed() {
+				return 0;
+			}
 		};
 	}
 	

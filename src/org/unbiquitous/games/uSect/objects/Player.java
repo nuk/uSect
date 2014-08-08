@@ -58,6 +58,10 @@ public class Player extends EnvironmentObject{
 		currentAction = new AttackAction();
 	}
 	
+	public void onCapture(Sect s){
+		//TODO:
+	}
+	
 	public int influenceRadius(){
 		return influenceRadius;
 	}

@@ -1,7 +1,5 @@
 package org.unbiquitous.games.uSect;
 
-import java.util.logging.Level;
-
 import org.unbiquitous.driver.execution.executionUnity.ExecutionUnity;
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.Environment.Stats;
@@ -19,14 +17,12 @@ import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.engine.io.ScreenManager;
 import org.unbiquitous.uImpala.engine.time.DeltaTime;
 import org.unbiquitous.uImpala.util.math.Point;
-import org.unbiquitous.uos.core.UOSLogging;
 
-public class Starter extends GameObjectTreeScene {
+public class StartScene extends GameObjectTreeScene {
 
 	private Screen screen;
 
-	public Starter() {
-		UOSLogging.setLevel(Level.ALL);
+	public StartScene() {
 		DeltaTime deltaTime = GameComponents.get(DeltaTime.class);
 		deltaTime.setUPS(30);
 		
@@ -43,7 +39,7 @@ public class Starter extends GameObjectTreeScene {
 		
 		GameComponents.put(Screen.class, screen);
 		GameComponents.put(AssetManager.class,assets());
-		Environment e = new Environment(new DeviceStats());
+		Environment e = new Environment((DeviceStats) settings.get("usect.devicestats"));
 		populateEnvironment(e);
 		
 		e.addPlayer(new Player(), new Point(screen.getWidth()/2,screen.getHeight()));

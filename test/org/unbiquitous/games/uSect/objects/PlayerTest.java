@@ -19,7 +19,7 @@ public class PlayerTest {
 
 	@Test
 	public void playerDoesNothingWhileNotAskedForIt() {
-		Player p = e.addPlayer(new Player(), new Point(600, 0));
+		 e.addPlayer(new Player(), new Point(600, 0));
 		Sect s = e.addSect(movingSect(new Point(0, +1)), new Point(600, 100));
 
 		executeThisManyTurns(e, 60);
@@ -98,8 +98,25 @@ public class PlayerTest {
 		assertThat(s.position()).isEqualTo(new Point(600, 1100-20 -4));
 		
 		executeThisManyTurns(e, 60);
-		
 		assertThat(s.position()).isEqualTo(new Point(600, 1100+2));
+	}
+	
+	//TODO: this behavior must be related with sending it away
+	@Test
+	public void whenASectComesToCloseToThePlayerItsCaptured() {
+		final boolean[] captured = new boolean[]{false};
+		Player p = e.addPlayer(new Player(){
+			public void onCapture(Sect s){
+				captured[0] = true;
+			}
+		}, new Point(600, 0));
+		Sect s = e.addSect(movingSect(new Point(0, +1)), new Point(600, 50));
+
+		p.call();
+
+		executeThisManyTurns(e, 2 * 60);
+		assertThat(s.position()).isEqualTo(new Point(600, 20));
+		assertThat(captured[0]).isTrue();
 	}
 
 }

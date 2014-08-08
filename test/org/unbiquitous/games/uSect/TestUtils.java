@@ -1,5 +1,6 @@
 package org.unbiquitous.games.uSect;
 
+import static org.mockito.Mockito.*;
 import java.awt.Font;
 
 import org.unbiquitous.games.uSect.environment.Environment;
@@ -63,7 +64,7 @@ public class TestUtils {
 			public boolean isUpdating() {return false;}
 		});
 		Random.setvalue(0);
-		return new Environment();
+		return new Environment(mock(DeviceStats.class));
 	}
 	
 	public static Sect addSect(Environment e, Behavior behavior, Point position, Long energy) {
@@ -77,6 +78,13 @@ public class TestUtils {
 }
 
 class DummyAssetManager extends AssetManager {
+	public DummyAssetManager() {
+		factory = new Factory(){
+			public AssetManager create() {
+				return DummyAssetManager.this;
+			}
+		};
+	}
 	@Override
 	public Text newText(Font font, String text) {
 		// TODO Auto-generated method stub

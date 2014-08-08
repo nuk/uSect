@@ -6,6 +6,7 @@ import java.util.List;
 import org.unbiquitous.games.uSect.objects.Player;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.uImpala.util.math.Point;
+import org.unbiquitous.uImpala.util.math.Rectangle;
 
 public class PlayerManager implements EnvironemtObjectManager {
 	private List<Player> players = new ArrayList<Player>();
@@ -43,7 +44,11 @@ public class PlayerManager implements EnvironemtObjectManager {
 	}
 
 	private void checkInfluence(Player p, Sect s) {
-		if(isUnderInfluence(p, s)){
+		Rectangle r = new Rectangle(p.position(),40,40);
+		if (s.position().isInside(r)){
+			env.freeze(s);
+			p.onCapture(s);
+		}else if(isUnderInfluence(p, s)){
 			env.freeze(s);
 			if(isReturning(p)){
 				moveTowardPlayer(p, s);
