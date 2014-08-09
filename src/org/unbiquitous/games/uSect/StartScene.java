@@ -3,6 +3,7 @@ package org.unbiquitous.games.uSect;
 import org.unbiquitous.driver.execution.executionUnity.ExecutionUnity;
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.Environment.Stats;
+import org.unbiquitous.games.uSect.environment.Random;
 import org.unbiquitous.games.uSect.objects.Player;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Something.Feeding;
@@ -39,12 +40,35 @@ public class StartScene extends GameObjectTreeScene {
 		
 		GameComponents.put(Screen.class, screen);
 		GameComponents.put(AssetManager.class,assets());
+		setUpEnvironment(settings);
+		
+//		populateEnvironment(e);
+//		
+//		e.addPlayer(new Player(), new Point(screen.getWidth()/2,screen.getHeight()));
+//		e.addPlayer(new Player(), new Point(screen.getWidth()/2,0));
+		
+	}
+
+	private void setUpEnvironment(GameSettings settings) {
 		Environment e = new Environment((DeviceStats) settings.get("usect.devicestats"));
-		populateEnvironment(e);
-		
+		int numberOfHerbivores = (int) (Random.v()*10)+5;
+		for(int i = 0 ; i < numberOfHerbivores; i++){
+			Point position = new Point(
+					(int)(Random.v()*screen.getWidth()),
+					(int)(Random.v()*screen.getHeight())
+					);
+			e.addSect(new Sect(new Herbivore()), position);
+		}
+		int numberOfCarnivores = (int) (Random.v()*2)+1;
+//		for(int i = 0 ; i < numberOfCarnivores; i++){
+			Point position = new Point(
+					(int)(Random.v()*screen.getWidth()),
+					(int)(Random.v()*screen.getHeight())
+					);
+			e.add(new Sect(new Carnivore()), new Stats(position,settings.getInt("usect.initial.energy",30*60*10)*4));
+//		}
+			
 		e.addPlayer(new Player(), new Point(screen.getWidth()/2,screen.getHeight()));
-		e.addPlayer(new Player(), new Point(screen.getWidth()/2,0));
-		
 		add(e);
 	}
 

@@ -104,10 +104,10 @@ public class PlayerTest {
 	//TODO: this behavior must be related with sending it away
 	@Test
 	public void whenASectComesToCloseToThePlayerItsCaptured() {
-		final boolean[] captured = new boolean[]{false};
+		final Sect[] captured = new Sect[]{null};
 		Player p = e.addPlayer(new Player(){
 			public void onCapture(Sect s){
-				captured[0] = true;
+				captured[0] = s;
 			}
 		}, new Point(600, 0));
 		Sect s = e.addSect(movingSect(new Point(0, +1)), new Point(600, 50));
@@ -116,7 +116,7 @@ public class PlayerTest {
 
 		executeThisManyTurns(e, 2 * 60);
 		assertThat(s.position()).isEqualTo(new Point(600, 20));
-		assertThat(captured[0]).isTrue();
+		assertThat(captured[0]).isEqualTo(s);
 	}
 
 }

@@ -30,7 +30,7 @@ public class Carnivore extends TargetFocused{
 	
 	@Override
 	public void update() {
-		if(sect.energy() < 10*initialEnergy){
+		if(sect.energy() < 5*initialEnergy){
 			super.update();
 		}
 		Something target = target();
@@ -39,7 +39,7 @@ public class Carnivore extends TargetFocused{
 				sect.mate();
 				waitToMateAgain = 10*50;
 			}else{
-				if(sect.energy() < 10*initialEnergy){
+				if(sect.energy() < 5*initialEnergy){
 					sect.attack();
 				}
 			}

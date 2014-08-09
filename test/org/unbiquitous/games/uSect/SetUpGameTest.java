@@ -7,6 +7,7 @@ import static org.fest.assertions.api.Assertions.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
@@ -53,6 +54,14 @@ public class SetUpGameTest {
 		settings.put("usect.height", 600);
 		new StartScene();
 		verify(screen).open("uSect",800,600,false,null);
+	}
+	
+	@Test public void populatesAnEnvironmentWithSects(){
+		StartScene scene = new StartScene();
+		scene.update();
+		assertThat(scene.getChildren()).hasSize(1);
+		Environment e = (Environment) scene.getChildren().get(0);
+		assertThat(e.sects()).isNotEmpty();
 	}
 	
 }

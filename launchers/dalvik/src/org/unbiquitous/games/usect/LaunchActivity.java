@@ -7,20 +7,22 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.logging.Level;
 
 import org.unbiquitous.games.uSect.DeviceStats;
 import org.unbiquitous.games.uSect.StartScene;
+import org.unbiquitous.games.uSect.environment.Random;
 import org.unbiquitous.uImpala.dalvik.GameActivity;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.engine.io.MouseManager;
 import org.unbiquitous.uImpala.engine.io.ScreenManager;
 import org.unbiquitous.uos.core.UOSLogging;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 
 public class LaunchActivity extends GameActivity {
@@ -29,6 +31,7 @@ public class LaunchActivity extends GameActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		UOSLogging.setLevel(Level.ALL);
+		Random.setSeed(seed());
 		run(new GameSettings() {
 			{ // TODO: Game Settings could have helper methods
 				put("main_activity", LaunchActivity.this);
@@ -38,6 +41,27 @@ public class LaunchActivity extends GameActivity {
 				put("usect.devicestats", new DeviceStatsDalvik());
 			}
 		});
+	}
+	
+	private static long seed() {
+		try {
+			long seed = 0;
+			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
+					.getNetworkInterfaces();
+			while (networkInterfaces.hasMoreElements()) {
+				NetworkInterface e = networkInterfaces.nextElement();
+				if (!e.isVirtual() && !e.isLoopback()) {
+					if (e.getHardwareAddress() != null) {
+						for (byte b : e.getHardwareAddress()) {
+							seed += b;
+						}
+					}
+				}
+			}
+			return seed;
+		} catch (SocketException e) {
+			return (long) (Math.random() * Long.MAX_VALUE);
+		}
 	}
 }
 

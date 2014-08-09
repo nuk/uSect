@@ -20,9 +20,15 @@ import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
+import org.unbiquitous.uImpala.engine.io.MouseEvent;
+import org.unbiquitous.uImpala.engine.io.MouseManager;
+import org.unbiquitous.uImpala.engine.io.MouseSource;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.util.Color;
 import org.unbiquitous.uImpala.util.math.Point;
+import org.unbiquitous.uImpala.util.observer.Event;
+import org.unbiquitous.uImpala.util.observer.Observation;
+import org.unbiquitous.uImpala.util.observer.Subject;
 
 public class Environment extends GameObject {
 
@@ -58,6 +64,16 @@ public class Environment extends GameObject {
 		initialEnergy = settings.getInt("usect.initial.energy", 30 * 60 * 10);
 		nutrientEnergy = settings.getInt("usect.nutrient.energy", 30 * 60);
 		corpseEnergy = settings.getInt("usect.corpse.energy", 5 * 30 * 60);
+		
+		
+		MouseManager mouses = GameComponents.get(MouseManager.class);
+		mouses.connect(MouseSource.EVENT_BUTTON_DOWN, new Observation(){
+			protected void notifyEvent(Event event, Subject subject) {
+				MouseEvent e = (MouseEvent) event;
+				MouseSource s = (MouseSource) subject;
+				System.out.println(e.getX()+","+e.getY());
+			}
+		});
 	}
 
 	private void createBackground() {

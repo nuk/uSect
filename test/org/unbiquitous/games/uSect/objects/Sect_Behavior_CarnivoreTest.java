@@ -108,16 +108,16 @@ public class Sect_Behavior_CarnivoreTest {
 	@Test
 	public void onlyattacksOrMovesWhenIsHungry() {
 		e.addNutrient(new Point(400,400));
-		Sect s1 = addSect(e,new Carnivore(), new Point(20, 20),10l*INITIAL_ENERGY+10);
-		Sect s2 = addSect(e,new Carnivore(), new Point(60, 20),10l*INITIAL_ENERGY+10);
+		Sect s1 = addSect(e,new Carnivore(), new Point(20, 20),5l*INITIAL_ENERGY+10);
+		Sect s2 = addSect(e,new Carnivore(), new Point(60, 20),5l*INITIAL_ENERGY+10);
 		
 		Random.setvalue(0);
 		executeThisManyTurns(e, 10);
 		
 		assertThat(s1.position()).isEqualTo(new Point(20,20));
-		assertThat(s1.energy()).isEqualTo(10l*INITIAL_ENERGY);
+		assertThat(s1.energy()).isEqualTo(5l*INITIAL_ENERGY);
 		assertThat(s2.position()).isEqualTo(new Point(60,20));
-		assertThat(s2.energy()).isEqualTo(10l*INITIAL_ENERGY);
+		assertThat(s2.energy()).isEqualTo(5l*INITIAL_ENERGY);
 		
 		executeThisManyTurns(e, 2);
 		assertThat(s1.position()).isNotEqualTo(new Point(20,20));
