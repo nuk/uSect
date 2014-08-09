@@ -51,6 +51,12 @@ public class StartScene extends GameObjectTreeScene {
 
 	private void setUpEnvironment(GameSettings settings) {
 		Environment e = new Environment((DeviceStats) settings.get("usect.devicestats"));
+		populateSects(settings, e);
+		populatePlayer(settings, e);
+		add(e);
+	}
+
+	private void populateSects(GameSettings settings, Environment e) {
 		int numberOfHerbivores = (int) (Random.v()*10)+5;
 		for(int i = 0 ; i < numberOfHerbivores; i++){
 			Point position = new Point(
@@ -59,7 +65,7 @@ public class StartScene extends GameObjectTreeScene {
 					);
 			e.addSect(new Sect(new Herbivore()), position);
 		}
-		int numberOfCarnivores = (int) (Random.v()*2)+1;
+//		int numberOfCarnivores = (int) (Random.v()*2)+1;
 //		for(int i = 0 ; i < numberOfCarnivores; i++){
 			Point position = new Point(
 					(int)(Random.v()*screen.getWidth()),
@@ -67,11 +73,22 @@ public class StartScene extends GameObjectTreeScene {
 					);
 			e.add(new Sect(new Carnivore()), new Stats(position,settings.getInt("usect.initial.energy",30*60*10)*4));
 //		}
-			
-		e.addPlayer(new Player(), new Point(screen.getWidth()/2,screen.getHeight()));
-		add(e);
 	}
 
+	private void populatePlayer(GameSettings settings, Environment e) {
+		if(settings.containsKey("usect.player.id")){
+			Point _position = new Point(); 
+			if(Random.v() > 0.5){
+				_position.x = Random.v() > 0.5 ? 0 : screen.getWidth();
+				_position.y = (int) (screen.getHeight()*Random.v());
+			}else{
+				_position.x = (int) (screen.getWidth()*Random.v());
+				_position.y = Random.v() > 0.5 ? 0 : screen.getHeight();
+			}
+			e.addPlayer(new Player(), _position);
+		}
+	}
+	
 	private void populateEnvironment(Environment e) {
 		populateHerbivores(e);
 		populateCarnivores(e);

@@ -11,6 +11,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.unbiquitous.games.uSect.DeviceStats;
@@ -39,6 +40,7 @@ public class LaunchActivity extends GameActivity {
 				put("input_managers", Arrays.asList(MouseManager.class));
 				put("output_managers", Arrays.asList(ScreenManager.class));
 				put("usect.devicestats", new DeviceStatsDalvik());
+				put("usect.player.id", UUID.randomUUID().toString());
 			}
 		});
 	}

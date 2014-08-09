@@ -65,15 +65,22 @@ public class Environment extends GameObject {
 		nutrientEnergy = settings.getInt("usect.nutrient.energy", 30 * 60);
 		corpseEnergy = settings.getInt("usect.corpse.energy", 5 * 30 * 60);
 		
-		
+		if(settings.containsKey("usect.player.id")){
+			setUpPlayerEnvironment();
+		}
+	}
+
+	private void setUpPlayerEnvironment() {
 		MouseManager mouses = GameComponents.get(MouseManager.class);
-		mouses.connect(MouseSource.EVENT_BUTTON_DOWN, new Observation(){
-			protected void notifyEvent(Event event, Subject subject) {
-				MouseEvent e = (MouseEvent) event;
-				MouseSource s = (MouseSource) subject;
-				System.out.println(e.getX()+","+e.getY());
-			}
-		});
+		if(mouses != null){
+			mouses.connect(MouseSource.EVENT_BUTTON_DOWN, new Observation(){
+				protected void notifyEvent(Event event, Subject subject) {
+					if(!players.players().isEmpty()){
+						players.players().get(0).call();
+					}
+				}
+			});
+		}
 	}
 
 	private void createBackground() {
@@ -222,6 +229,10 @@ public class Environment extends GameObject {
 
 	public List<Corpse> corpses() {
 		return nutrients.corpses();
+	}
+	
+	public List<Player> players() {
+		return players.players();
 	}
 
 	protected void render(GameRenderers renderers) {

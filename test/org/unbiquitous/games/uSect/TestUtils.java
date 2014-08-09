@@ -1,6 +1,7 @@
 package org.unbiquitous.games.uSect;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+
 import java.awt.Font;
 
 import org.unbiquitous.games.uSect.environment.Environment;
@@ -27,6 +28,14 @@ public class TestUtils {
 		for (int i = 0; i < numberOfTurns; i++){
 			e.update();
 		}
+	}
+	
+	public static Sect movingSect(final Environment e, final Point direction) {
+		return new Sect() {
+			public void update() {
+				e.moveTo(this, direction);
+			}
+		};
 	}
 	
 	public static Environment setUpEnvironment(){

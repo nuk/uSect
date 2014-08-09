@@ -5,12 +5,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.fest.assertions.api.Assertions.*;
 
+import java.util.UUID;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
+import org.unbiquitous.uImpala.engine.io.MouseManager;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.engine.io.ScreenManager;
 import org.unbiquitous.uImpala.engine.time.DeltaTime;
@@ -62,6 +65,23 @@ public class SetUpGameTest {
 		assertThat(scene.getChildren()).hasSize(1);
 		Environment e = (Environment) scene.getChildren().get(0);
 		assertThat(e.sects()).isNotEmpty();
+	}
+	
+	@Test public void noPlayerMustBeSetByDefault(){
+		StartScene scene = new StartScene();
+		scene.update();
+		Environment e = (Environment) scene.getChildren().get(0);
+		assertThat(e.players()).isEmpty();
+	}
+	
+	@Test public void setPlayerIfInformed(){
+//		settings.put("usect.player.name","John");
+		settings.put("usect.player.id",UUID.randomUUID().toString());
+		GameComponents.put(MouseManager.class, new MouseManager());
+		StartScene scene = new StartScene();
+		scene.update();
+		Environment e = (Environment) scene.getChildren().get(0);
+		assertThat(e.players()).hasSize(1);
 	}
 	
 }

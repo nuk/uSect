@@ -1,16 +1,22 @@
 package org.unbiquitous.games.uSect.environment;
 
-
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
-import static org.unbiquitous.games.uSect.TestUtils.setUpEnvironment;
+import static org.unbiquitous.games.uSect.TestUtils.*;
+
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.objects.Nutrient;
+import org.unbiquitous.games.uSect.objects.Player;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.games.uSect.objects.behavior.Carnivore;
+import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.io.IOResource;
+import org.unbiquitous.uImpala.engine.io.MouseEvent;
+import org.unbiquitous.uImpala.engine.io.MouseManager;
+import org.unbiquitous.uImpala.engine.io.MouseSource;
 import org.unbiquitous.uImpala.util.math.Point;
 
 public class Environment_EventsControlTest {
@@ -133,4 +139,5 @@ public class Environment_EventsControlTest {
 		
 		assertThat(s2.position()).isEqualTo(new Point(10+s1.radius()+1,10));
 	}
+	
 }

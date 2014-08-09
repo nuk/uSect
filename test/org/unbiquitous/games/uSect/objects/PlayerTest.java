@@ -1,8 +1,7 @@
 package org.unbiquitous.games.uSect.objects;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
-import static org.unbiquitous.games.uSect.TestUtils.setUpEnvironment;
+import static org.unbiquitous.games.uSect.TestUtils.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +19,7 @@ public class PlayerTest {
 	@Test
 	public void playerDoesNothingWhileNotAskedForIt() {
 		 e.addPlayer(new Player(), new Point(600, 0));
-		Sect s = e.addSect(movingSect(new Point(0, +1)), new Point(600, 100));
+		Sect s = e.addSect(movingSect(e,new Point(0, +1)), new Point(600, 100));
 
 		executeThisManyTurns(e, 60);
 		assertThat(s.position()).isEqualTo(new Point(600, 100 + 60));
@@ -29,7 +28,7 @@ public class PlayerTest {
 	@Test
 	public void playerAttackStopsSectWhenInsideRange() {
 		Player p = e.addPlayer(new Player(), new Point(600, 0));
-		Sect s = e.addSect(movingSect(new Point(0, +1)), new Point(600, 100));
+		Sect s = e.addSect(movingSect(e,new Point(0, +1)), new Point(600, 100));
 
 		p.call();
 
@@ -41,9 +40,9 @@ public class PlayerTest {
 	@Test
 	public void playerInfluenceIsOverAllSectsinRange() {
 		Player p = e.addPlayer(new Player(), new Point(600, 0));
-		Sect s1 = e.addSect(movingSect(new Point(0, +1)), new Point(600, 100));
-		Sect s2= e.addSect(movingSect(new Point(0, +1)), new Point(550, 50));
-		Sect s3= e.addSect(movingSect(new Point(0, +1)), new Point(650, 50));
+		Sect s1 = e.addSect(movingSect(e,new Point(0, +1)), new Point(600, 100));
+		Sect s2= e.addSect(movingSect(e,new Point(0, +1)), new Point(550, 50));
+		Sect s3= e.addSect(movingSect(e,new Point(0, +1)), new Point(650, 50));
 
 		p.call();
 
@@ -54,18 +53,10 @@ public class PlayerTest {
 		assertThat(s3.position()).isEqualTo(new Point(650, 50 + 20 + 4));
 	}
 
-	private Sect movingSect(final Point direction) {
-		return new Sect() {
-			public void update() {
-				e.moveTo(this, direction);
-			}
-		};
-	}
-
 	@Test
 	public void playerAttackbringsSectCloserToPlayerAsRangeShrinks() {
 		Player p = e.addPlayer(new Player(), new Point(600, 0));
-		Sect s = e.addSect(movingSect(new Point(0, +1)), new Point(600, 100));
+		Sect s = e.addSect(movingSect(e,new Point(0, +1)), new Point(600, 100));
 
 		p.call();
 
@@ -76,7 +67,7 @@ public class PlayerTest {
 	@Test
 	public void ifASectIsNotCapturedItCanMoveAround() {
 		Player p = e.addPlayer(new Player(), new Point(600, 0));
-		Sect s = e.addSect(movingSect(new Point(0, +1)), new Point(600, 100));
+		Sect s = e.addSect(movingSect(e,new Point(0, +1)), new Point(600, 100));
 
 		p.call();
 
@@ -89,7 +80,7 @@ public class PlayerTest {
 	public void ASectIsAttractedToThePlayerInRange() {
 		Player p1 = e.addPlayer(new Player(), new Point(600, 0));
 		Player p2 = e.addPlayer(new Player(), new Point(600, 1200));
-		Sect s = e.addSect(movingSect(new Point(0, -1)), new Point(600, 1100));
+		Sect s = e.addSect(movingSect(e,new Point(0, -1)), new Point(600, 1100));
 
 		p1.call();
 		p2.call();
@@ -110,7 +101,7 @@ public class PlayerTest {
 				captured[0] = s;
 			}
 		}, new Point(600, 0));
-		Sect s = e.addSect(movingSect(new Point(0, +1)), new Point(600, 50));
+		Sect s = e.addSect(movingSect(e,new Point(0, +1)), new Point(600, 50));
 
 		p.call();
 
