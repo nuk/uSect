@@ -1,9 +1,14 @@
 package org.unbiquitous.games.uSect;
 
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.awt.Font;
 
+import org.mockito.ArgumentMatcher;
+import org.mockito.stubbing.OngoingStubbing;
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.games.uSect.environment.Random;
@@ -23,6 +28,10 @@ import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.util.Color;
 import org.unbiquitous.uImpala.util.math.Point;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
+import org.unbiquitous.uos.core.adaptabitilyEngine.ServiceCallException;
+import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 public class TestUtils {
 	public static void executeThisManyTurns(Environment e, int numberOfTurns) {
@@ -37,6 +46,17 @@ public class TestUtils {
 				e.moveTo(this, direction);
 			}
 		};
+	}
+	
+	public static OngoingStubbing<Response> whenCallFor(Gateway gateway,
+			UpDevice targetDevice, final String service)
+			throws ServiceCallException {
+		return when(gateway.callService(eq(targetDevice),
+				argThat(new ArgumentMatcher<Call>() {
+					public boolean matches(Object arg) {
+						return ((Call) arg).getService() == service;
+					}
+				})));
 	}
 	
 	public static Environment setUpEnvironment(){
