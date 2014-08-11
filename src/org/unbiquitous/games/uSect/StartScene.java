@@ -77,15 +77,7 @@ public class StartScene extends GameObjectTreeScene {
 
 	private void populatePlayer(GameSettings settings, Environment e) {
 		if(settings.containsKey("usect.player.id")){
-			Point _position = new Point(); 
-			if(Random.v() > 0.5){
-				_position.x = Random.v() > 0.5 ? 0 : screen.getWidth();
-				_position.y = (int) (screen.getHeight()*Random.v());
-			}else{
-				_position.x = (int) (screen.getWidth()*Random.v());
-				_position.y = Random.v() > 0.5 ? 0 : screen.getHeight();
-			}
-			e.addPlayer(new Player(), _position);
+			e.addPlayer(new Player());
 		}
 	}
 	

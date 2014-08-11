@@ -19,8 +19,6 @@ import org.unbiquitous.uImpala.engine.io.ScreenManager;
 import org.unbiquitous.uImpala.engine.time.DeltaTime;
 
 public class SetUpGameTest {
-
-	
 	private DeltaTime timer;
 	private ScreenManager screens;
 	private Screen screen;

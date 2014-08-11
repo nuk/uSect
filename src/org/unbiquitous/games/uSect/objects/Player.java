@@ -1,5 +1,7 @@
 package org.unbiquitous.games.uSect.objects;
 
+import java.util.UUID;
+
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
@@ -32,6 +34,11 @@ public class Player extends EnvironmentObject{
 		GameSettings settings = GameComponents.get(GameSettings.class);
 		maxInfluenceRadius = settings.getInt("usect.player.influence.radius",300);
 		influenceGrowthSpeed = settings.getInt("usect.player.influence.speed",5);
+	}
+	
+	public Player(UUID id){
+		this();
+		this.id = id;
 	}
 	
 	public void setEnv(Environment env) {

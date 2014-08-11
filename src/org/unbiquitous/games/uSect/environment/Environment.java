@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.unbiquitous.games.uSect.DeviceStats;
 import org.unbiquitous.games.uSect.objects.Corpse;
@@ -20,7 +22,6 @@ import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
-import org.unbiquitous.uImpala.engine.io.MouseEvent;
 import org.unbiquitous.uImpala.engine.io.MouseManager;
 import org.unbiquitous.uImpala.engine.io.MouseSource;
 import org.unbiquitous.uImpala.engine.io.Screen;
@@ -29,9 +30,16 @@ import org.unbiquitous.uImpala.util.math.Point;
 import org.unbiquitous.uImpala.util.observer.Event;
 import org.unbiquitous.uImpala.util.observer.Observation;
 import org.unbiquitous.uImpala.util.observer.Subject;
+import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
+import org.unbiquitous.uos.core.adaptabitilyEngine.ServiceCallException;
+import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 public class Environment extends GameObject {
-
+	private static final Logger LOGGER = UOSLogging.getLogger();
+	
 	private Screen screen;
 	private Rectangle background;
 
@@ -48,7 +56,8 @@ public class Environment extends GameObject {
 	private Set<Sect> frozenThisTurn = new HashSet<Sect>();
 
 	private int initialEnergy, nutrientEnergy, corpseEnergy;
-	private long turnNumber;
+	private long turn;
+	private Gateway gateway;
 
 	public Environment(DeviceStats deviceStats) {
 		nutrients = new NutrientManager(this, deviceStats);
@@ -64,6 +73,7 @@ public class Environment extends GameObject {
 		initialEnergy = settings.getInt("usect.initial.energy", 30 * 60 * 10);
 		nutrientEnergy = settings.getInt("usect.nutrient.energy", 30 * 60);
 		corpseEnergy = settings.getInt("usect.corpse.energy", 5 * 30 * 60);
+		gateway = GameComponents.get(Gateway.class);
 		
 		if(settings.containsKey("usect.player.id")){
 			setUpPlayerEnvironment();
@@ -91,37 +101,70 @@ public class Environment extends GameObject {
 				screen.getWidth(), screen.getHeight());
 	}
 
+	
 	public void update() {
-		turnNumber++;
+//		updatePlayers();
+		
 		for (EnvironemtObjectManager mng : managers) {
 			mng.update();
 		}
 		attack.update();
 		mate.update();
-
-		// TODO: untested
-		/*
-		 * if (screen.getKeyboard() != null){
-		 * if(screen.getKeyboard().getKey(Keyboard.KEY_A)){
-		 * System.out.println("Attack"); for(Player p: players){ p.attack(); }
-		 * }else if(screen.getKeyboard().getKey(Keyboard.KEY_C)){
-		 * System.out.println("Call"); for(Player p: players){ p.call(); } } }
-		 */
-		if (screen.getKeyboard() != null) {
-			if (screen.getKeyboard().getKey(0x1E)) {
-				players.players().get(0).call();
-			}
-			if (screen.getKeyboard().getKey(0x1F)) {
-				players.players().get(1).call();
-			}
-		}
-		// }else if(screen.getKeyboard().getKey(Keyboard.KEY_C)){
-		// System.out.println("Call");
-		// for(Player p: players){
-		// p.call();
-		// }
+		
+		turn++;
 	}
 
+//	/// Begin Player
+//	
+//	Map<UpDevice, Player> registeredDevices = new HashMap<UpDevice, Player>();
+//	private void updatePlayers() {
+//		if(shouldCheckPlayers()){
+//			List<UpDevice> devices = gateway.listDevices();
+//			checkNewPlayers(devices);
+//			checkPlayersThatLeft(devices);
+//		}
+//	}
+//
+//	private boolean shouldCheckPlayers() {
+//		return turn % 10 == 0 && gateway.listDevices() != null;
+//	}
+//	
+//	private void checkNewPlayers(List<UpDevice> devices) {
+//		for(UpDevice d: devices){
+//			if(!registeredDevices.containsKey(d)){
+//				Player p = createPlayer(d);
+//				registeredDevices.put(d,p);
+//			}
+//		}
+//	}
+//
+//	private Player createPlayer(UpDevice d) {
+//		try {
+//			addPlayer(new Player(callPlayerID(d)));
+//		} catch (ServiceCallException e) {
+//			LOGGER.log(Level.WARNING, "Not possible to handle call", e);
+//		}
+//		return null;
+//	}
+//
+//	private UUID callPlayerID(UpDevice d) throws ServiceCallException {
+//		Call playerInfo = new Call("app", "playerInfo", "usect");
+//		Response r = gateway.callService(d, playerInfo);
+//		return UUID.fromString(r.getResponseString("player.id"));
+//	}
+//
+//	private void checkPlayersThatLeft(List<UpDevice> devices) {
+//		Set<UpDevice> left = new HashSet<UpDevice>(registeredDevices.keySet());
+//		left.removeAll(devices);
+//		//remove players
+//		for(UpDevice d:left){
+//			players.remove(registeredDevices.get(d));
+//			registeredDevices.remove(d);
+//		}
+//	}
+//	
+//	// End Player
+	
 	public Stats stats(UUID objectId) {
 		if (!dataMap.containsKey(objectId)) {
 			return null;
@@ -180,6 +223,10 @@ public class Environment extends GameObject {
 	protected void unfreeze(Sect sect) {
 		frozenThisTurn.remove(sect);
 	}
+	
+	public long turn(){
+		return turn;
+	}
 
 	public EnvironmentObject add(EnvironmentObject object, Stats initialStats) {
 		object.setEnv(this);
@@ -213,6 +260,18 @@ public class Environment extends GameObject {
 		return s;
 	}
 
+	public Player addPlayer(Player p) {
+		Point _position = new Point(); 
+		if(Random.v() > 0.5){
+			_position.x = Random.v() > 0.5 ? 0 : screen.getWidth();
+			_position.y = (int) (screen.getHeight()*Random.v());
+		}else{
+			_position.x = (int) (screen.getWidth()*Random.v());
+			_position.y = Random.v() > 0.5 ? 0 : screen.getHeight();
+		}
+		return addPlayer(p,_position);
+	}
+	
 	public Player addPlayer(Player p, Point position) {
 		p.setEnv(this);
 		this.add(p, new Stats(position, 0));

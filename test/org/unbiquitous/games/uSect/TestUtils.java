@@ -22,6 +22,7 @@ import org.unbiquitous.uImpala.engine.io.MouseSource;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.util.Color;
 import org.unbiquitous.uImpala.util.math.Point;
+import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 
 public class TestUtils {
 	public static void executeThisManyTurns(Environment e, int numberOfTurns) {
@@ -50,6 +51,9 @@ public class TestUtils {
 								final int width, final int height){
 		GameComponents.put(GameSettings.class, settings);
 		GameComponents.put(AssetManager.class, new DummyAssetManager());
+		if(GameComponents.get(Gateway.class) == null){
+			GameComponents.put(Gateway.class, mock(Gateway.class));
+		}
 		GameComponents.put(org.unbiquitous.uImpala.engine.io.Screen.class, new Screen(){
 			public int getWidth() {		return width;	}
 			public int getHeight() {	return height;	}
