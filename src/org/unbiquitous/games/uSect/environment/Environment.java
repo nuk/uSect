@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.unbiquitous.games.uSect.DeviceStats;
 import org.unbiquitous.games.uSect.objects.Corpse;
@@ -30,16 +28,8 @@ import org.unbiquitous.uImpala.util.math.Point;
 import org.unbiquitous.uImpala.util.observer.Event;
 import org.unbiquitous.uImpala.util.observer.Observation;
 import org.unbiquitous.uImpala.util.observer.Subject;
-import org.unbiquitous.uos.core.UOSLogging;
-import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
-import org.unbiquitous.uos.core.adaptabitilyEngine.ServiceCallException;
-import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
-import org.unbiquitous.uos.core.messageEngine.messages.Call;
-import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 public class Environment extends GameObject {
-	private static final Logger LOGGER = UOSLogging.getLogger();
-	
 	private Screen screen;
 	private Rectangle background;
 
@@ -57,9 +47,17 @@ public class Environment extends GameObject {
 
 	private int initialEnergy, nutrientEnergy, corpseEnergy;
 	private long turn;
-	private Gateway gateway;
 
 	public Environment(DeviceStats deviceStats) {
+		setUpManagers(deviceStats);
+		createBackground();
+		GameSettings settings = setUpProperties();
+		if(settings.containsKey("usect.player.id")){
+			setUpPlayerEnvironment();
+		}
+	}
+
+	private void setUpManagers(DeviceStats deviceStats) {
 		nutrients = new NutrientManager(this, deviceStats);
 		sects = new SectManager(this);
 		players = new PlayerManager(this);
@@ -67,19 +65,24 @@ public class Environment extends GameObject {
 		mover = new MovementManager(this);
 		attack = new AttackManager(this);
 		mate = new MatingManager(this);
-		createBackground();
+	}
 
+	private void createBackground() {
+		screen = GameComponents.get(Screen.class);
+		AssetManager assets = GameComponents.get(AssetManager.class);
+		Point center = new Point(screen.getWidth() / 2, screen.getHeight() / 2);
+		background = assets.newRectangle(center, Color.WHITE,
+				screen.getWidth(), screen.getHeight());
+	}
+
+	private GameSettings setUpProperties() {
 		GameSettings settings = GameComponents.get(GameSettings.class);
 		initialEnergy = settings.getInt("usect.initial.energy", 30 * 60 * 10);
 		nutrientEnergy = settings.getInt("usect.nutrient.energy", 30 * 60);
 		corpseEnergy = settings.getInt("usect.corpse.energy", 5 * 30 * 60);
-		gateway = GameComponents.get(Gateway.class);
-		
-		if(settings.containsKey("usect.player.id")){
-			setUpPlayerEnvironment();
-		}
+		return settings;
 	}
-
+	
 	private void setUpPlayerEnvironment() {
 		MouseManager mouses = GameComponents.get(MouseManager.class);
 		if(mouses != null){
@@ -92,19 +95,8 @@ public class Environment extends GameObject {
 			});
 		}
 	}
-
-	private void createBackground() {
-		screen = GameComponents.get(Screen.class);
-		AssetManager assets = GameComponents.get(AssetManager.class);
-		Point center = new Point(screen.getWidth() / 2, screen.getHeight() / 2);
-		background = assets.newRectangle(center, Color.WHITE,
-				screen.getWidth(), screen.getHeight());
-	}
-
 	
 	public void update() {
-//		updatePlayers();
-		
 		for (EnvironemtObjectManager mng : managers) {
 			mng.update();
 		}
@@ -114,57 +106,6 @@ public class Environment extends GameObject {
 		turn++;
 	}
 
-//	/// Begin Player
-//	
-//	Map<UpDevice, Player> registeredDevices = new HashMap<UpDevice, Player>();
-//	private void updatePlayers() {
-//		if(shouldCheckPlayers()){
-//			List<UpDevice> devices = gateway.listDevices();
-//			checkNewPlayers(devices);
-//			checkPlayersThatLeft(devices);
-//		}
-//	}
-//
-//	private boolean shouldCheckPlayers() {
-//		return turn % 10 == 0 && gateway.listDevices() != null;
-//	}
-//	
-//	private void checkNewPlayers(List<UpDevice> devices) {
-//		for(UpDevice d: devices){
-//			if(!registeredDevices.containsKey(d)){
-//				Player p = createPlayer(d);
-//				registeredDevices.put(d,p);
-//			}
-//		}
-//	}
-//
-//	private Player createPlayer(UpDevice d) {
-//		try {
-//			addPlayer(new Player(callPlayerID(d)));
-//		} catch (ServiceCallException e) {
-//			LOGGER.log(Level.WARNING, "Not possible to handle call", e);
-//		}
-//		return null;
-//	}
-//
-//	private UUID callPlayerID(UpDevice d) throws ServiceCallException {
-//		Call playerInfo = new Call("app", "playerInfo", "usect");
-//		Response r = gateway.callService(d, playerInfo);
-//		return UUID.fromString(r.getResponseString("player.id"));
-//	}
-//
-//	private void checkPlayersThatLeft(List<UpDevice> devices) {
-//		Set<UpDevice> left = new HashSet<UpDevice>(registeredDevices.keySet());
-//		left.removeAll(devices);
-//		//remove players
-//		for(UpDevice d:left){
-//			players.remove(registeredDevices.get(d));
-//			registeredDevices.remove(d);
-//		}
-//	}
-//	
-//	// End Player
-	
 	public Stats stats(UUID objectId) {
 		if (!dataMap.containsKey(objectId)) {
 			return null;

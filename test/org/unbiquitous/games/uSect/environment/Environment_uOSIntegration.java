@@ -1,8 +1,7 @@
 package org.unbiquitous.games.uSect.environment;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
@@ -14,8 +13,11 @@ import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
+import org.mockito.stubbing.OngoingStubbing;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
+import org.unbiquitous.uos.core.adaptabitilyEngine.ServiceCallException;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
 import org.unbiquitous.uos.core.messageEngine.messages.Call;
 import org.unbiquitous.uos.core.messageEngine.messages.Response;
@@ -75,8 +77,16 @@ public class Environment_uOSIntegration {
 		for(UpDevice d : devices){
 			UUID id = new UUID(0,i++);
 			Response r = new Response().addParameter("player.id", id.toString());
-			when(gateway.callService(eq(d), any(Call.class)))
-				.thenReturn(r);
+			whenCallFor(d, "playerInfo").thenReturn(r);
 		}
+	}
+
+	private OngoingStubbing<Response> whenCallFor(UpDevice d, final String service)
+			throws ServiceCallException {
+		return when(gateway.callService(eq(d), argThat(new ArgumentMatcher<Call>() {
+			public boolean matches(Object arg) {
+				return ((Call)arg).getService() == service;
+			}
+		})));
 	}
 }
