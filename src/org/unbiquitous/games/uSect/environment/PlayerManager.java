@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import org.unbiquitous.games.uSect.objects.Player;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.util.math.Point;
 import org.unbiquitous.uImpala.util.math.Rectangle;
 import org.unbiquitous.uos.core.UOSLogging;
@@ -29,10 +30,15 @@ public class PlayerManager implements EnvironemtObjectManager {
 	private Map<UpDevice, Player> registeredDevices = new HashMap<UpDevice, Player>();
 	private Environment env;
 	private Gateway gateway;
+	private boolean isPlayerDevice;
 
 	public PlayerManager(Environment env) {
 		this.env = env;
 		gateway = GameComponents.get(Gateway.class);
+		GameSettings settings = GameComponents.get(GameSettings.class);
+		if(settings.containsKey("player.id")){
+			isPlayerDevice = true;
+		}
 	}
 
 	@Override
@@ -61,7 +67,7 @@ public class PlayerManager implements EnvironemtObjectManager {
 	}
 
 	private boolean shouldCheckPlayers() {
-		return env.turn() % 10 == 0 && gateway.listDevices() != null;
+		return !isPlayerDevice && env.turn() % 10 == 0 && gateway.listDevices() != null;
 	}
 
 	private void checkNewPlayers(List<UpDevice> devices) {

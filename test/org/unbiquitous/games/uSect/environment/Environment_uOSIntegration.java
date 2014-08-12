@@ -14,6 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
 import org.unbiquitous.uos.core.messageEngine.messages.Response;
@@ -70,6 +71,17 @@ public class Environment_uOSIntegration {
 		assertThat(e.players()).hasSize(1);
 	}
 
+	@Test
+	public void playerDeviceDoesNotConnectWithOthers() throws Exception {
+		GameSettings settings = GameComponents.get(GameSettings.class);
+		settings.put("player.id", UUID.randomUUID().toString());
+		e = setUpEnvironment(settings);
+		setListDevices(new UpDevice("Dummy1"), new UpDevice("Dummy2"));
+		executeThisManyTurns(e, 10);
+
+		assertThat(e.players()).hasSize(0);
+	}
+	
 	@Test
 	public void removesPlayerIfTheyDisconnect() throws Exception {
 		setListDevices(new UpDevice("Dummy1"), new UpDevice("Dummy2"));
