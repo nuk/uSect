@@ -1,12 +1,11 @@
 package org.unbiquitous.games.uSect;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 import java.util.UUID;
 
+import org.fest.assertions.data.MapEntry;
 import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
@@ -17,6 +16,8 @@ import org.unbiquitous.uImpala.engine.io.MouseManager;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.engine.io.ScreenManager;
 import org.unbiquitous.uImpala.engine.time.DeltaTime;
+import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 public class SetUpGameTest {
 	private DeltaTime timer;
@@ -82,4 +83,11 @@ public class SetUpGameTest {
 		assertThat(e.players()).hasSize(1);
 	}
 	
+	
+	@Test public void deploysASectDriverToManageInteractions(){
+		Gateway gateway = mock(Gateway.class);
+		GameComponents.put(Gateway.class, gateway);
+		new StartScene();
+		verify(gateway).addDriver(any(USectDriver.class));
+	}
 }

@@ -16,6 +16,7 @@ import java.util.logging.Level;
 
 import org.unbiquitous.games.uSect.DeviceStats;
 import org.unbiquitous.games.uSect.StartScene;
+import org.unbiquitous.games.uSect.USectDriver;
 import org.unbiquitous.games.uSect.environment.Random;
 import org.unbiquitous.uImpala.dalvik.GameActivity;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
@@ -34,8 +35,9 @@ public class LaunchActivity extends GameActivity {
 		UOSLogging.setLevel(Level.ALL);
 		Random.setSeed(seed());
 		run(new GameSettings() {
-			{ // TODO: Game Settings could have helper methods
+			{ 
 				put("main_activity", LaunchActivity.this);
+				put("game_id", "uSect");
 				put("first_scene", StartScene.class);
 				put("input_managers", Arrays.asList(MouseManager.class));
 				put("output_managers", Arrays.asList(ScreenManager.class));

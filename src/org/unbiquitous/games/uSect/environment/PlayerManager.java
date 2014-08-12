@@ -66,16 +66,24 @@ public class PlayerManager implements EnvironemtObjectManager {
 
 	private void checkNewPlayers(List<UpDevice> devices) {
 		for (UpDevice d : devices) {
-			if (!registeredDevices.containsKey(d)) {
+			if (isNewDevice(d)) {
 				Player p = createPlayer(d);
 				registeredDevices.put(d, p);
 			}
 		}
 	}
 
+	private boolean isNewDevice(UpDevice d) {
+		return !d.equals(gateway.getCurrentDevice()) && 
+				!registeredDevices.containsKey(d);
+	}
+
 	private Player createPlayer(UpDevice d) {
 		try {
-			return env.addPlayer(new Player(callPlayerID(d)));
+			UUID id = callPlayerID(d);
+			if(id != null){
+				return env.addPlayer(new Player(id));
+			}
 		} catch (ServiceCallException e) {
 			LOGGER.log(Level.WARNING, "Not possible to handle call", e);
 		}
@@ -83,9 +91,12 @@ public class PlayerManager implements EnvironemtObjectManager {
 	}
 
 	private UUID callPlayerID(UpDevice d) throws ServiceCallException {
-		Call playerInfo = new Call("app", "playerInfo", "usect");
+		Call playerInfo = new Call("usect.driver", "playerInfo");
 		Response r = gateway.callService(d, playerInfo);
-		return UUID.fromString(r.getResponseString("player.id"));
+		if(r.getResponseData() != null && r.getResponseData().containsKey("player.id")){
+			return UUID.fromString(r.getResponseString("player.id"));
+		}
+		return null;
 	}
 
 	private void checkPlayersThatLeft(List<UpDevice> devices) {

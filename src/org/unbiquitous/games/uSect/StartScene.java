@@ -18,6 +18,7 @@ import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.engine.io.ScreenManager;
 import org.unbiquitous.uImpala.engine.time.DeltaTime;
 import org.unbiquitous.uImpala.util.math.Point;
+import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 
 public class StartScene extends GameObjectTreeScene {
 
@@ -41,6 +42,9 @@ public class StartScene extends GameObjectTreeScene {
 		GameComponents.put(Screen.class, screen);
 		GameComponents.put(AssetManager.class,assets());
 		setUpEnvironment(settings);
+		
+		Gateway gateway = GameComponents.get(Gateway.class);
+		gateway.addDriver(new USectDriver(settings));
 		
 //		populateEnvironment(e);
 //		

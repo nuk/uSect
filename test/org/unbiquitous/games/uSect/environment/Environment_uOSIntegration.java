@@ -61,6 +61,14 @@ public class Environment_uOSIntegration {
 		executeThisManyTurns(e, 10);
 		assertThat(e.players()).hasSize(2);
 	}
+	
+	@Test
+	public void ignoresCurrentDevice() throws Exception {
+		setListDevices(new UpDevice("Current"), new UpDevice("Dummy"));
+		when(gateway.getCurrentDevice()).thenReturn(new UpDevice("Current"));
+		executeThisManyTurns(e, 10);
+		assertThat(e.players()).hasSize(1);
+	}
 
 	@Test
 	public void removesPlayerIfTheyDisconnect() throws Exception {
@@ -70,6 +78,16 @@ public class Environment_uOSIntegration {
 		setListDevices(new UpDevice("Dummy1"));
 		executeThisManyTurns(e, 10);
 		assertThat(e.players()).hasSize(1);
+	}
+	
+	@Test
+	public void dontAddAPlayerIfThereIsNoResponseFroPlayerId() throws Exception {
+		UpDevice device = new UpDevice("Dummy");
+		when(gateway.listDevices()).thenReturn(Arrays.asList(device));
+		whenCallFor(gateway, device, "playerInfo").thenReturn(new Response());
+
+		executeThisManyTurns(e, 10);
+		assertThat(e.players()).hasSize(0);
 	}
 
 	private void setListDevices(UpDevice... devices) throws Exception {

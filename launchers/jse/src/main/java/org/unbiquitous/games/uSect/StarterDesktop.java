@@ -20,7 +20,7 @@ import org.unbiquitous.uImpala.engine.io.ScreenManager;
 import org.unbiquitous.uImpala.jse.impl.core.Game;
 import org.unbiquitous.uos.core.UOSLogging;
 
-public class StarterJSE extends StartScene {
+public class StarterDesktop extends StartScene {
 
 	@SuppressWarnings({ "unchecked", "serial" })
 	public static void main(String[] args) {
@@ -36,6 +36,7 @@ public class StarterJSE extends StartScene {
 		Game.run(new GameSettings() {
 			{
 				put("first_scene", StartScene.class);
+				put("game_id", "uSect");
 				put("input_managers", Arrays.asList(MouseManager.class,
 						KeyboardManager.class));
 				put("output_managers", Arrays.asList(ScreenManager.class));

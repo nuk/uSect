@@ -63,7 +63,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>org.unbiquitous.games.uSect.StarterJSE</mainClass>
+							<mainClass>org.unbiquitous.games.uSect.StarterDesktop</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
