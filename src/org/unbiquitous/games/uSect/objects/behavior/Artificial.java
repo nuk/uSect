@@ -125,4 +125,8 @@ public class Artificial extends TargetFocused {
 			return something;
 		}
 	}
+	
+	public ExecutionUnity unity(){
+		return unity;
+	}
 }

@@ -4,10 +4,17 @@ import static java.lang.String.format;
 
 import java.util.UUID;
 
+import org.unbiquitous.driver.execution.executionUnity.ExecutionUnity;
+import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
 import org.unbiquitous.games.uSect.environment.Random;
+import org.unbiquitous.games.uSect.environment.Environment.Stats;
+import org.unbiquitous.games.uSect.objects.Something.Feeding;
+import org.unbiquitous.games.uSect.objects.behavior.Artificial;
 import org.unbiquitous.games.uSect.objects.behavior.Carnivore;
 import org.unbiquitous.games.uSect.objects.behavior.Herbivore;
+import org.unbiquitous.json.JSONException;
+import org.unbiquitous.json.JSONObject;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.asset.SimetricShape;
 import org.unbiquitous.uImpala.engine.asset.Text;
@@ -131,6 +138,48 @@ public class Sect extends EnvironmentObject {
 	}
 	
 	public String toString() {
-		return format("Sect:%s%s[%s]",behavior.feeding(), position(),energy());
+		return format("Sect:%s@%s[e=%s]",behavior.feeding(), position(),energy());
+	}
+
+	public static Sect fromJSON(Environment e, JSONObject json) {
+		return fromJSON(e, json, null);
+	}
+	
+	public static Sect fromJSON(Environment e, JSONObject json, Point position) {
+		Sect s = new Sect(deserializeBehavior(json));
+		s.id = UUID.fromString(json.optString("id"));
+		if(position == null)	position = new Point();
+		Stats stats = new Stats(position, json.optLong("energy"));
+		return (Sect) e.add(s, stats);
+	}
+
+	private static Behavior deserializeBehavior(JSONObject json) {
+		Behavior behavior;
+		if("Carnivore".equalsIgnoreCase(json.optString("behavior"))){
+			behavior = new Carnivore();
+		}else if("Artificial".equalsIgnoreCase(json.optString("behavior"))){
+			Feeding feeding = Feeding.valueOf(json.optString("feeding"));
+			ExecutionUnity unity = ExecutionUnity.fromJSON(json.optJSONObject("execution"));
+			behavior = new Artificial(unity,feeding);
+		}else{
+			behavior = new Herbivore();
+		}
+		return behavior;
+	}
+
+	public JSONObject toJSON() {
+		try {
+			JSONObject json = new JSONObject();
+			json.put("id", id().toString());
+			json.put("behavior", behavior().getClass().getSimpleName());
+			if(behavior instanceof Artificial){
+				json.put("feeding", behavior().feeding());
+				json.put("execution", ((Artificial)behavior()).unity().toJSON());
+			}
+			json.put("energy", energy());
+			return json;
+		} catch (JSONException e) {
+			throw new RuntimeException(e);
+		}
 	};
 }

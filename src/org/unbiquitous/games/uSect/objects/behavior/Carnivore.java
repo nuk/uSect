@@ -1,7 +1,7 @@
 package org.unbiquitous.games.uSect.objects.behavior;
 
-import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.games.uSect.objects.Sect.Behavior;
+import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.games.uSect.objects.Something.Feeding;
 
 public class Carnivore extends TargetFocused{

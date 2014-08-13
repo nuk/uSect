@@ -3,8 +3,8 @@ package org.unbiquitous.games.uSect.objects.behavior;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.games.uSect.objects.Sect.Behavior;
+import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.games.uSect.objects.Something.Feeding;
 import org.unbiquitous.games.uSect.objects.Something.Type;
 
@@ -58,5 +58,4 @@ public class Herbivore extends TargetFocused{
 	public Behavior clone() {
 		return new Herbivore();
 	}
-	
 }
