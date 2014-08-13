@@ -6,9 +6,9 @@ import java.util.UUID;
 
 import org.unbiquitous.driver.execution.executionUnity.ExecutionUnity;
 import org.unbiquitous.games.uSect.environment.Environment;
+import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
 import org.unbiquitous.games.uSect.environment.Random;
-import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.games.uSect.objects.Something.Feeding;
 import org.unbiquitous.games.uSect.objects.behavior.Artificial;
 import org.unbiquitous.games.uSect.objects.behavior.Carnivore;
@@ -158,12 +158,18 @@ public class Sect extends EnvironmentObject {
 		if("Carnivore".equalsIgnoreCase(json.optString("behavior"))){
 			behavior = new Carnivore();
 		}else if("Artificial".equalsIgnoreCase(json.optString("behavior"))){
-			Feeding feeding = Feeding.valueOf(json.optString("feeding"));
-			ExecutionUnity unity = ExecutionUnity.fromJSON(json.optJSONObject("execution"));
-			behavior = new Artificial(unity,feeding);
+			behavior = deserializeArtificialBehavior(json);
 		}else{
 			behavior = new Herbivore();
 		}
+		return behavior;
+	}
+
+	private static Behavior deserializeArtificialBehavior(JSONObject json) {
+		Behavior behavior;
+		Feeding feeding = Feeding.valueOf(json.optString("feeding"));
+		ExecutionUnity unity = ExecutionUnity.fromJSON(json.optJSONObject("execution"));
+		behavior = new Artificial(unity,feeding);
 		return behavior;
 	}
 

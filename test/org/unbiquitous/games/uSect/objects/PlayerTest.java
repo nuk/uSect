@@ -1,7 +1,9 @@
 package org.unbiquitous.games.uSect.objects;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.unbiquitous.games.uSect.TestUtils.*;
+import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
+import static org.unbiquitous.games.uSect.TestUtils.movingSect;
+import static org.unbiquitous.games.uSect.TestUtils.setUpEnvironment;
 
 import org.junit.Before;
 import org.junit.Test;

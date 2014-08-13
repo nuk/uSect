@@ -6,8 +6,8 @@ import java.util.LinkedList;
 
 import org.unbiquitous.games.uSect.environment.Random;
 import org.unbiquitous.games.uSect.objects.Sect;
-import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.games.uSect.objects.Sect.Behavior;
+import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.util.math.Point;

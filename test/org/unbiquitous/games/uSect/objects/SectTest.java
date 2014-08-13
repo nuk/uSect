@@ -1,7 +1,7 @@
 package org.unbiquitous.games.uSect.objects;
 
-import static org.fest.assertions.api.Assertions.*;
-import static org.unbiquitous.games.uSect.TestUtils.*;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.unbiquitous.games.uSect.TestUtils.setUpEnvironment;
 
 import org.junit.Before;
 import org.junit.Test;

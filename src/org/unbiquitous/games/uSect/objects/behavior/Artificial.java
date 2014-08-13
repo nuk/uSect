@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import org.unbiquitous.driver.execution.executionUnity.ExecutionError;
 import org.unbiquitous.driver.execution.executionUnity.ExecutionUnity;
-import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.games.uSect.objects.Sect.Behavior;
+import org.unbiquitous.games.uSect.objects.Something;
 import org.unbiquitous.games.uSect.objects.Something.Feeding;
 import org.unbiquitous.uImpala.util.math.Point;
 
