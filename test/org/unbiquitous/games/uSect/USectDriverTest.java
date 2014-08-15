@@ -16,8 +16,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.objects.Player;
+import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
+import org.unbiquitous.uImpala.util.math.Point;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 import org.unbiquitous.uos.core.applicationManager.CallContext;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
@@ -80,5 +82,15 @@ public class USectDriverTest {
 		verify(p1,times(0)).call();
 		verify(p2,times(1)).call();
 		verify(p3,times(0)).call();
+	}
+	
+	@Test public void allowsTheMigrationOfSects() throws Exception {
+		Sect s = setUpEnvironment().addSect(new Sect(), new Point());
+		USectDriver driver = new USectDriver(settings, e);
+		Call call = new Call();
+		call.addParameter("sect", s.toJSON().toMap());
+		driver.migrate(call, null, null);
+		
+		assertThat(e.sects()).containsOnly(s);
 	}
 }

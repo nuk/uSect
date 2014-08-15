@@ -1,6 +1,7 @@
 package org.unbiquitous.games.uSect.environment;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.unbiquitous.games.uSect.environment.Environment.Stats;
@@ -32,6 +33,16 @@ class SectManager implements EnvironemtObjectManager{
 		sects.add(s);
 		sectsAddedThisTurn.add(s);
 		return s;
+	}
+	
+	@Override
+	public void remove(EnvironmentObject o) {
+		sects.remove(o);
+	}
+
+	@Override
+	public void removeAll(Collection<EnvironmentObject> c) {
+		sects.removeAll(c);
 	}
 
 	List<Sect> sects(){

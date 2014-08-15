@@ -2,25 +2,30 @@ package org.unbiquitous.games.uSect.objects;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
 import static org.unbiquitous.games.uSect.TestUtils.movingSect;
 import static org.unbiquitous.games.uSect.TestUtils.setUpEnvironment;
+
+import java.util.UUID;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.unbiquitous.games.uSect.environment.Environment;
+import org.unbiquitous.json.JSONObject;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.util.math.Point;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
 import org.unbiquitous.uos.core.messageEngine.messages.Call;
 
 public class PlayerTest {
+	
 	private Environment e;
 	private Gateway gateway;
+	private GameSettings settings;
 
 	@Before
 	public void setUp() throws Exception{
@@ -28,7 +33,8 @@ public class PlayerTest {
 //		when(gateway.callService(any(UpDevice.class), any(Call.class)))
 //			.thenReturn(new Response());
 		GameComponents.put(Gateway.class, gateway);
-		e = setUpEnvironment();
+		settings = new GameSettings();
+		e = setUpEnvironment(settings);
 	}
 
 	@Test
@@ -109,6 +115,7 @@ public class PlayerTest {
 	
 	@Test
 	public void sendCallToConnectedDevices() throws Exception{
+		settings.put("usect.player.id", UUID.randomUUID());
 		Player p = e.addPlayer(new Player(), new Point(600, 0));
 		UpDevice device = new UpDevice("avocado");
 		p.connect(device);
@@ -122,7 +129,18 @@ public class PlayerTest {
 		assertThat(captor.getValue().getParameterString("id")).isEqualTo(p.id().toString());
 	}
 	
-	//TODO: this behavior must be related with sending it away
+	@Test
+	public void nonPlayerDevicesDontSendCalls() throws Exception{
+		Player p = e.addPlayer(new Player(), new Point(600, 0));
+		UpDevice device = new UpDevice("avocado");
+		p.connect(device);
+		
+		p.call();
+		
+		ArgumentCaptor<Call> captor = ArgumentCaptor.forClass(Call.class);
+		verify(gateway, never()).callService(eq(device), captor.capture());
+	}
+	
 	@Test
 	public void whenASectComesTooCloseToThePlayerItsCaptured() {
 		final Sect[] captured = new Sect[]{null};
@@ -138,6 +156,28 @@ public class PlayerTest {
 		executeThisManyTurns(e, 2 * 60);
 		assertThat(s.position()).isEqualTo(new Point(600, 20));
 		assertThat(captured[0]).isEqualTo(s);
+	}
+	
+	@Test
+	public void migratesSectWhenItsCaptured() throws Exception {
+		Player p = e.addPlayer(new Player(), new Point(600, 0));
+		Sect s = e.addSect(movingSect(e,new Point(0, +1)), new Point(600, 19));
+		
+		UpDevice d = new UpDevice("Target");
+		p.call();
+		p.connect(d);
+		
+		executeThisManyTurns(e, 1);
+		JSONObject sectJson = s.toJSON();
+		executeThisManyTurns(e, 1);
+		
+		assertThat(e.sects()).isEmpty();
+		ArgumentCaptor<Call> captor = ArgumentCaptor.forClass(Call.class);
+		verify(gateway, times(1)).callService(eq(d), captor.capture());
+		assertThat(captor.getAllValues()).hasSize(1);
+		assertThat(captor.getValue().getParameter("sect")).isEqualTo(sectJson);
+		assertThat(captor.getValue().getService()).isEqualTo("migrate");
+		assertThat(captor.getValue().getDriver()).isEqualTo("usect.driver");
 	}
 
 }

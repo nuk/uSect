@@ -13,6 +13,7 @@ import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.unbiquitous.games.uSect.objects.Player;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
@@ -38,11 +39,14 @@ public class Environment_uOSIntegration {
 
 	@Test
 	public void whenANewDeviceEntersPlacesItsPlayer() throws Exception {
-		setListDevices(new UpDevice("Dummy"));
+		UpDevice d = new UpDevice("Dummy");
+		setListDevices(d);
 		e.update();
 
 		assertThat(e.players()).hasSize(1);
-		assertThat(e.players().get(0).id()).isEqualTo(new UUID(0, 0));
+		Player player = e.players().get(0);
+		assertThat(player.id()).isEqualTo(new UUID(0, 0));
+		assertThat(player.connectedDevices()).containsOnly(d);
 	}
 
 	@Test

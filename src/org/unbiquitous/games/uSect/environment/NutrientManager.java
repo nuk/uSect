@@ -1,6 +1,7 @@
 package org.unbiquitous.games.uSect.environment;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,6 +53,18 @@ class NutrientManager implements EnvironemtObjectManager{
 	Nutrient add(Nutrient n) {
 		nutrients.add(n);
 		return n;
+	}
+	
+	@Override
+	public void remove(EnvironmentObject o) {
+		nutrients.remove(o);
+		corpses.remove(o);
+	}
+
+	@Override
+	public void removeAll(Collection<EnvironmentObject> c) {
+		nutrients.removeAll(c);
+		corpses.removeAll(c);
 	}
 	
 	Corpse add(Corpse c) {

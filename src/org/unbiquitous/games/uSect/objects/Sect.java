@@ -20,6 +20,7 @@ import org.unbiquitous.uImpala.engine.asset.SimetricShape;
 import org.unbiquitous.uImpala.engine.asset.Text;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
+import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.util.Color;
 import org.unbiquitous.uImpala.util.math.Point;
 
@@ -153,7 +154,12 @@ public class Sect extends EnvironmentObject {
 	public static Sect fromJSON(Environment e, JSONObject json, Point position) {
 		UUID id = UUID.fromString(json.optString("id"));
 		Sect s = new Sect(deserializeBehavior(json), id);
-		if(position == null)	position = new Point();
+		if(position == null){
+			Screen screen = GameComponents.get(Screen.class);
+			int x = (int) (Math.random() * screen.getWidth());
+			int y = (int) (Math.random() * screen.getHeight());
+			position = new Point(x,y);
+		}
 		Stats stats = new Stats(position, json.optLong("energy"));
 		return (Sect) e.add(s, stats);
 	}

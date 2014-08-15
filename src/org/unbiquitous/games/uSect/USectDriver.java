@@ -1,11 +1,14 @@
 package org.unbiquitous.games.uSect;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.objects.Player;
+import org.unbiquitous.games.uSect.objects.Sect;
+import org.unbiquitous.json.JSONObject;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uos.core.InitialProperties;
 import org.unbiquitous.uos.core.UOSLogging;
@@ -54,12 +57,20 @@ public class USectDriver implements UosDriver {
 
 	public void call(Call call, Response response, CallContext ctx) {
 		UUID id = UUID.fromString(call.getParameterString("id"));
+		LOGGER.info("Received call for Player "+id);
 		for(Player p : e.players()){
 			if(id.equals(p.id())){
 				p.call();
 				return;
 			}
 		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public void migrate(Call call, Response response, CallContext ctx) {
+		JSONObject json = new JSONObject((Map)call.getParameter("sect"));
+		Sect s = Sect.fromJSON(e, json);
+		LOGGER.info("Received Sect "+s);
 	}
 
 }

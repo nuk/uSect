@@ -36,8 +36,10 @@ public class Player extends EnvironmentObject{
 	private int maxInfluenceRadius ;
 	private int influenceGrowthSpeed;
 	
+	private GameSettings settings;
 	private Gateway gateway;
 	private Set<UpDevice> connectedDevices = new HashSet<UpDevice>();
+	private Set<Sect> toMigrate = new HashSet<Sect>();
 	
 	public Player() {
 		this(UUID.randomUUID());
@@ -48,7 +50,7 @@ public class Player extends EnvironmentObject{
 		AssetManager assets = GameComponents.get(AssetManager.class);
 		square = assets.newRectangle(new Point(0,0), PLAYER_PAINT, 40, 40);
 		inlfuence = assets.newCircle(new Point(0,0), ATTACK_PAINT, 40);
-		GameSettings settings = GameComponents.get(GameSettings.class);
+		settings = GameComponents.get(GameSettings.class);
 		maxInfluenceRadius = settings.getInt("usect.player.influence.radius",300);
 		influenceGrowthSpeed = settings.getInt("usect.player.influence.speed",5);
 		gateway = GameComponents.get(Gateway.class);
@@ -72,23 +74,41 @@ public class Player extends EnvironmentObject{
 	@Override
 	public  void update() {
 		currentAction.update();
+		if(!toMigrate.isEmpty()){
+			for(Sect s : toMigrate){
+				if(!connectedDevices.isEmpty()){
+					UpDevice target = connectedDevices.iterator().next();
+					try {
+						env.markRemoval(s);
+						Call c = new Call("usect.driver","migrate")
+										.addParameter("sect", s.toJSON());
+						gateway.callService(target, c);
+					} catch (ServiceCallException e) {
+						LOGGER.log(Level.WARNING, "Not possible to migrate sect "+s+" to device "+target, e);
+					}
+				}
+			}
+			toMigrate.clear();
+		}
 	}
 
 	public void call(){
 		currentAction = new CallAction();
 		Call call = new Call("usect.driver","call")
-		.addParameter("id", id().toString());
-		for(UpDevice d : connectedDevices){
-			try {
-				gateway.callService(d, call);
-			} catch (ServiceCallException e) {
-				LOGGER.log(Level.SEVERE, "Could not send call.", e);
+								.addParameter("id", id().toString());
+		if(settings.containsKey("usect.player.id")){
+			for(UpDevice d : connectedDevices){
+				try {
+					gateway.callService(d, call);
+				} catch (ServiceCallException e) {
+					LOGGER.log(Level.SEVERE, "Could not send call.", e);
+				}
 			}
 		}
 	}
 	
 	public void onCapture(Sect s){
-		//TODO:
+		toMigrate.add(s);
 	}
 	
 	public int influenceRadius(){
@@ -129,5 +149,9 @@ public class Player extends EnvironmentObject{
 
 	public void connect(UpDevice device) {
 		connectedDevices.add(device);
+	}
+	
+	public Set<UpDevice> connectedDevices(){
+		return connectedDevices;
 	}
 }

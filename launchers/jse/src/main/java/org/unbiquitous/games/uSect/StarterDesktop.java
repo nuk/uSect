@@ -12,6 +12,7 @@ import org.hyperic.sigar.CpuInfo;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 import org.unbiquitous.games.uSect.environment.Random;
+import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.engine.io.KeyboardManager;
 import org.unbiquitous.uImpala.engine.io.MouseManager;
@@ -30,6 +31,8 @@ public class StarterDesktop extends StartScene {
 				.getDefaultScreenDevice();
 		final int width = gd.getDisplayMode().getWidth();
 		final int height = gd.getDisplayMode().getHeight() - 60;
+		
+		GameComponents.get(null);
 		
 		Random.setSeed(seed());
 		Game.run(new GameSettings() {

@@ -1,6 +1,7 @@
 package org.unbiquitous.games.uSect.environment;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -50,6 +51,16 @@ public class PlayerManager implements EnvironemtObjectManager {
 	}
 
 	@Override
+	public void remove(EnvironmentObject o) {
+		players.remove(o);
+	}
+
+	@Override
+	public void removeAll(Collection<EnvironmentObject> c) {
+		players.removeAll(c);
+	}
+	
+	@Override
 	public void update() {
 		updateDevicePlayers();
 		env.frozen().clear();
@@ -88,7 +99,9 @@ public class PlayerManager implements EnvironemtObjectManager {
 		try {
 			UUID id = callPlayerID(d);
 			if(id != null){
-				return env.addPlayer(new Player(id));
+				Player player = new Player(id);
+				player.connect(d);
+				return env.addPlayer(player);
 			}
 		} catch (ServiceCallException e) {
 			LOGGER.log(Level.WARNING, "Not possible to handle call", e);
@@ -161,4 +174,5 @@ public class PlayerManager implements EnvironemtObjectManager {
 	public List<Player> players() {
 		return new ArrayList<Player>(players);
 	}
+
 }

@@ -2,6 +2,7 @@ package org.unbiquitous.games.uSect.environment;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -44,6 +45,7 @@ public class Environment extends GameObject {
 	private MatingManager mate;
 	private Set<Sect> busyThisTurn = new HashSet<Sect>();
 	private Set<Sect> frozenThisTurn = new HashSet<Sect>();
+	private Set<EnvironmentObject> toRemove = new HashSet<EnvironmentObject>();
 
 	private int initialEnergy, nutrientEnergy, corpseEnergy;
 	private long turn;
@@ -102,6 +104,10 @@ public class Environment extends GameObject {
 		}
 		attack.update();
 		mate.update();
+		for (EnvironemtObjectManager mng : managers) {
+			mng.removeAll(toRemove);
+		}
+		toRemove.clear();
 		
 		turn++;
 	}
@@ -319,10 +325,16 @@ public class Environment extends GameObject {
 			return this;
 		}
 	}
+
+	public void markRemoval(EnvironmentObject o) {
+		toRemove.add(o);
+	}
 }
 
 interface EnvironemtObjectManager {
 	public EnvironmentObject add(EnvironmentObject o);
+	public void remove(EnvironmentObject o);
+	public void removeAll(Collection<EnvironmentObject> c);
 
 	public void update();
 }
