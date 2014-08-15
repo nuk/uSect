@@ -3,6 +3,10 @@ There's life living inside every electronic device.
 uSect gives you the ability of seeing the unseen. An ecosystem of "bugs" that eating lost bytes of your memory and each other. While also evolving and procreating.
 
 
+<img src="https://raw.githubusercontent.com/wiki/nuk/uSect/imgs/usect_pc.png" height="400px"/>
+<img src="https://raw.githubusercontent.com/wiki/nuk/uSect/imgs/usect_smartphone.png" height="400px"/>
+
+
 Structure
 =============
 
