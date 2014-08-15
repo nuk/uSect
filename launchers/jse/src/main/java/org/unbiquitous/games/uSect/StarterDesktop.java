@@ -6,7 +6,6 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.UUID;
 import java.util.logging.Level;
 
 import org.hyperic.sigar.CpuInfo;
@@ -44,7 +43,7 @@ public class StarterDesktop extends StartScene {
 				put("usect.width", width);
 				put("usect.height", height);
 				put("usect.devicestats", new DeviceStatsJSE());
-				put("usect.player.id",UUID.randomUUID().toString());
+//				put("usect.player.id",UUID.randomUUID().toString());
 			}
 		});
 	}

@@ -47,7 +47,7 @@ class SectManager implements EnvironemtObjectManager{
 		for(Sect dead: sectsThatDiedThisTurn){
 			env.addCorpse(dead.position());
 			for(Sect s : sects()){
-				s.leftSight(new Something(dead.id, env, Type.SECT, s.behavior().feeding()));
+				s.leftSight(new Something(dead.id(), env, Type.SECT, s.behavior().feeding()));
 			}
 		}
 		sectsThatDiedThisTurn.clear(); //TODO: remove from other places
@@ -58,7 +58,7 @@ class SectManager implements EnvironemtObjectManager{
 		checkForNewSects(s);
 		s.update();
 		env.changeStats(s, Stats.change().energy(-1));
-		if(env.stats(s.id).energy <= 0){
+		if(env.stats(s.id()).energy <= 0){
 			sectsThatDiedThisTurn.add(s);
 		}
 	}
@@ -66,7 +66,7 @@ class SectManager implements EnvironemtObjectManager{
 	private void checkForNewSects(Sect s) {
 		for(Sect newSect : sectsAddedThisTurn){
 			if(!s.equals(newSect)){
-				s.enteredSight(new Something(newSect.id, env, Something.Type.SECT, newSect.behavior().feeding()));
+				s.enteredSight(new Something(newSect.id(), env, Something.Type.SECT, newSect.behavior().feeding()));
 			}
 		}
 	}

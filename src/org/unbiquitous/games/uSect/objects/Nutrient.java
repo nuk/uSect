@@ -46,13 +46,13 @@ public class Nutrient extends EnvironmentObject{
 
 	private void notifyAbsortionToAll() {
 		for(Sect s: targetOf){
-			s.leftSight(new Something(id, env, type, Feeding.NONE));
+			s.leftSight(new Something(id(), env, type, Feeding.NONE));
 		}
 	}
 
 	public void insightOf(Sect s) {
 		if(! targetOf.contains(s)){
-			s.enteredSight(new Something(id, env, type, Feeding.NONE)); 
+			s.enteredSight(new Something(id(), env, type, Feeding.NONE)); 
 			targetOf.add(s);
 			absortionTable.put(s, 0);
 		};

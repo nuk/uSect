@@ -6,9 +6,17 @@ import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.util.math.Point;
 
 public abstract class EnvironmentObject extends GameObject {
-	protected UUID id = UUID.randomUUID();
+	private UUID id;
 	protected Environment env;
 
+	public EnvironmentObject() {
+		this(UUID.randomUUID());
+	}
+	
+	public EnvironmentObject(UUID id) {
+		this.id = id;
+	}
+	
 	protected void update() {
 	}
 

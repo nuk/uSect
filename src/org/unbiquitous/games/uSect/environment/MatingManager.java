@@ -32,9 +32,9 @@ public class MatingManager {
 	public void update() {
 		for(Sect male: matingDuringThisTurn){
 			for(Sect female : matingDuringThisTurn){
-				if (male.id != female.id 
+				if (male.id() != female.id() 
 						&& male.position().distanceTo(female.position()) <= male.influenceRadius()
-						&& env.stats(male.id).busyCoolDown <= 0){
+						&& env.stats(male.id()).busyCoolDown <= 0){
 					env.changeStats(male, Environment.Stats.change().busyCoolDown(matingCooldown));
 					env.markAsBusy(male);
 				}
@@ -45,10 +45,10 @@ public class MatingManager {
 		Set<Sect> parents = new HashSet<Sect>();
 		for(Sect coller: env.busy()){
 //			dataMap.get(coller.id).busyCoolDown --;
-			if(env.stats(coller.id).busyCoolDown > 0){
+			if(env.stats(coller.id()).busyCoolDown > 0){
 				env.changeStats(coller, Environment.Stats.change().busyCoolDown(-1));
 			}
-			if(env.stats(coller.id).busyCoolDown <= 0){
+			if(env.stats(coller.id()).busyCoolDown <= 0){
 				env.changeStats(coller, Environment.Stats.change().energy(-matingEnergy));
 				parents.add(coller);
 			}

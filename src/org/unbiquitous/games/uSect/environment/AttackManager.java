@@ -41,9 +41,9 @@ public class AttackManager {
 	}
 
 	private void checkAttack(Sect attacker, Sect deffendant) {
-		if (attacker.id != deffendant.id 
+		if (attacker.id() != deffendant.id() 
 				&& attacker.position().distanceTo(deffendant.position()) <= attacker.influenceRadius()
-				&& env.stats(attacker.id).attackCoolDown <= 0){
+				&& env.stats(attacker.id()).attackCoolDown <= 0){
 			busyAttackers.add(attacker);
 			env.changeStats(deffendant, Environment.Stats.change().energy(-attackEnergy));
 			env.changeStats(attacker, Environment.Stats.change().attackCoolDown(attackCooldown));
@@ -53,10 +53,10 @@ public class AttackManager {
 	private void updateAttackCoolDown() {
 		Set<Sect> remove = new HashSet<Sect>();
 		for(Sect coller: busyAttackers){
-			if(env.stats(coller.id).attackCoolDown > 0){
+			if(env.stats(coller.id()).attackCoolDown > 0){
 				env.changeStats(coller, Environment.Stats.change().attackCoolDown(-1));
 			}
-			if(env.stats(coller.id).attackCoolDown <= 0){
+			if(env.stats(coller.id()).attackCoolDown <= 0){
 				remove.add(coller);
 			}
 		}

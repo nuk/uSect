@@ -76,12 +76,14 @@ public class SetUpGameTest {
 	
 	@Test public void setPlayerIfInformed(){
 //		settings.put("usect.player.name","John");
-		settings.put("usect.player.id",UUID.randomUUID().toString());
+		UUID id = UUID.randomUUID();
+		settings.put("usect.player.id",id.toString());
 		GameComponents.put(MouseManager.class, new MouseManager());
 		StartScene scene = new StartScene();
 		scene.update();
 		Environment e = (Environment) scene.getChildren().get(0);
 		assertThat(e.players()).hasSize(1);
+		assertThat(e.players().get(0).id()).isEqualTo(id);
 	}
 	
 	

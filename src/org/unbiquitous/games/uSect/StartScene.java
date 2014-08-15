@@ -1,5 +1,7 @@
 package org.unbiquitous.games.uSect;
 
+import java.util.UUID;
+
 import org.unbiquitous.driver.execution.executionUnity.ExecutionUnity;
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.Environment.Stats;
@@ -23,6 +25,7 @@ import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 public class StartScene extends GameObjectTreeScene {
 
 	private Screen screen;
+	private Environment env;
 
 	public StartScene() {
 		DeltaTime deltaTime = GameComponents.get(DeltaTime.class);
@@ -44,7 +47,7 @@ public class StartScene extends GameObjectTreeScene {
 		setUpEnvironment(settings);
 		
 		Gateway gateway = GameComponents.get(Gateway.class);
-		gateway.addDriver(new USectDriver(settings));
+		gateway.addDriver(new USectDriver(settings,env));
 		
 //		populateEnvironment(e);
 //		
@@ -54,10 +57,10 @@ public class StartScene extends GameObjectTreeScene {
 	}
 
 	private void setUpEnvironment(GameSettings settings) {
-		Environment e = new Environment((DeviceStats) settings.get("usect.devicestats"));
-		populateSects(settings, e);
-		populatePlayer(settings, e);
-		add(e);
+		env = new Environment((DeviceStats) settings.get("usect.devicestats"));
+		populateSects(settings, env);
+		populatePlayer(settings, env);
+		add(env);
 	}
 
 	private void populateSects(GameSettings settings, Environment e) {
@@ -81,7 +84,8 @@ public class StartScene extends GameObjectTreeScene {
 
 	private void populatePlayer(GameSettings settings, Environment e) {
 		if(settings.containsKey("usect.player.id")){
-			e.addPlayer(new Player());
+			UUID id = UUID.fromString(settings.getString("usect.player.id"));
+			e.addPlayer(new Player(id));
 		}
 	}
 	

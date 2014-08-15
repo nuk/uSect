@@ -1,6 +1,10 @@
 package org.unbiquitous.games.uSect.objects;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.environment.EnvironmentObject;
@@ -12,9 +16,14 @@ import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.util.Color;
 import org.unbiquitous.uImpala.util.math.Point;
+import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
+import org.unbiquitous.uos.core.adaptabitilyEngine.ServiceCallException;
+import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
 
 public class Player extends EnvironmentObject{
-	
+	private static final Logger LOGGER = UOSLogging.getLogger();
 	private static final Color PLAYER_PAINT = new Color(142, 68, 173);
 	private static final Color ATTACK_PAINT = new Color(192, 57, 43,128);
 
@@ -27,18 +36,22 @@ public class Player extends EnvironmentObject{
 	private int maxInfluenceRadius ;
 	private int influenceGrowthSpeed;
 	
+	private Gateway gateway;
+	private Set<UpDevice> connectedDevices = new HashSet<UpDevice>();
+	
 	public Player() {
+		this(UUID.randomUUID());
+	}
+	
+	public Player(UUID id){
+		super(id);
 		AssetManager assets = GameComponents.get(AssetManager.class);
 		square = assets.newRectangle(new Point(0,0), PLAYER_PAINT, 40, 40);
 		inlfuence = assets.newCircle(new Point(0,0), ATTACK_PAINT, 40);
 		GameSettings settings = GameComponents.get(GameSettings.class);
 		maxInfluenceRadius = settings.getInt("usect.player.influence.radius",300);
 		influenceGrowthSpeed = settings.getInt("usect.player.influence.speed",5);
-	}
-	
-	public Player(UUID id){
-		this();
-		this.id = id;
+		gateway = GameComponents.get(Gateway.class);
 	}
 	
 	public void setEnv(Environment env) {
@@ -62,7 +75,16 @@ public class Player extends EnvironmentObject{
 	}
 
 	public void call(){
-		currentAction = new AttackAction();
+		currentAction = new CallAction();
+		Call call = new Call("usect.driver","call")
+		.addParameter("id", id().toString());
+		for(UpDevice d : connectedDevices){
+			try {
+				gateway.callService(d, call);
+			} catch (ServiceCallException e) {
+				LOGGER.log(Level.SEVERE, "Could not send call.", e);
+			}
+		}
 	}
 	
 	public void onCapture(Sect s){
@@ -82,8 +104,8 @@ public class Player extends EnvironmentObject{
 		void update(){}
 	}
 	
-	class AttackAction extends BaseAction{
-		public AttackAction() {
+	class CallAction extends BaseAction{
+		public CallAction() {
 			growingInfluence = true;
 		}
 		
@@ -95,13 +117,17 @@ public class Player extends EnvironmentObject{
 				growingInfluence = false;
 				influenceRadius -= influenceGrowthSpeed;
 			}else{
-				currentAction  =new BaseAction();
+				currentAction  = new BaseAction();
 			}
 		}
 	}
 	
 	@Override
 	public String toString() {
-		return String.format("Player[%s@%s]", id.getLeastSignificantBits(),position());
+		return String.format("Player[%s@%s]", id().getLeastSignificantBits(),position());
+	}
+
+	public void connect(UpDevice device) {
+		connectedDevices.add(device);
 	}
 }

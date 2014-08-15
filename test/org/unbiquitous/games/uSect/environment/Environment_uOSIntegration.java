@@ -96,7 +96,7 @@ public class Environment_uOSIntegration {
 	public void dontAddAPlayerIfThereIsNoResponseFroPlayerId() throws Exception {
 		UpDevice device = new UpDevice("Dummy");
 		when(gateway.listDevices()).thenReturn(Arrays.asList(device));
-		whenCallFor(gateway, device, "playerInfo").thenReturn(new Response());
+		whenCallFor(gateway, device, "connect").thenReturn(new Response());
 
 		executeThisManyTurns(e, 10);
 		assertThat(e.players()).hasSize(0);
@@ -109,7 +109,7 @@ public class Environment_uOSIntegration {
 			UUID id = new UUID(0, i++);
 			Response r = new Response()
 					.addParameter("player.id", id.toString());
-			whenCallFor(gateway, d, "playerInfo").thenReturn(r);
+			whenCallFor(gateway, d, "connect").thenReturn(r);
 		}
 	}
 }

@@ -101,7 +101,7 @@ public class Environment_EventsControlTest {
 		},new Point(10,10));
 		e.addSect(new Sect(new Carnivore()){
 			public void leftSight(Something n) {
-				if(n.id() == h.id){
+				if(n.id() == h.id()){
 					count[1]++;
 				}
 			}

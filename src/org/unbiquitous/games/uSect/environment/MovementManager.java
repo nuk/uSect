@@ -20,7 +20,7 @@ class MovementManager {
 	}
 
 	public void moveTo(Sect sect, Point dir) {
-		env.moveTo(sect.id, determineFinalPosition(sect, adjustDirection(dir)));
+		env.moveTo(sect.id(), determineFinalPosition(sect, adjustDirection(dir)));
 		env.changeStats(sect, Stats.change().energy(-1));
 	}
 

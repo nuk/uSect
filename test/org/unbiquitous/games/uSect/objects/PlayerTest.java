@@ -1,20 +1,33 @@
 package org.unbiquitous.games.uSect.objects;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.unbiquitous.games.uSect.TestUtils.executeThisManyTurns;
 import static org.unbiquitous.games.uSect.TestUtils.movingSect;
 import static org.unbiquitous.games.uSect.TestUtils.setUpEnvironment;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.unbiquitous.games.uSect.environment.Environment;
+import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.util.math.Point;
+import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
+import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
 
 public class PlayerTest {
 	private Environment e;
+	private Gateway gateway;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws Exception{
+		gateway = mock(Gateway.class);
+//		when(gateway.callService(any(UpDevice.class), any(Call.class)))
+//			.thenReturn(new Response());
+		GameComponents.put(Gateway.class, gateway);
 		e = setUpEnvironment();
 	}
 
@@ -94,9 +107,24 @@ public class PlayerTest {
 		assertThat(s.position()).isEqualTo(new Point(600, 1100+2));
 	}
 	
+	@Test
+	public void sendCallToConnectedDevices() throws Exception{
+		Player p = e.addPlayer(new Player(), new Point(600, 0));
+		UpDevice device = new UpDevice("avocado");
+		p.connect(device);
+
+		p.call();
+		
+		ArgumentCaptor<Call> captor = ArgumentCaptor.forClass(Call.class);
+		verify(gateway).callService(eq(device), captor.capture());
+		assertThat(captor.getValue().getDriver()).isEqualTo("usect.driver");
+		assertThat(captor.getValue().getService()).isEqualTo("call");
+		assertThat(captor.getValue().getParameterString("id")).isEqualTo(p.id().toString());
+	}
+	
 	//TODO: this behavior must be related with sending it away
 	@Test
-	public void whenASectComesToCloseToThePlayerItsCaptured() {
+	public void whenASectComesTooCloseToThePlayerItsCaptured() {
 		final Sect[] captured = new Sect[]{null};
 		Player p = e.addPlayer(new Player(){
 			public void onCapture(Sect s){

@@ -51,6 +51,11 @@ public class Sect extends EnvironmentObject {
 	}
 	
 	public Sect(Behavior behavior) {
+		this(behavior, UUID.randomUUID());
+	}
+	
+	public Sect(Behavior behavior, UUID id) {
+		super(id);
 //		Font font = new Font("Verdana", Font.BOLD, 12);
 		AssetManager assets = GameComponents.get(AssetManager.class);
 		if(assets != null){
@@ -110,14 +115,14 @@ public class Sect extends EnvironmentObject {
 	}
 	
 	public void render(GameRenderers renderers) {
-		if(env.stats(id).attackCoolDown > 0){
-			influence.radius(influenceRadius*env.stats(id).attackCoolDown/5);
+		if(env.stats(id()).attackCoolDown > 0){
+			influence.radius(influenceRadius*env.stats(id()).attackCoolDown/5);
 			influence.center(position());
 			influence.render();
 		}
 		
-		if(env.stats(id).busyCoolDown > 0){
-			mating.radius(influenceRadius*env.stats(id).busyCoolDown/50+radius);
+		if(env.stats(id()).busyCoolDown > 0){
+			mating.radius(influenceRadius*env.stats(id()).busyCoolDown/50+radius);
 			mating.center(position());
 			mating.render();
 		}
@@ -146,8 +151,8 @@ public class Sect extends EnvironmentObject {
 	}
 	
 	public static Sect fromJSON(Environment e, JSONObject json, Point position) {
-		Sect s = new Sect(deserializeBehavior(json));
-		s.id = UUID.fromString(json.optString("id"));
+		UUID id = UUID.fromString(json.optString("id"));
+		Sect s = new Sect(deserializeBehavior(json), id);
 		if(position == null)	position = new Point();
 		Stats stats = new Stats(position, json.optLong("energy"));
 		return (Sect) e.add(s, stats);

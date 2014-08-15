@@ -43,6 +43,7 @@ public class LaunchActivity extends GameActivity {
 				put("output_managers", Arrays.asList(ScreenManager.class));
 				put("usect.devicestats", new DeviceStatsDalvik());
 				put("usect.player.id", UUID.randomUUID().toString());
+				put("ubiquitos.eth.tcp.ignoreFilter", "192.168.56.*");
 			}
 		});
 	}
