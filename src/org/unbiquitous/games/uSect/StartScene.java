@@ -50,12 +50,6 @@ public class StartScene extends GameObjectTreeScene {
 		
 		Gateway gateway = GameComponents.get(Gateway.class);
 		gateway.addDriver(new USectDriver(settings,env));
-		
-//		populateEnvironment(e);
-//		
-//		e.addPlayer(new Player(), new Point(screen.getWidth()/2,screen.getHeight()));
-//		e.addPlayer(new Player(), new Point(screen.getWidth()/2,0));
-		
 	}
 
 	private void setUpEnvironment(GameSettings settings) {
@@ -65,45 +59,64 @@ public class StartScene extends GameObjectTreeScene {
 		add(env);
 	}
 
-	@SuppressWarnings("unchecked")
 	private void populateSects(GameSettings settings, Environment e) {
+		populateHerbivores(settings, e);
+		populateCarnivores(settings, e);
+		populateArtificials(settings, e);
+	}
+
+	private void populateHerbivores(GameSettings settings, Environment e) {
 		int numberOfHerbivores = (int) (Random.v()*10)+5;
 		for(int i = 0 ; i < numberOfHerbivores; i++){
-			Point position = new Point(
-					(int)(Random.v()*screen.getWidth()),
-					(int)(Random.v()*screen.getHeight())
-					);
-			e.addSect(new Sect(new Herbivore()), position);
+			Sect sect = new Sect(new Herbivore());
+			e.addSect(sect, randScreenPosition());
 		}
+	}
+	
+	private void populateCarnivores(GameSettings settings, Environment e) {
 		int numberOfCarnivores = 1;
 		for(int i = 0 ; i < numberOfCarnivores; i++){
-			Point position = new Point(
-					(int)(Random.v()*screen.getWidth()),
-					(int)(Random.v()*screen.getHeight())
-					);
-			e.add(new Sect(new Carnivore()), new Stats(position,settings.getInt("usect.initial.energy",30*60*10)*4));
+			Sect sect = new Sect(new Carnivore());
+			int startEnergy = settings.getInt("usect.initial.energy",30*60*10)*4;
+			e.add(sect, new Stats(randScreenPosition(),startEnergy));
 		}
+	}
+
+	private void populateArtificials(GameSettings settings, Environment e) {
 		if(settings.containsKey("usect.artificials")){
-			Object value = settings.get("usect.artificials");
-			List<String> scripts;
-			if(value instanceof List){
-				scripts = (List<String>) value;
-			}else{
-				scripts = Arrays.asList(value.toString());
-			}
+			List<String> scripts = defineArtificialScripts(settings);
 			for(String script: scripts){
-				Point position = new Point(
-						(int)(Random.v()*screen.getWidth()),
-						(int)(Random.v()*screen.getHeight())
-						);
 				ExecutionUnity behavior = new ExecutionUnity(script);
-				Feeding type = Feeding.CARNIVORE;
-				if(Random.v() > 0.5){
-					type = Feeding.HERBIVORE;
-				}
-				e.add(new Sect(new Artificial(behavior, type)), new Stats(position,settings.getInt("usect.initial.energy",30*60*10)*4));
+				Feeding type = defineArtificialFeeding();
+				Sect sect = new Sect(new Artificial(behavior, type));
+				e.addSect(sect, randScreenPosition());
 			}
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<String> defineArtificialScripts(GameSettings settings) {
+		Object value = settings.get("usect.artificials");
+		if(value instanceof List){
+			return (List<String>) value;
+		}
+		return Arrays.asList(value.toString());
+	}
+
+	private Feeding defineArtificialFeeding() {
+		Feeding type = Feeding.CARNIVORE;
+		if(Random.v() > 0.5){
+			type = Feeding.HERBIVORE;
+		}
+		return type;
+	}
+
+	private Point randScreenPosition() {
+		Point position = new Point(
+				(int)(Random.v()*screen.getWidth()),
+				(int)(Random.v()*screen.getHeight())
+				);
+		return position;
 	}
 
 	private void populatePlayer(GameSettings settings, Environment e) {
