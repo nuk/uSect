@@ -1,8 +1,17 @@
-- Players must be able to interact (interact, steal objects, deliver objects)
-- Different environments must interact among them
-- Environment affects Sect speed
-- Sects should have more characteristics
-- Sects have parts
-- Reproduction must mix characteristics (with mutation)
-- Better handle configuration of java.library.path for lwjgl and sigar
-	Ex: java -Djava.library.path=target/natives/:include/:lib/ -jar target/uSect-1.0-DEV-jar-with-dependencies.jar s
+NEEDED:
+	- Move players based on a directional controller
+	- Connect environments
+
+IDEAS :
+	- Players must be able to interact (interact, steal objects, deliver objects)
+	- Different environments must interact among them
+	- Environment affects Sect speed
+	- Sects should have more characteristics
+	- Sects have parts
+	- Reproduction must mix characteristics (with mutation)
+	- Better handle configuration of java.library.path for lwjgl and sigar
+		Ex: java -Djava.library.path=target/natives/:include/:lib/ -jar target/uSect-1.0-DEV-jar-with-dependencies.jar s
+	- Better handle disconnections:
+		- uos-core : remove caches when a device is no longer at sight.
+		- uos-socket : should not break when socket times out or wifi disconnects
+			- For disconnection, maybe we need to change our strategy fo,r network managers.

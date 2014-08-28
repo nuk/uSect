@@ -6,11 +6,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.UUID;
 
+import org.fest.assertions.core.Condition;
 import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
+import org.unbiquitous.games.uSect.objects.Sect;
+import org.unbiquitous.games.uSect.objects.behavior.Artificial;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.core.GameComponents;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
@@ -84,6 +88,38 @@ public class SetUpGameTest {
 		Environment e = (Environment) scene.getChildren().get(0);
 		assertThat(e.players()).hasSize(1);
 		assertThat(e.players().get(0).id()).isEqualTo(id);
+	}
+	
+	@Test public void loadsArtificialSects(){
+		StringBuilder script = new StringBuilder()
+		.append("function update()\n")
+		.append("end\n")
+		;
+		settings.put("usect.artificials",script.toString());
+		StartScene scene = new StartScene();
+		scene.update();
+		Environment e = (Environment) scene.getChildren().get(0);
+		assertThat(e.sects()).haveExactly(1, new Condition<Sect>("an Artificial") {
+			public boolean matches(Sect value) {
+				return value.behavior() instanceof Artificial;
+			}
+		});
+	}
+	
+	@Test public void loadsMultipleArtificialSects(){
+		StringBuilder script = new StringBuilder()
+		.append("function update()\n")
+		.append("end\n")
+		;
+		settings.put("usect.artificials",Arrays.asList(script.toString(),script.toString()));
+		StartScene scene = new StartScene();
+		scene.update();
+		Environment e = (Environment) scene.getChildren().get(0);
+		assertThat(e.sects()).haveExactly(2, new Condition<Sect>("an Artificial") {
+			public boolean matches(Sect value) {
+				return value.behavior() instanceof Artificial;
+			}
+		});
 	}
 	
 	

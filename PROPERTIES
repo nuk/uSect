@@ -25,3 +25,9 @@ usect.speed.value=1
 #Player max influence radius (and speed) on the environment
 usect.player.influence.radius=300
 usect.player.influence.speed=5
+
+#String or list of strings with the lua code to be loaded as Artificials
+usect.artificials=\
+function update()\
+	move(1,0)\
+end 

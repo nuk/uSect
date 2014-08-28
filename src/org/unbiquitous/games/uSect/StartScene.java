@@ -1,5 +1,7 @@
 package org.unbiquitous.games.uSect;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.unbiquitous.driver.execution.executionUnity.ExecutionUnity;
@@ -63,6 +65,7 @@ public class StartScene extends GameObjectTreeScene {
 		add(env);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void populateSects(GameSettings settings, Environment e) {
 		int numberOfHerbivores = (int) (Random.v()*10)+5;
 		for(int i = 0 ; i < numberOfHerbivores; i++){
@@ -72,14 +75,35 @@ public class StartScene extends GameObjectTreeScene {
 					);
 			e.addSect(new Sect(new Herbivore()), position);
 		}
-//		int numberOfCarnivores = (int) (Random.v()*2)+1;
-//		for(int i = 0 ; i < numberOfCarnivores; i++){
+		int numberOfCarnivores = 1;
+		for(int i = 0 ; i < numberOfCarnivores; i++){
 			Point position = new Point(
 					(int)(Random.v()*screen.getWidth()),
 					(int)(Random.v()*screen.getHeight())
 					);
 			e.add(new Sect(new Carnivore()), new Stats(position,settings.getInt("usect.initial.energy",30*60*10)*4));
-//		}
+		}
+		if(settings.containsKey("usect.artificials")){
+			Object value = settings.get("usect.artificials");
+			List<String> scripts;
+			if(value instanceof List){
+				scripts = (List<String>) value;
+			}else{
+				scripts = Arrays.asList(value.toString());
+			}
+			for(String script: scripts){
+				Point position = new Point(
+						(int)(Random.v()*screen.getWidth()),
+						(int)(Random.v()*screen.getHeight())
+						);
+				ExecutionUnity behavior = new ExecutionUnity(script);
+				Feeding type = Feeding.CARNIVORE;
+				if(Random.v() > 0.5){
+					type = Feeding.HERBIVORE;
+				}
+				e.add(new Sect(new Artificial(behavior, type)), new Stats(position,settings.getInt("usect.initial.energy",30*60*10)*4));
+			}
+		}
 	}
 
 	private void populatePlayer(GameSettings settings, Environment e) {
