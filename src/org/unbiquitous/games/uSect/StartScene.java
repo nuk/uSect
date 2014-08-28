@@ -126,78 +126,11 @@ public class StartScene extends GameObjectTreeScene {
 		}
 	}
 	
-	private void populateEnvironment(Environment e) {
-		populateHerbivores(e);
-		populateCarnivores(e);
-		StringBuilder crazyScript = new StringBuilder()
-		.append("targetPosition = nil\n")
-		.append("knownPeople = {}\n")
-		.append("attackMode = false\n")
-		.append("function update()\n")
-		.append("	changeTarget()\n")
-		.append("	if targetPosition == nil then\n")
-		.append("		targetPosition = position\n")
-		.append("	end\n")
-		.append("	if(	targetPosition['x'] == position['x'] and \n")
-		.append("		targetPosition['y'] == position['y']  )then\n")
-		.append("		targetPosition['x'] = position['x'] + math.random(-20,20)\n")
-		.append("		targetPosition['y'] = position['y'] + math.random(-20,20)\n")
-		.append("		attackMode = false\n")
-		.append("	end\n")			
-		.append("	x = targetPosition['x'] - position['x']\n")
-		.append("	y = targetPosition['y'] - position['y']\n")
-		.append("	move(x,y)\n")
-		.append("	if attackMode then\n")
-		.append("		attack()\n")
-		.append("	end \n")
-		.append("end\n")
-		.append("function onEntered(data)\n")
-		.append("	table.insert(knownPeople, data['id'])\n")
-		.append("end\n")
-		.append("function onLeft(data)\n")
-		.append("	for index, id in pairs(knownPeople) do\n")
-		.append("		if id == data['id'] then\n")
-		.append("			table.remove(knownPeople, index)\n")
-		.append("		end\n")
-		.append("	end\n")
-		.append("end\n")
-		.append("function distance(id)\n")
-		.append("	p = positionOf(id)\n")
-		.append("	return math.abs(position['x']-p['x'])+math.abs(position['y']-p['y'])")
-		.append("end\n")
-		.append("function changeTarget()\n")
-		.append("	for index, id in pairs(knownPeople) do\n")
-		.append("		if distance(id) < 100 then\n")
-		.append("			targetPosition = positionOf(id)\n")
-		.append("			attackMode = true\n")
-		.append("		end\n")
-		.append("	end\n")
-		.append("end\n");
-		Artificial crazyBehavior = new Artificial(new ExecutionUnity(crazyScript.toString()), Feeding.CARNIVORE);
-		e.addSect(new Sect(crazyBehavior), new Point(screen.getWidth()/2,screen.getHeight()/2));
-	}
-
-	private void populateHerbivores(Environment e) {
-		e.add(new Sect(new Herbivore()), new Stats(new Point(),100*1000));
-		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth(),0));
-		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth()/2,0));
-		e.addSect(new Sect(new Herbivore()),new Point(0,screen.getHeight()));
-		e.addSect(new Sect(new Herbivore()),new Point(0,screen.getHeight()/2));
-		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth(),screen.getHeight()));
-		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth()/2,screen.getHeight()));
-		e.addSect(new Sect(new Herbivore()),new Point(screen.getWidth(),screen.getHeight()/2));
-	}
-	
-	private void populateCarnivores(Environment e) {
-		e.add(new Sect(new Carnivore()),new Stats(new Point(screen.getWidth()/4,screen.getHeight()/4),100*1000));
-		e.addSect(new Sect(new Carnivore()),new Point(3*screen.getWidth()/4,3*screen.getHeight()/4));
-	}
-	
 	@Override
 	public void update() {
-		super.update();
 		if (screen.isCloseRequested()) {
 			GameComponents.get(org.unbiquitous.uImpala.engine.core.Game.class).quit();
 		}
+		super.update();
 	}
 }
