@@ -2,7 +2,7 @@ package org.unbiquitous.games.uSect.environment;
 
 import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.games.uSect.objects.Sect;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.util.math.Point;
@@ -14,8 +14,8 @@ class MovementManager {
 	
 	public MovementManager(Environment env) {
 		this.env = env;
-		GameSettings settings = GameComponents.get(GameSettings.class);
-		screen = GameComponents.get(Screen.class);
+		GameSettings settings = GameSingletons.get(GameSettings.class);
+		screen = GameSingletons.get(Screen.class);
 		speed = settings.getInt("usect.speed.value",1);
 	}
 

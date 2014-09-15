@@ -11,7 +11,7 @@ import org.unbiquitous.games.uSect.environment.Environment.Stats;
 import org.unbiquitous.games.uSect.objects.Corpse;
 import org.unbiquitous.games.uSect.objects.Nutrient;
 import org.unbiquitous.games.uSect.objects.Sect;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 
 class NutrientManager implements EnvironemtObjectManager{
@@ -29,7 +29,7 @@ class NutrientManager implements EnvironemtObjectManager{
 		this.env = env;
 		this.deviceStats = deviceStats;
 		
-		GameSettings settings = GameComponents.get(GameSettings.class);
+		GameSettings settings = GameSingletons.get(GameSettings.class);
 		maxMemory = settings.getInt("sect.maxMemory",16*1024);
 		minMemory = settings.getInt("sect.minMemory",512);
 		maxChance = settings.getDouble("sect.nutrient.chance.max",0.05);

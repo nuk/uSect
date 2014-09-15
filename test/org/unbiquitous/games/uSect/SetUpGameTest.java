@@ -16,7 +16,7 @@ import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.behavior.Artificial;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.engine.io.MouseManager;
 import org.unbiquitous.uImpala.engine.io.Screen;
@@ -34,14 +34,14 @@ public class SetUpGameTest {
 		TestUtils.setUpEnvironment();
 		
 		timer = mock(DeltaTime.class);
-		GameComponents.put(DeltaTime.class, timer);
+		GameSingletons.put(DeltaTime.class, timer);
 		
 		screens = mock(ScreenManager.class);
 		screen = mock(Screen.class);
 		when(screens.create()).thenReturn(screen);
-		GameComponents.put(ScreenManager.class, screens);
+		GameSingletons.put(ScreenManager.class, screens);
 		
-		settings = GameComponents.get(GameSettings.class);
+		settings = GameSingletons.get(GameSettings.class);
 	}
 	
 	@Test public void deltaTimeIs30(){
@@ -52,8 +52,8 @@ public class SetUpGameTest {
 	@Test public void setUpOpensAScreen(){
 		new StartScene();
 		verify(screen).open();
-		assertThat(GameComponents.get(Screen.class)).isEqualTo(screen);
-		assertThat(GameComponents.get(AssetManager.class)).isNotNull();
+		assertThat(GameSingletons.get(Screen.class)).isEqualTo(screen);
+		assertThat(GameSingletons.get(AssetManager.class)).isNotNull();
 	}
 	
 	@Test public void setUpOpensAScreenWithSpecifiedWidthIfRequested(){
@@ -82,7 +82,7 @@ public class SetUpGameTest {
 //		settings.put("usect.player.name","John");
 		UUID id = UUID.randomUUID();
 		settings.put("usect.player.id",id.toString());
-		GameComponents.put(MouseManager.class, new MouseManager());
+		GameSingletons.put(MouseManager.class, new MouseManager());
 		StartScene scene = new StartScene();
 		scene.update();
 		Environment e = (Environment) scene.getChildren().get(0);
@@ -125,7 +125,7 @@ public class SetUpGameTest {
 	
 	@Test public void deploysASectDriverToManageInteractions(){
 		Gateway gateway = mock(Gateway.class);
-		GameComponents.put(Gateway.class, gateway);
+		GameSingletons.put(Gateway.class, gateway);
 		new StartScene();
 		verify(gateway).addDriver(any(USectDriver.class));
 	}

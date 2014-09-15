@@ -18,13 +18,17 @@ import org.unbiquitous.json.JSONObject;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.asset.SimetricShape;
 import org.unbiquitous.uImpala.engine.asset.Text;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.engine.io.Screen;
 import org.unbiquitous.uImpala.util.Color;
 import org.unbiquitous.uImpala.util.math.Point;
 
 public class Sect extends EnvironmentObject {
+	private static final Color HERBIVORE_COLOR = new Color(41, 128, 185,200);
+
+	private static final Color CARNIVOROUS_COLOR = new Color(211, 84, 0,200);
+
 	private static final Color ATTACK_PAINT = new Color(192, 57, 43,128);
 	
 	private Behavior behavior;
@@ -58,14 +62,20 @@ public class Sect extends EnvironmentObject {
 	public Sect(Behavior behavior, UUID id) {
 		super(id);
 //		Font font = new Font("Verdana", Font.BOLD, 12);
-		AssetManager assets = GameComponents.get(AssetManager.class);
+		AssetManager assets = GameSingletons.get(AssetManager.class);
 		if(assets != null){
 //			text = assets.newText(font, "");
 		}
 		if(behavior instanceof Carnivore){
-			shape = assets.newSimetricShape(new Point(), new Color(211, 84, 0,200), radius,5);
+			shape = assets.newSimetricShape(new Point(), CARNIVOROUS_COLOR, radius,3);
+		}else if(behavior instanceof Artificial){
+			Color color = CARNIVOROUS_COLOR;
+			if(behavior.feeding().equals(Feeding.HERBIVORE)){
+				color = HERBIVORE_COLOR;
+			}
+			shape = assets.newSimetricShape(new Point(), color, radius,4);
 		}else{
-			shape = assets.newSimetricShape(new Point(), new Color(41, 128, 185,200), radius,7);
+			shape = assets.newSimetricShape(new Point(), HERBIVORE_COLOR, radius,7);
 		}
 		influence = assets.newCircle(new Point(), ATTACK_PAINT, influenceRadius);
 		mating = assets.newSimetricShape(new Point(), ATTACK_PAINT, influenceRadius,13);
@@ -133,7 +143,7 @@ public class Sect extends EnvironmentObject {
 		shape.rotate(rotationAngle());
 		shape.render();
 		
-//		Screen screen = GameComponents.get(Screen.class);
+//		Screen screen = GameSingletons.get(Screen.class);
 //		text.setText(energy().toString());
 //		text.render(screen, (float)position().x, (float)position().y, Corner.TOP_LEFT, 1f, 0f, 1f, 1f, new org.unbiquitous.uImpala.util.Color(0, 0, 0));
 	}
@@ -155,7 +165,7 @@ public class Sect extends EnvironmentObject {
 		UUID id = UUID.fromString(json.optString("id"));
 		Sect s = new Sect(deserializeBehavior(json), id);
 		if(position == null){
-			Screen screen = GameComponents.get(Screen.class);
+			Screen screen = GameSingletons.get(Screen.class);
 			int x = (int) (Math.random() * screen.getWidth());
 			int y = (int) (Math.random() * screen.getHeight());
 			position = new Point(x,y);

@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 import org.unbiquitous.games.uSect.objects.Player;
 import org.unbiquitous.games.uSect.objects.Sect;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.util.math.Point;
 import org.unbiquitous.uImpala.util.math.Rectangle;
@@ -35,8 +35,8 @@ public class PlayerManager implements EnvironemtObjectManager {
 
 	public PlayerManager(Environment env) {
 		this.env = env;
-		gateway = GameComponents.get(Gateway.class);
-		GameSettings settings = GameComponents.get(GameSettings.class);
+		gateway = GameSingletons.get(Gateway.class);
+		GameSettings settings = GameSingletons.get(GameSettings.class);
 		if(settings.containsKey("player.id")){
 			isPlayerDevice = true;
 		}

@@ -17,7 +17,7 @@ import org.junit.Test;
 import org.unbiquitous.games.uSect.environment.Environment;
 import org.unbiquitous.games.uSect.objects.Player;
 import org.unbiquitous.games.uSect.objects.Sect;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.util.math.Point;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
@@ -34,7 +34,7 @@ public class USectDriverTest {
 	
 	@Before public void setUp(){
 		gateway = mock(Gateway.class);
-		GameComponents.put(Gateway.class, gateway);
+		GameSingletons.put(Gateway.class, gateway);
 		settings = new GameSettings();
 		e = setUpEnvironment(settings);
 	}

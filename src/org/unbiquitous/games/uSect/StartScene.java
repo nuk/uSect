@@ -15,7 +15,7 @@ import org.unbiquitous.games.uSect.objects.behavior.Artificial;
 import org.unbiquitous.games.uSect.objects.behavior.Carnivore;
 import org.unbiquitous.games.uSect.objects.behavior.Herbivore;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameObjectTreeScene;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.engine.io.Screen;
@@ -30,11 +30,11 @@ public class StartScene extends GameObjectTreeScene {
 	private Environment env;
 
 	public StartScene() {
-		DeltaTime deltaTime = GameComponents.get(DeltaTime.class);
+		DeltaTime deltaTime = GameSingletons.get(DeltaTime.class);
 		deltaTime.setUPS(30);
 		
-		screen = GameComponents.get(ScreenManager.class).create();
-		GameSettings settings = GameComponents.get(GameSettings.class);
+		screen = GameSingletons.get(ScreenManager.class).create();
+		GameSettings settings = GameSingletons.get(GameSettings.class);
 		
 		if(settings.containsKey("usect.width") && settings.containsKey("usect.height")){
 			screen.open("uSect", 
@@ -44,11 +44,11 @@ public class StartScene extends GameObjectTreeScene {
 			screen.open();
 		}
 		
-		GameComponents.put(Screen.class, screen);
-		GameComponents.put(AssetManager.class,assets());
+		GameSingletons.put(Screen.class, screen);
+		GameSingletons.put(AssetManager.class,assets());
 		setUpEnvironment(settings);
 		
-		Gateway gateway = GameComponents.get(Gateway.class);
+		Gateway gateway = GameSingletons.get(Gateway.class);
 		gateway.addDriver(new USectDriver(settings,env));
 	}
 
@@ -66,7 +66,8 @@ public class StartScene extends GameObjectTreeScene {
 	}
 
 	private void populateHerbivores(GameSettings settings, Environment e) {
-		int numberOfHerbivores = (int) (Random.v()*10)+5;
+		int multiplier = screen.getHeight()*screen.getWidth()/1000/100;
+		int numberOfHerbivores = (int) (Random.v()*multiplier)+5;
 		for(int i = 0 ; i < numberOfHerbivores; i++){
 			Sect sect = new Sect(new Herbivore());
 			e.addSect(sect, randScreenPosition());
@@ -129,7 +130,7 @@ public class StartScene extends GameObjectTreeScene {
 	@Override
 	public void update() {
 		if (screen.isCloseRequested()) {
-			GameComponents.get(org.unbiquitous.uImpala.engine.core.Game.class).quit();
+			GameSingletons.get(org.unbiquitous.uImpala.engine.core.Game.class).quit();
 		}
 		super.update();
 	}

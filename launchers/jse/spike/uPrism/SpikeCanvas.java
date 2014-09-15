@@ -7,7 +7,7 @@ import java.util.List;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.asset.Rectangle;
 import org.unbiquitous.uImpala.engine.asset.SimetricShape;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.engine.core.GameScene;
@@ -28,15 +28,15 @@ public class SpikeCanvas extends GameScene {
 	private List<SpikeSect> sects = new ArrayList<SpikeSect>();
 	
 	public SpikeCanvas() {
-		DeltaTime deltaTime = GameComponents.get(DeltaTime.class);
+		DeltaTime deltaTime = GameSingletons.get(DeltaTime.class);
 		deltaTime.setUPS(60);
 		
 		
-		screen = GameComponents.get(ScreenManager.class).create();
+		screen = GameSingletons.get(ScreenManager.class).create();
 		screen.open("uSect", 800, 600, false, null);
 
-		GameComponents.put(Screen.class, screen);
-		AssetManager assets = GameComponents.get(AssetManager.class);
+		GameSingletons.put(Screen.class, screen);
+		AssetManager assets = GameSingletons.get(AssetManager.class);
 		
 		control = assets.newRectangle(new Point(50,50),Color.WHITE, 100, 100);
 		control2 = assets.newSimetricShape(new Point(50,50), Color.DARK_GRAY, 100, 4);
@@ -60,7 +60,7 @@ public class SpikeCanvas extends GameScene {
 			sect.update();
 		}
 		if (screen.isCloseRequested()) {
-			GameComponents.get(org.unbiquitous.uImpala.engine.core.Game.class).quit();
+			GameSingletons.get(org.unbiquitous.uImpala.engine.core.Game.class).quit();
 			System.exit(0);
 		}
 	}
@@ -111,7 +111,7 @@ class SpikeSect extends GameObject {
 		this.screen = screen;
 		triangleRadius = (int) Math.ceil(Math.sqrt((4*componentSize*componentSize)/3));
 		updatePositions();
-		AssetManager assets = GameComponents.get(AssetManager.class);
+		AssetManager assets = GameSingletons.get(AssetManager.class);
 		head = assets.newSimetricShape(headPosition , Color.WHITE, triangleRadius,3);
 		body = assets.newRectangle(center, Color.RED, componentSize, componentSize);
 		tail = assets.newCircle(tailPosition, Color.BLUE, componentSize);

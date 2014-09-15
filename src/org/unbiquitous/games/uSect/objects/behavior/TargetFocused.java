@@ -8,7 +8,7 @@ import org.unbiquitous.games.uSect.environment.Random;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Sect.Behavior;
 import org.unbiquitous.games.uSect.objects.Something;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.util.math.Point;
 
@@ -19,7 +19,7 @@ public abstract class TargetFocused implements Sect.Behavior {
 	double sameSpeciesChance, differentSpeciesChance;
 
 	public TargetFocused() {
-		GameSettings settings = GameComponents.get(GameSettings.class);
+		GameSettings settings = GameSingletons.get(GameSettings.class);
 		initialEnergy = settings.getInt("usect.initial.energy", 30 * 60 * 10);
 		sameSpeciesChance = settings.getDouble(
 				"usect.mating.sameSpeciesChance", 0.5);

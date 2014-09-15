@@ -4,10 +4,9 @@ function update()
   checkTarget()
   
   if (not (targetPosition == nil)) then
-    x = targetPosition['x'] - position['x']
-    y = targetPosition['y'] - position['y']
+    x = position['x'] - targetPosition['x'] 
+    y = position['y'] - targetPosition['y']
     move(x,y)
-    attack()
   end
 end
 function checkTarget()

@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.games.uSect.objects.Sect.Behavior;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.util.math.Point;
 
@@ -19,7 +19,7 @@ public class MatingManager {
 	
 	public MatingManager(Environment env) {
 		this.env = env;
-		GameSettings settings = GameComponents.get(GameSettings.class);
+		GameSettings settings = GameSingletons.get(GameSettings.class);
 		matingEnergy = settings.getInt("usect.mating.energy",30*60);
 		initialEnergy = settings.getInt("usect.initial.energy",30*60*10);
 		matingCooldown = settings.getInt("usect.mating.cooldown",50);

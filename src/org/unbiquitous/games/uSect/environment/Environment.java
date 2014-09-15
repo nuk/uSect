@@ -17,7 +17,7 @@ import org.unbiquitous.games.uSect.objects.Player;
 import org.unbiquitous.games.uSect.objects.Sect;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.asset.Rectangle;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameObject;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
@@ -70,15 +70,15 @@ public class Environment extends GameObject {
 	}
 
 	private void createBackground() {
-		screen = GameComponents.get(Screen.class);
-		AssetManager assets = GameComponents.get(AssetManager.class);
+		screen = GameSingletons.get(Screen.class);
+		AssetManager assets = GameSingletons.get(AssetManager.class);
 		Point center = new Point(screen.getWidth() / 2, screen.getHeight() / 2);
 		background = assets.newRectangle(center, Color.WHITE,
 				screen.getWidth(), screen.getHeight());
 	}
 
 	private GameSettings setUpProperties() {
-		GameSettings settings = GameComponents.get(GameSettings.class);
+		GameSettings settings = GameSingletons.get(GameSettings.class);
 		initialEnergy = settings.getInt("usect.initial.energy", 30 * 60 * 10);
 		nutrientEnergy = settings.getInt("usect.nutrient.energy", 30 * 60);
 		corpseEnergy = settings.getInt("usect.corpse.energy", 5 * 30 * 60);
@@ -86,7 +86,7 @@ public class Environment extends GameObject {
 	}
 	
 	private void setUpPlayerEnvironment() {
-		MouseManager mouses = GameComponents.get(MouseManager.class);
+		MouseManager mouses = GameSingletons.get(MouseManager.class);
 		if(mouses != null){
 			mouses.connect(MouseSource.EVENT_BUTTON_DOWN, new Observation(){
 				protected void notifyEvent(Event event, Subject subject) {

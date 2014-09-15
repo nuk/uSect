@@ -7,7 +7,7 @@ function update()
     x = targetPosition['x'] - position['x']
     y = targetPosition['y'] - position['y']
     move(x,y)
-    attack()
+    mate()
   end
 end
 function checkTarget()

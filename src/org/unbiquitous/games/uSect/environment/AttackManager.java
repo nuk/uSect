@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.unbiquitous.games.uSect.objects.Sect;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 
 public class AttackManager {
@@ -15,7 +15,7 @@ public class AttackManager {
 	
 	public AttackManager(Environment env) {
 		this.env = env;
-		GameSettings settings = GameComponents.get(GameSettings.class);
+		GameSettings settings = GameSingletons.get(GameSettings.class);
 		attackEnergy = settings.getInt("usect.attack.energy",30*60);
 		attackCooldown = settings.getInt("usect.attack.cooldown",5);
 	}

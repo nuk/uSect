@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.objects.Player;
 import org.unbiquitous.games.uSect.objects.Sect;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.engine.io.IOResource;
 import org.unbiquitous.uImpala.engine.io.MouseEvent;
@@ -30,7 +30,7 @@ public class Environment_PlayerInteraction {
 		settings.put("usect.player.id", UUID.randomUUID().toString());
 		manager = new MouseManager();
 		manager.add(new MouseSource(1));
-		GameComponents.put(MouseManager.class, manager);
+		GameSingletons.put(MouseManager.class, manager);
 		
 		e = setUpEnvironment(settings);
 	}

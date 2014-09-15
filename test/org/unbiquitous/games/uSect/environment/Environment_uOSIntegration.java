@@ -14,7 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.unbiquitous.games.uSect.objects.Player;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
@@ -28,13 +28,13 @@ public class Environment_uOSIntegration {
 	@Before
 	public void setUp() {
 		gateway = mock(Gateway.class);
-		GameComponents.put(Gateway.class, gateway);
+		GameSingletons.put(Gateway.class, gateway);
 		e = setUpEnvironment();
 	}
 
 	@After
 	public void tearDown() {
-		GameComponents.put(Gateway.class, null);
+		GameSingletons.put(Gateway.class, null);
 	}
 
 	@Test
@@ -77,7 +77,7 @@ public class Environment_uOSIntegration {
 
 	@Test
 	public void playerDeviceDoesNotConnectWithOthers() throws Exception {
-		GameSettings settings = GameComponents.get(GameSettings.class);
+		GameSettings settings = GameSingletons.get(GameSettings.class);
 		settings.put("player.id", UUID.randomUUID().toString());
 		e = setUpEnvironment(settings);
 		setListDevices(new UpDevice("Dummy1"), new UpDevice("Dummy2"));

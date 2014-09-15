@@ -20,7 +20,7 @@ import org.unbiquitous.uImpala.engine.asset.Rectangle;
 import org.unbiquitous.uImpala.engine.asset.SimetricShape;
 import org.unbiquitous.uImpala.engine.asset.Sprite;
 import org.unbiquitous.uImpala.engine.asset.Text;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.engine.io.KeyboardSource;
 import org.unbiquitous.uImpala.engine.io.MouseSource;
@@ -69,12 +69,12 @@ public class TestUtils {
 	
 	public static Environment setUpEnvironment(GameSettings settings, 
 								final int width, final int height){
-		GameComponents.put(GameSettings.class, settings);
-		GameComponents.put(AssetManager.class, new DummyAssetManager());
-		if(GameComponents.get(Gateway.class) == null){
-			GameComponents.put(Gateway.class, mock(Gateway.class));
+		GameSingletons.put(GameSettings.class, settings);
+		GameSingletons.put(AssetManager.class, new DummyAssetManager());
+		if(GameSingletons.get(Gateway.class) == null){
+			GameSingletons.put(Gateway.class, mock(Gateway.class));
 		}
-		GameComponents.put(org.unbiquitous.uImpala.engine.io.Screen.class, new Screen(){
+		GameSingletons.put(org.unbiquitous.uImpala.engine.io.Screen.class, new Screen(){
 			public int getWidth() {		return width;	}
 			public int getHeight() {	return height;	}
 			public void open() {}

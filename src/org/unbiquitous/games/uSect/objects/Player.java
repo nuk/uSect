@@ -11,7 +11,7 @@ import org.unbiquitous.games.uSect.environment.EnvironmentObject;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.asset.Rectangle;
 import org.unbiquitous.uImpala.engine.asset.SimetricShape;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.engine.core.GameSettings;
 import org.unbiquitous.uImpala.util.Color;
@@ -47,13 +47,13 @@ public class Player extends EnvironmentObject{
 	
 	public Player(UUID id){
 		super(id);
-		AssetManager assets = GameComponents.get(AssetManager.class);
+		AssetManager assets = GameSingletons.get(AssetManager.class);
 		square = assets.newRectangle(new Point(0,0), PLAYER_PAINT, 40, 40);
 		inlfuence = assets.newCircle(new Point(0,0), ATTACK_PAINT, 40);
-		settings = GameComponents.get(GameSettings.class);
+		settings = GameSingletons.get(GameSettings.class);
 		maxInfluenceRadius = settings.getInt("usect.player.influence.radius",300);
 		influenceGrowthSpeed = settings.getInt("usect.player.influence.speed",5);
-		gateway = GameComponents.get(Gateway.class);
+		gateway = GameSingletons.get(Gateway.class);
 	}
 	
 	public void setEnv(Environment env) {

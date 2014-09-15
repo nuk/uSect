@@ -10,7 +10,7 @@ import org.unbiquitous.games.uSect.objects.Something.Feeding;
 import org.unbiquitous.games.uSect.objects.Something.Type;
 import org.unbiquitous.uImpala.engine.asset.AssetManager;
 import org.unbiquitous.uImpala.engine.asset.SimetricShape;
-import org.unbiquitous.uImpala.engine.core.GameComponents;
+import org.unbiquitous.uImpala.engine.core.GameSingletons;
 import org.unbiquitous.uImpala.engine.core.GameRenderers;
 import org.unbiquitous.uImpala.util.Color;
 import org.unbiquitous.uImpala.util.math.Point;
@@ -27,7 +27,7 @@ public class Nutrient extends EnvironmentObject{
 	private Sect hasBeenConsumedBy;
 
 	public Nutrient() {
-		AssetManager assets = GameComponents.get(AssetManager.class);
+		AssetManager assets = GameSingletons.get(AssetManager.class);
 		shape = assets.newCircle(new Point(), Color.GREEN.darker(), radius);
 		targetOf = new HashSet<Sect>();
 	}
